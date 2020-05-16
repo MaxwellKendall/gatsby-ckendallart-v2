@@ -4,9 +4,12 @@ import Client from 'shopify-buy'
 import Context from '~/context/StoreContext'
 
 const client = Client.buildClient({
-  storefrontAccessToken: process.env.SHOPIFY_ACCESS_TOKEN,
-  domain: `${process.env.SHOP_NAME}.myshopify.com`,
-})
+  // eslint-disable-next-line
+  storefrontAccessToken: GATSBY_ACCESS_TOKEN,
+  // eslint-disable-next-line
+  domain: `${GATSBY_SHOP_NAME}.myshopify.com`,
+
+});
 
 const ContextProvider = ({ children }) => {
   let initialStoreState = {

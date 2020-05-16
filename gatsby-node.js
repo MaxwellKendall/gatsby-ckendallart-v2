@@ -1,4 +1,5 @@
 const path = require(`path`)
+const webpack = require('webpack');
 
 exports.createPages = ({ graphql, actions }) => {
   const { createPage } = actions
@@ -24,5 +25,22 @@ exports.createPages = ({ graphql, actions }) => {
         },
       })
     })
+  })
+}
+
+exports.onCreateWebpackConfig = ({
+  stage,
+  rules,
+  loaders,
+  plugins,
+  actions,
+}) => {
+  actions.setWebpackConfig({
+    plugins: [
+      plugins.define({
+          GATSBY_SHOP_NAME: JSON.stringify(process.env.SHOP_NAME),
+          GATSBY_ACCESS_TOKEN: JSON.stringify(process.env.SHOPIFY_ACCESS_TOKEN)
+      })
+    ]
   })
 }
