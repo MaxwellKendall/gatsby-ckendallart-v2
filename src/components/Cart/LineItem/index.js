@@ -7,7 +7,7 @@ const LineItem = props => {
   const { line_item } = props
   const {
     removeLineItem,
-    store: { client, checkout },
+    store: { shopifyBuyClient, checkout },
   } = useContext(StoreContext)
 
   const variantImage = line_item.variant.image ? (
@@ -25,7 +25,7 @@ const LineItem = props => {
     : null
 
   const handleRemove = () => {
-    removeLineItem(client, checkout.id, line_item.id)
+    removeLineItem(shopifyBuyClient, checkout.id, line_item.id)
   }
 
   return (

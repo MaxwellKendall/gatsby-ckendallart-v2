@@ -16,16 +16,16 @@ const ProductForm = ({ product }) => {
   const [quantity, setQuantity] = useState(1)
   const {
     addVariantToCart,
-    store: { client, adding },
+    store: { shopifyBuyClient, adding },
   } = useContext(StoreContext)
 
   const productVariant =
-    client.product.helpers.variantForOptions(product, variant) || variant
+    shopifyBuyClient.product.helpers.variantForOptions(product, variant) || variant
   const [available, setAvailable] = useState(productVariant.availableForSale)
 
   const checkAvailability = useCallback(
     productId => {
-      client.product.fetch(productId).then(fetchedProduct => {
+      shopifyBuyClient.product.fetch(productId).then(fetchedProduct => {
         // this checks the currently selected variant for availability
         if (fetchedProduct) {
           const result = fetchedProduct.variants.filter(
@@ -37,7 +37,7 @@ const ProductForm = ({ product }) => {
         }
       })
     },
-    [client.product, productVariant.shopifyId, variants]
+    [shopifyBuyClient.product, productVariant.shopifyId, variants]
   )
 
   useEffect(() => {

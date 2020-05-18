@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from 'react'
-import Client from 'shopify-buy'
+import ShopifyBuyClient from 'shopify-buy'
 
 import Context from '~/context/StoreContext'
 
-const client = Client.buildClient({
+const shopifyBuyClient = ShopifyBuyClient.buildClient({
   // eslint-disable-next-line
   storefrontAccessToken: GATSBY_ACCESS_TOKEN,
   // eslint-disable-next-line
   domain: `${GATSBY_SHOP_NAME}.myshopify.com`,
-
 });
 
 const ContextProvider = ({ children }) => {
   let initialStoreState = {
-    client,
+    shopifyBuyClient,
     adding: false,
     checkout: { lineItems: [] },
     products: [],
@@ -40,8 +39,8 @@ const ContextProvider = ({ children }) => {
         })
       }
 
-      const createNewCheckout = () => store.client.checkout.create()
-      const fetchCheckout = id => store.client.checkout.fetch(id)
+      const createNewCheckout = () => store.shopifyBuyClient.checkout.create()
+      const fetchCheckout = id => store.shopifyBuyClient.checkout.fetch(id)
 
       if (existingCheckoutID) {
         try {
@@ -61,7 +60,7 @@ const ContextProvider = ({ children }) => {
     }
 
     initializeCheckout()
-  }, [store.client.checkout])
+  }, [store.shopifyBuyClient.checkout])
 
   return (
     <Context.Provider
@@ -77,14 +76,14 @@ const ContextProvider = ({ children }) => {
             return { ...prevState, adding: true }
           })
 
-          const { checkout, client } = store
+          const { checkout, shopifyBuyClient } = store
 
           const checkoutId = checkout.id
           const lineItemsToUpdate = [
             { variantId, quantity: parseInt(quantity, 10) },
           ]
 
-          return client.checkout
+          return shopifyBuyClient.checkout
             .addLineItems(checkoutId, lineItemsToUpdate)
             .then(checkout => {
               updateStore(prevState => {
@@ -92,8 +91,8 @@ const ContextProvider = ({ children }) => {
               })
             })
         },
-        removeLineItem: (client, checkoutID, lineItemID) => {
-          return client.checkout
+        removeLineItem: (shopifyBuyClient, checkoutID, lineItemID) => {
+          return shopifyBuyClient.checkout
             .removeLineItems(checkoutID, [lineItemID])
             .then(res => {
               updateStore(prevState => {
@@ -101,12 +100,12 @@ const ContextProvider = ({ children }) => {
               })
             })
         },
-        updateLineItem: (client, checkoutID, lineItemID, quantity) => {
+        updateLineItem: (shopifyBuyClient, checkoutID, lineItemID, quantity) => {
           const lineItemsToUpdate = [
             { id: lineItemID, quantity: parseInt(quantity, 10) },
           ]
 
-          return client.checkout
+          return shopifyBuyClient.checkout
             .updateLineItems(checkoutID, lineItemsToUpdate)
             .then(res => {
               updateStore(prevState => {
