@@ -1,4 +1,4 @@
-const { ApolloClient, HttpLink, InMemoryCache } = require('@apollo/client');
+const clientConstructor = require('graphql-request').GraphQLClient;
 const fetch = require('axios');
 
 const {
@@ -15,25 +15,20 @@ const defaultOptions = {
     apiVersion: `04-2020`
 }
 
+const url = `https://ckendallart.myshopify.com/api/2020-04/graphql`;
+
+const header = 'X-Shopify-Storefront-Access-Token';
+
 exports.sourceNodes = async ({ actions: { createNode } }, options = defaultOptions) => {
-    console.log("options", options);
-    const client = new ApolloClient({
-        cache: new InMemoryCache(),
-        link: new HttpLink({
-            uri: `https://ckendallart.myshopify.com/api/2020-04/graphql.json`,
-            fetch,
-            headers: {
-                Accept: 'application/json',
-                'X-Shopify-Storefront-Access-Token': options.accessToken,
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-            },
-            credentials: 'include',
-        })
+    const client = new clientConstructor(url, {
+        headers: {
+            [header]: options.accessToken,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
     });
-    client.query({
-            query: TEST_QUERY
-        })
+    
+    client.request(TEST_QUERY)
         .then((data) => {
             console.log("data", data);
         })

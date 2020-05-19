@@ -1,6 +1,6 @@
 const gql = require('graphql-tag');
 
-const ARTICLES_QUERY = gql`
+const ARTICLES_QUERY = `
   query GetArticles($first: Int!, $after: String) {
     articles(first: $first, after: $after) {
       pageInfo {
@@ -107,8 +107,8 @@ const COLLECTIONS_QUERY = gql`
   }
 `;
 
-exports.TEST_QUERY = gql`
-    {
+exports.TEST_QUERY = `
+    query {
         shop {
             name
         }
@@ -116,7 +116,7 @@ exports.TEST_QUERY = gql`
 `;
 
 exports.COLLECTIONS_QUERY = COLLECTIONS_QUERY;
-const PRODUCTS_QUERY = gql`
+const PRODUCTS_QUERY = `
   query GetProducts($first: Int!, $after: String) {
     products(first: $first, after: $after) {
       pageInfo {
@@ -238,7 +238,7 @@ const PRODUCTS_QUERY = gql`
   }
 `;
 exports.PRODUCTS_QUERY = PRODUCTS_QUERY;
-const SHOP_POLICIES_QUERY = gql`
+const SHOP_POLICIES_QUERY = `
   query GetPolicies {
     shop {
       privacyPolicy {
@@ -263,7 +263,7 @@ const SHOP_POLICIES_QUERY = gql`
   }
 `;
 exports.SHOP_POLICIES_QUERY = SHOP_POLICIES_QUERY;
-const PAGES_QUERY = gql`
+const PAGES_QUERY = `
   query GetPages($first: Int!, $after: String) {
     pages(first: $first, after: $after) {
       pageInfo {

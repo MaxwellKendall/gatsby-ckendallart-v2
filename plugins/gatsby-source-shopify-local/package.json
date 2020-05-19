@@ -12,6 +12,7 @@
   "dependencies": {
     "@apollo/client": "^3.0.0-beta.49",
     "axios": "^0.19.2",
+    "graphql-request": "^1.8.2",
     "graphql-tag": "^2.10.3",
     "isomorphic-fetch": "^2.2.1",
     "node-fetch": "^2.6.0"
