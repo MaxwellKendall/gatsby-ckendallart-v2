@@ -35,7 +35,7 @@ module.exports = {
       },
     },
     {
-      resolve: `gatsby-source-shopify`,
+      resolve: `gatsby-source-shopify-local`,
       options: {
         // The domain name of your Shopify shop. This is required.
         // Example: 'gatsby-source-shopify-test-shop' if your Shopify address is
@@ -55,22 +55,26 @@ module.exports = {
         // much time was required to fetch and process the data.
         // Defaults to true.
         verbose: true,
+        apiVersion: '2020-04'
       },
     },
     {
-      resolve: 'gatsby-plugin-root-import',
+      resolve: `gatsby-source-graphql`,
       options: {
-        '~': path.join(__dirname, 'src/'),
+        typeName: `storeFrontApi`,
+        fieldName: `storeFront`,
+        url: `https://ckendallart.com/api/2020-04/graphql`,
+        refetchInterval: 60,
       },
     },
-    {
-      resolve: `gatsby-plugin-google-analytics`,
-      options: {
-        trackingId: "UA-134421805-1",
-        anonymize: true,
-        respectDNT: true,
-      },
-    },
+    // {
+    //   resolve: `gatsby-plugin-google-analytics`,
+    //   options: {
+    //     trackingId: "UA-134421805-1",
+    //     anonymize: true,
+    //     respectDNT: true,
+    //   },
+    // },
     // this (optional) plugin enables Progressive Web App + Offline functionality
     // To learn more, visit: https://gatsby.app/offline
     // 'gatsby-plugin-offline',

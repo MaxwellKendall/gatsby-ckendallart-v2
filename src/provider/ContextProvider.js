@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import ShopifyBuyClient from 'shopify-buy'
 
-import Context from '~/context/StoreContext'
+import CheckoutContext from '../context/StoreContext';
 
 const shopifyBuyClient = ShopifyBuyClient.buildClient({
   // eslint-disable-next-line
@@ -10,7 +10,7 @@ const shopifyBuyClient = ShopifyBuyClient.buildClient({
   domain: `${GATSBY_SHOP_NAME}.myshopify.com`,
 });
 
-const ContextProvider = ({ children }) => {
+const CheckoutProvider = ({ children }) => {
   let initialStoreState = {
     shopifyBuyClient,
     adding: false,
@@ -63,7 +63,7 @@ const ContextProvider = ({ children }) => {
   }, [store.shopifyBuyClient.checkout])
 
   return (
-    <Context.Provider
+    <CheckoutContext.Provider
       value={{
         store,
         addVariantToCart: (variantId, quantity) => {
@@ -116,7 +116,7 @@ const ContextProvider = ({ children }) => {
       }}
     >
       {children}
-    </Context.Provider>
+    </CheckoutContext.Provider>
   )
 }
-export default ContextProvider
+export default CheckoutProvider;

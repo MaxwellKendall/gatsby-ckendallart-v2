@@ -1,5 +1,5 @@
 import React from 'react'
 
-const StoreContext = React.createContext()
+const CheckoutContext = React.createContext()
 
-export default StoreContext
+export default CheckoutContext
