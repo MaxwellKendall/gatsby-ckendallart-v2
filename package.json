@@ -14,9 +14,24 @@
     "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1"
   },
   "dependencies": {
+    "@apollo/react-hooks": "^3.1.5",
+    "apollo-boost": "^0.4.9",
+    "dotenv": "^8.2.0",
     "gatsby": "^2.21.37",
+    "gatsby-image": "^2.4.5",
+    "gatsby-plugin-google-analytics": "^2.3.2",
+    "gatsby-plugin-manifest": "^2.4.9",
+    "gatsby-plugin-offline": "^3.2.7",
+    "gatsby-plugin-react-helmet": "^3.3.2",
+    "gatsby-plugin-sharp": "^2.6.9",
+    "gatsby-source-filesystem": "^2.3.8",
+    "gatsby-source-graphql": "2.1.25",
+    "gatsby-transformer-sharp": "^2.5.3",
+    "graphql-tag": "^2.10.3",
+    "isomorphic-fetch": "^2.2.1",
     "react": "^16.12.0",
-    "react-dom": "^16.12.0"
+    "react-dom": "^16.12.0",
+    "react-helmet": "^6.0.0"
   },
   "devDependencies": {
     "prettier": "2.0.5"
