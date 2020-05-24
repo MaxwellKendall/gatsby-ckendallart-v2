@@ -8,8 +8,10 @@
     "node": "=> 10.13 < 10.11"
   },
   "dependencies": {
+    "@apollo/react-hooks": "^3.1.5",
     "@emotion/core": "^10.0.22",
     "@emotion/styled": "^10.0.22",
+    "apollo-boost": "^0.4.9",
     "gatsby": "^2.17.4",
     "gatsby-image": "^2.2.29",
     "gatsby-plugin-google-analytics": "^2.0.13",
@@ -22,6 +24,7 @@
     "gatsby-source-filesystem": "^2.1.33",
     "gatsby-source-shopify": "^3.0.24",
     "gatsby-transformer-sharp": "^2.3.0",
+    "isomorphic-fetch": "^2.2.1",
     "js-yaml": "^3.13.1",
     "lodash": "^4.17.15",
     "prop-types": "^15.7.2",
