@@ -1,21 +1,14 @@
-import ApolloClient, { InMemoryCache, HttpLink, gql } from 'apollo-boost';
-import fetch from 'node-fetch';
+import ApolloClient, { InMemoryCache, gql } from 'apollo-boost';
+import fetch from 'isomorphic-fetch';
 
 export const client = new ApolloClient({
     cache: new InMemoryCache(),
     // eslint-disable-next-line
-    uri: `https://${GATSBY_SHOP_NAME}.com/api/2019-07/graphql`,
+    uri: `https://${GATSBY_SHOP_NAME}.com/api/2020-04/graphql.json`,
     fetch,
-    credentials: 'include',
-    fetchOptions: {
-      mode: 'cors'
-    },
     headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
       // eslint-disable-next-line
-      'X-Shopify-Storefront-Access-Token': GATSBY_ACCESS_TOKEN,
-      'Access-Control-Allow-Origin': "*"
+      'X-Shopify-Storefront-Access-Token': GATSBY_ACCESS_TOKEN
     }
 });
 
@@ -35,7 +28,7 @@ export const client = new ApolloClient({
 // `;
 
 export const getShopDetails = gql`
-    query {
+    query test {
         shop {
             name
         }
