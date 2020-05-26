@@ -35,39 +35,39 @@ export const getShopDetails = gql`
     }
 `;
 
-// export const productFragment = graphql`
-// fragment productFragment on Product {
-//     createdAt
-//     id
-//     title
-//     handle
-//     description
-//     productType
-//     availablePublicationCount
-//     id
-//     tracksInventory
-//     totalInventory
-//     seo {
-//       description
-//       title
-//     }
-//     featuredImage {
-//       id
-//       originalSrc
-//       transformedSrc
-//     }
-//     priceRange {
-//       maxVariantPrice {
-//         amount
-//         currencyCode
-//       }
-//       minVariantPrice {
-//         amount
-//         currencyCode
-//       }
-//     }
-//   }
-// `;
+export const productFragment = gql`
+fragment productFragment on Product {
+    createdAt
+    id
+    title
+    handle
+    description
+    productType
+    availablePublicationCount
+    id
+    tracksInventory
+    totalInventory
+    seo {
+      description
+      title
+    }
+    featuredImage {
+      id
+      originalSrc
+      transformedSrc
+    }
+    priceRange {
+      maxVariantPrice {
+        amount
+        currencyCode
+      }
+      minVariantPrice {
+        amount
+        currencyCode
+      }
+    }
+  }
+`;
   
 // export const collectionFragment = graphql`
 // fragment collectionFragment on Collection {
