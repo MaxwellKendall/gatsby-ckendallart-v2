@@ -130,7 +130,7 @@ exports.onCreateNode = async ({
                 }, Promise.resolve(null));
             })
             .catch((e) => {
-                console.log("error onCreateNode: ",e);
+                console.log("error onCreateNode: ", e);
             })
         , Promise.resolve());
     }
