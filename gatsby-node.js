@@ -1,5 +1,6 @@
 const path = require(`path`);
-
+const image = require('gatsby-image');
+// need to do this in the template ☝
 exports.onCreateWebpackConfig = ({
     stage,
     rules,
@@ -37,10 +38,17 @@ exports.createPages = async ({ graphql, actions }) => {
           variants {
             price
             title
+            id
             sku
             weight
             weightUnit
-            id
+            localFile {
+              childImageSharp {
+                fluid(maxWidth: 700) {
+                  ...GatsbyImageSharpFluid
+                }
+              }
+            }
           }
         }
         totalCount
