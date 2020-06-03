@@ -26,8 +26,7 @@ export default ({
             <h2>{title}</h2>
             <p>{description}</p>
             {high !== low && <p>{`Price Ranging from $${low} to $${high}`}</p>}
-            {high === low && <p>{`Price $${selectedVariant.price}`}</p>}
-            
+            <p>{`Price $${selectedVariant.price}`}</p>
             <select name="variants" onChange={handleSelectVariant} value={selectedVariant.title}>
                 {parsedVariants.map((variant) => (
                     <option value={variant.title}>{variant.title}</option>

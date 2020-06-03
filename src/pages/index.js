@@ -1,10 +1,49 @@
 import React from "react";
 import { useQuery } from "@apollo/react-hooks";
+import { useStaticQuery, graphql, Link } from "gatsby"
 
 import { getShopDetails } from '../../graphql';
 
 export default (props) => {
   const { loading, error, data } = useQuery(getShopDetails);
-  console.log("props", loading, error, data);
-  return <div>Hello world!</div>
+  const { allShopifyProduct: { nodes }} = useStaticQuery(graphql`
+    query HomePageQuery {
+      allShopifyProduct {
+        nodes {
+          productType
+          handle
+          totalInventory
+          variants {
+            optimizedImages
+            availableForSale
+            title
+          }
+          priceRange {
+            high
+            low
+          }
+          collection
+          title
+          slug
+        }
+      }
+    }  
+  `)
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error...</p>;
+  console.log(nodes.map((node) => node.totalInventory))
+  return (
+    <div className="home">
+      {data.shop.shopName}
+      <ul>
+        {nodes
+          .filter((node) => node.totalInventory !== 0)
+          .map((node) => (
+            <li>
+              <Link to={`${node.productType.toLowerCase()}/${node.handle}`}>{node.title}</Link>
+            </li>
+          ))}
+      </ul>
+    </div>
+  );
 }
