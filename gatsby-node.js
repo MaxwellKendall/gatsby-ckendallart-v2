@@ -21,61 +21,32 @@ exports.createPages = async ({ graphql, actions }) => {
   const { createPage } = actions
   const productTemplate = path.resolve(`src/templates/Product.jsx`)
   return graphql(`
-    query GetProducts($first: Int!) {
-      shopifyCollection {
-        products(first: $first) {
-          edges {
-            cursor
-            node {
-              availableForSale
-              createdAt
-              description
-              handle
-              id
-              variants(first: 100) {
-                edges {
-                  node {
-                    id
-                  }
-                }
-              }
-              images(first: 10) {
-                edges {
-                  node {
-                    originalSrc
-                    src
-                    transformedSrc
-                    altText
-                  }
-                }
-                pageInfo {
-                  hasNextPage
-                }
-              }
-              priceRange {
-                maxVariantPrice {
-                  amount
-                  currencyCode
-                }
-                minVariantPrice {
-                  amount
-                  currencyCode
-                }
-              }
-              productType
-              tags
-              title
-              totalInventory
-              vendor
-            }
+    query GetProducts {
+      allShopifyProduct {
+        nodes {
+          id
+          title
+          handle
+          description
+          collection
+          priceRange {
+            high
+            low
           }
-          pageInfo {
-            hasNextPage
+          productType
+          variants {
+            price
+            title
+            sku
+            weight
+            weightUnit
+            id
           }
         }
+        totalCount
       }
     }  
-  `, { first: 250 }).then(result => {
+  `).then((result) => {
     if (result.errors) {
       throw result.errors
     }
@@ -83,10 +54,10 @@ exports.createPages = async ({ graphql, actions }) => {
     console.log(`********* RESULT ${result}`);
 
     // Create product pages.
-    result.data.shopifyCollection.products.edges.forEach(edge => {
+    result.data.allShopifyProduct.nodes.forEach((node) => {
       createPage({
         // Path for this page — required
-        path: `${edge.node.productType.toLowerCase()}/${edge.node.handle}`,
+        path: `${node.productType.toLowerCase()}/${node.handle}`,
         component: productTemplate,
         context: {
           // Add optional context data to be inserted
@@ -97,7 +68,7 @@ exports.createPages = async ({ graphql, actions }) => {
           //
           // The page "path" is always available as a GraphQL
           // argument.
-          ...edge.node
+          ...node
         },
       })
     })

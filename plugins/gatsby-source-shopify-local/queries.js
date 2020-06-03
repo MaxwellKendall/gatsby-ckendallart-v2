@@ -119,6 +119,7 @@ exports.GetAllProductsInCollection = gql`
             title
             image {
                 id
+                originalSrc
             }
             products(first: $first) {
                 edges {
