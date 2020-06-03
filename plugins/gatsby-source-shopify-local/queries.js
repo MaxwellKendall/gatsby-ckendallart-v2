@@ -139,6 +139,23 @@ exports.GetAllProductsInCollection = gql`
                                 }
                             }
                         }
+                        variants(first:$first) {
+                      	  edges {
+                      	    node {
+                              price
+                              sku
+                              weight
+                              weightUnit
+                              title
+                      	      id
+                              availableForSale
+                              image {
+                                altText
+                                originalSrc
+                              }
+                      	    }
+                      	  }
+                      	}
                         priceRange {
                             maxVariantPrice {
                                 amount

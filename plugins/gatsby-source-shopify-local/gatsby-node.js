@@ -52,15 +52,20 @@ exports.sourceNodes = async ({ actions, createNodeId, createContentDigest }, opt
                     productType,
                     totalInventory,
                     priceRange,
-                    id
+                    id,
+                    variants
                 } = product.node;
                 return {
                     id,
                     createdAt,
                     description,
                     images: images.edges.map((image) => {
-                        console.log(" images", image)
                         return image.node.originalSrc
+                    }),
+                    variants: variants.edges.map(({ node }) => {
+                        return Object.entries(node)
+                            .filter(([key]) => key !== '_xtypename')
+                            .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
                     }),
                     title,
                     handle,
@@ -116,7 +121,14 @@ exports.onCreateNode = async ({
                     return prevPromise
                         .then ((fileNode) => {
                             if (fileNode) {
-                                node.featuredImg___NODE = fileNode.id
+                                // node.featuredImg___NODE = fileNode.id
+                                if (product.optimizedImages) {
+                                    product.optimizedImages = product.optimizedImages.concat([fileNode.base])
+                                }
+                                else {
+                                    console.log("fileNode", fileNode.base);
+                                    product.optimizedImages = [fileNode.base]
+                                }
                             }
                             return createRemoteFileNode({
                                 url, // string that points to the URL of the image
