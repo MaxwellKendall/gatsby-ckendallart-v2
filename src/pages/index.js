@@ -14,7 +14,6 @@ export default (props) => {
           handle
           totalInventory
           variants {
-            optimizedImages
             availableForSale
             title
           }

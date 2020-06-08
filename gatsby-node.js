@@ -35,23 +35,8 @@ exports.createPages = async ({ graphql, actions }) => {
             low
           }
           productType
-          variants {
-            price
-            title
-            id
-            sku
-            weight
-            weightUnit
-            localFile {
-              childImageSharp {
-                fluid(maxWidth: 700) {
-                  ...GatsbyImageSharpFluid
-                }
-              }
-            }
-          }
+          totalInventory
         }
-        totalCount
       }
     }  
   `).then((result) => {

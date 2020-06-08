@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
+import { graphql } from 'gatsby';
 import Img from "gatsby-image"
 
 export default ({
     pathContext: {
+        id,
         title,
         description,
         collection,
-        variants,
-        localFile: { childImageSharp: { fluid }},
-        priceRange: { high, low }
+        priceRange: { high, low },
+        totalCount
     },
+    data: { shopifyProduct: { variants } },
     path
 }) => {
+    console.log("data", variants);
     const [parsedVariants, setParsedVariants] = useState(variants
         .map((variant) => ({
             ...variant,
@@ -29,7 +32,7 @@ export default ({
             <p>{description}</p>
             {high !== low && <p>{`Price Ranging from $${low} to $${high}`}</p>}
             <p>{`Price $${selectedVariant.price}`}</p>
-            <Img fluid={fluid} />
+            <Img fluid={selectedVariant.localFile.childImageSharp.fluid} />
             <select name="variants" onChange={handleSelectVariant} value={selectedVariant.title}>
                 {parsedVariants.map((variant) => (
                     <option value={variant.title}>{variant.title}</option>
@@ -38,3 +41,25 @@ export default ({
         </div>
     );
 };
+
+export const query = graphql`
+    query GetProduct($id: String) {
+        shopifyProduct(id: {eq: $id}) {
+            variants {
+                price
+                title
+                id
+                sku
+                localFile {
+                    childImageSharp {
+                      fluid(maxWidth:700) {
+                        ...GatsbyImageSharpFluid
+                      }
+                    }
+                  }
+                weight
+                weightUnit
+            }
+        }
+    }
+`;
