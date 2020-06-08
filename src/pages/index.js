@@ -4,6 +4,8 @@ import { useStaticQuery, graphql, Link } from "gatsby"
 
 import { getShopDetails } from '../../graphql';
 
+import Layout from "../components/Layout";
+
 export default (props) => {
   const { loading, error, data } = useQuery(getShopDetails);
   const { allShopifyProduct: { nodes }} = useStaticQuery(graphql`
@@ -32,17 +34,19 @@ export default (props) => {
   if (error) return <p>Error...</p>;
   console.log(nodes.map((node) => node.totalInventory))
   return (
-    <div className="home">
-      {data.shop.shopName}
-      <ul>
-        {nodes
-          .filter((node) => node.totalInventory !== 0)
-          .map((node) => (
-            <li>
-              <Link to={`${node.productType.toLowerCase()}/${node.handle}`}>{node.title}</Link>
-            </li>
-          ))}
-      </ul>
-    </div>
+    <Layout>
+      <div className="home">
+        {data.shop.shopName}
+        <ul>
+          {nodes
+            .filter((node) => node.totalInventory !== 0)
+            .map((node) => (
+              <li>
+                <Link to={`${node.productType.toLowerCase()}/${node.handle}`}>{node.title}</Link>
+              </li>
+            ))}
+        </ul>
+      </div>
+    </Layout>
   );
 }
