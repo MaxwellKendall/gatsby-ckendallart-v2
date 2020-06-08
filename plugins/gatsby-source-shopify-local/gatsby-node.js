@@ -107,6 +107,25 @@ exports.sourceNodes = async ({ actions, createNodeId, createContentDigest }, opt
             }), Promise.resolve(null));
 };
 
+const processFileNode = (fileNode, previousImage, node) => {
+    if (fileNode && previousImage.isVariantImage) {
+        node.variants = node.variants.map((variant) => {
+            if (variant.id === previousImage.id) {
+                return {
+                    ...variant,
+                    localFile___NODE: fileNode.id
+                };
+            }
+            return variant;
+        });
+    }
+    else if (fileNode) {
+        node.optimizedImages = node.optimizedImages
+            ? node.optimizedImages.concat([fileNode.base])
+            : [fileNode.base]
+    }
+}
+
 exports.onCreateNode = async ({
     node,
     actions: { createNode },
@@ -117,44 +136,51 @@ exports.onCreateNode = async ({
     const type = node.internal.type;
     // For all product nodes, call createRemoteFileNode
     if (type === "ShopifyProduct") {
-        return node.variants.reduce((prevPromise, variant) => {
-            return prevPromise
-                .then ((fileNode) => {
-                    if (fileNode === 'first') {
+        return node.variants
+            .filter((variant) => variant.image && variant.id)
+            .map((variant) => ({ isVariantImage: true, url: variant.image, id: variant.id }))
+            .concat(node.images
+                .filter((image) => {
+                    // if a product image is also a variant, don't use it.
+                    const imageIsVariant = node.variants.some((variant) => variant.image === image);
+                    if (imageIsVariant) return false;
+                    return true;
+                })
+                .map((image) => ({ url: image, id: node.id, isVariantImage: false })))
+            .reduce((prevPromise, image, i, arr) => {
+                return prevPromise
+                    .then ((fileNode) => {
+                        if (fileNode === 'first') {
+                            return createRemoteFileNode({
+                                url: image.url, // string that points to the URL of the image
+                                parentNodeId: image.id, // id of the parent node of the fileNode you are going to create
+                                createNode, // helper function in gatsby-node to generate the node
+                                createNodeId, // helper function in gatsby-node to generate the node id
+                                cache, // Gatsby's cache
+                                store, // Gatsby's redux store
+                            })
+                        }
+                        // the previous image is the one associated with the current fileNode.
+                        const previousImage = arr[i - 1];
+                        processFileNode(fileNode, previousImage, node);
                         return createRemoteFileNode({
-                            url: variant.image, // string that points to the URL of the image
-                            parentNodeId: variant.id, // id of the parent node of the fileNode you are going to create
+                            url: image.url, // string that points to the URL of the image
+                            parentNodeId: image.id, // id of the parent node of the fileNode you are going to create
                             createNode, // helper function in gatsby-node to generate the node
                             createNodeId, // helper function in gatsby-node to generate the node id
                             cache, // Gatsby's cache
                             store, // Gatsby's redux store
                         })
                         .then((resp) => {
-                            variant.localFile___NODE = resp.id;
-                            variant.optimizedImages = variant.optimizedImages
-                                ? variant.optimizedImages.concat([resp.base])
-                                : [resp.base]
+                            if (i === arr.length - 1) {
+                                processFileNode(fileNode, previousImage, node);
+                            }
                             return resp;
                         });
-                    }
-                    if (fileNode && variant.localFile___NODE !== fileNode.id) {
-                        variant.localFile___NODE = fileNode.id
-                        variant.optimizedImages = variant.optimizedImages
-                            ? variant.optimizedImages.concat([fileNode.base])
-                            : [fileNode.base]
-                    }
-                    return createRemoteFileNode({
-                        url: variant.image, // string that points to the URL of the image
-                        parentNodeId: variant.id, // id of the parent node of the fileNode you are going to create
-                        createNode, // helper function in gatsby-node to generate the node
-                        createNodeId, // helper function in gatsby-node to generate the node id
-                        cache, // Gatsby's cache
-                        store, // Gatsby's redux store
-                    });
-                })
-                .catch((e) => {
-                    console.log("error onCreateNode: ", e);
-                })
-        }, Promise.resolve('first'));
+                    })
+                    .catch((e) => {
+                        console.log("error onCreateNode: ", e);
+                    })
+            }, Promise.resolve('first'))
     }
 };
