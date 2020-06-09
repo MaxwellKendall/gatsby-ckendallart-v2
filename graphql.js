@@ -28,6 +28,62 @@ export const client = new ApolloClient({
 //     }
 // `;
 
+export const modifyCheckout = gql`
+  mutation checkoutAttributesUpdateV2($checkoutId: ID!, $input: CheckoutAttributesUpdateV2Input!) {
+    checkoutAttributesUpdateV2(checkoutId: $checkoutId, input: $input) {
+      checkout {
+        id
+      }
+      checkoutUserErrors {
+        code
+        field
+        message
+      }
+    }
+  }
+`;
+
+export const applyDiscountCode = gql`
+  mutation checkoutDiscountCodeApplyV2($discountCode: String!, $checkoutId: ID!) {
+    checkoutDiscountCodeApplyV2(discountCode: $discountCode, checkoutId: $checkoutId) {
+      checkout {
+        id
+      }
+      checkoutUserErrors {
+        code
+        field
+        message
+      }
+    }
+  }
+`
+
+export const createCheckout = gql`
+  mutation($input: CheckoutCreateInput!) {
+    checkoutCreate(input: $input) {
+      checkout {
+        id
+        webUrl
+        ready
+        taxExempt
+        lineItemsSubtotalPrice {
+          amount
+          currencyCode
+        }
+        totalPriceV2 {
+          amount
+          currencyCode
+        }
+      }
+      checkoutUserErrors {
+        code
+        field
+        message
+      }
+    }
+  }
+`;
+
 export const getShopDetails = gql`
     query test {
         shop {
