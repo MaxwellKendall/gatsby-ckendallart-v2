@@ -1,13 +1,10 @@
 import React from "react";
-import { useQuery } from "@apollo/react-hooks";
-import { useStaticQuery, graphql, Link } from "gatsby"
-
-import { getShopDetails } from '../../graphql';
+import { useStaticQuery, graphql, Link } from "gatsby";
+import { kebabCase } from "lodash";
 
 import Layout from "../components/Layout";
 
 export default (props) => {
-  const { loading, error, data } = useQuery(getShopDetails);
   const { allShopifyProduct: { nodes }} = useStaticQuery(graphql`
     query HomePageQuery {
       allShopifyProduct {
@@ -30,23 +27,17 @@ export default (props) => {
       }
     }  
   `)
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error...</p>;
-  console.log(nodes.map((node) => node.totalInventory))
   return (
-    <Layout>
-      <div className="home">
-        {data.shop.shopName}
-        <ul>
+    <Layout pageName="home">
+        <ul className="px-5">
           {nodes
             .filter((node) => node.totalInventory !== 0)
             .map((node) => (
               <li>
-                <Link to={`${node.productType.toLowerCase()}/${node.handle}`}>{node.title}</Link>
+                <Link to={`${kebabCase(node.productType)}/${node.handle}`}>{node.title}</Link>
               </li>
             ))}
         </ul>
-      </div>
     </Layout>
   );
 }

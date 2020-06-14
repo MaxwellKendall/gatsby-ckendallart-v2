@@ -13,6 +13,28 @@ module.exports = {
     title: `Ckendall Art V2`,
     description: `Claire Kendall Art; V2.`,
     author: `Maxwell Kendall`,
+    pages: [
+      {
+        name: 'home',
+        link: '/'
+      },
+      {
+        name: 'Cart',
+        link: '/cart'
+      },
+      {
+        name: 'Portfolio',
+        link: '/portfolio'
+      },
+      {
+        name: 'Comissions',
+        link: '/commissions'
+      },
+      {
+        name: 'Shop',
+        link: '/cart'
+      }
+    ]
   },
   plugins: [
     // styles
@@ -21,7 +43,8 @@ module.exports = {
       options: {
         postCssPlugins: [
           require("tailwindcss"),
-          // require("./tailwind.config.js"), // Optional: Load custom Tailwind CSS configuration
+          // Optional: Load custom Tailwind CSS configuration
+          // require("./tailwind.config.js"),
         ],
       },
     },

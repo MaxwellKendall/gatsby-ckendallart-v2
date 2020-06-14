@@ -2,3 +2,10 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+html,
+body,
+#___gatsby,
+#gatsby-focus-wrapper,
+.global-container {
+    min-height: 100vh;
+}

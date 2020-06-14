@@ -1,32 +1,58 @@
 // import ApolloClient, { InMemoryCache, gql } from 'apollo-boost';
-import { ApolloClient, HttpLink, InMemoryCache, gql } from '@apollo/client';
+import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import fetch from 'isomorphic-fetch';
 
+const cache = new InMemoryCache();
+
 export const client = new ApolloClient({
-    cache: new InMemoryCache(),
+    cache,
     // eslint-disable-next-line
     uri: `https://${GATSBY_SHOP_NAME}.com/api/2020-04/graphql.json`,
     fetch,
     headers: {
       // eslint-disable-next-line
       'X-Shopify-Storefront-Access-Token': GATSBY_ACCESS_TOKEN
+    },
+    resolvers: {
+      Mutation: {
+        setCart: (_root, variables, { cache }) => {
+          cache.modify({
+            id: cache.identify({
+              __typename: 'Checkout',
+              id: variables.id,
+            }),
+            fields: {
+              cartId: () => variables.cartId,
+            },
+          });
+          return null;
+        },
+      }
     }
 });
 
-// const createCustomer = gql`
-//     mutation customerCreate($input: CustomerCreateInput!) {
-//         customerCreate(input: $input) {
-//         customer {
-//             id
-//         }
-//         customerUserErrors {
-//             code
-//             field
-//             message
-//         }
-//         }
-//     }
-// `;
+const initCache = () => {
+  cache.writeQuery({
+    query: gql`
+      query GetCart {
+        checkout {
+          id
+          cartId
+        }
+      }
+    `,
+    data: {
+      checkout: {
+        id: '1',
+        cartId: '',
+        __typename: 'Checkout',
+      },
+    },
+  });
+};
+
+initCache();
+client.onResetStore(initCache);
 
 export const modifyCheckout = gql`
   mutation checkoutAttributesUpdateV2($checkoutId: ID!, $input: CheckoutAttributesUpdateV2Input!) {
@@ -58,8 +84,24 @@ export const applyDiscountCode = gql`
   }
 `
 
+export const checkInventory = gql`
+  query getInvetoryForProductVariantsByProductHandle($handle:String!) {
+    productByHandle(handle: $handle) {
+      variants(first: 250) {
+        edges {
+          node {
+            id
+            availableForSale
+            quantityAvailable
+          }
+        }
+      }
+    } 
+  }
+`
+
 export const createCheckout = gql`
-  mutation($input: CheckoutCreateInput!) {
+  mutation initCheckout($input: CheckoutCreateInput!) {
     checkoutCreate(input: $input) {
       checkout {
         id

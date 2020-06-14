@@ -1,5 +1,7 @@
 const path = require(`path`);
 const image = require('gatsby-image');
+const { kebabCase } = require('lodash');
+
 // need to do this in the template ☝
 exports.onCreateWebpackConfig = ({
     stage,
@@ -50,7 +52,7 @@ exports.createPages = async ({ graphql, actions }) => {
     result.data.allShopifyProduct.nodes.forEach((node) => {
       createPage({
         // Path for this page — required
-        path: `${node.productType.toLowerCase()}/${node.handle}`,
+        path: `${kebabCase(node.productType)}/${node.handle}`,
         component: productTemplate,
         context: {
           // Add optional context data to be inserted
