@@ -135,7 +135,7 @@ export default ({
         <Layout pageName="product-page">
             <h2>{title}</h2>
             {high !== low && <p>{`Price Ranging from $${low} to $${high}`}</p>}
-            <Img className="w-3/4" fluid={selectedVariant.localFile.childImageSharp.fluid} />
+            {selectedVariant.localFile && <Img className="w-3/4" fluid={selectedVariant.localFile.childImageSharp.fluid} />}
             <p>{description}</p>
             <p>{`Price $${selectedVariant.price}`}</p>
             <div className="actions w-full flex flex-col justify-center items-center my-5">
