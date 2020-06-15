@@ -5,8 +5,13 @@ import { useMutation, useQuery } from "@apollo/client";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import Layout from "../components/Layout";
-import { createCheckout, applyDiscountCode, checkInventory } from "../../graphql";
+import { createCheckout, applyDiscountCode, checkInventory, modifyCheckout } from "../../graphql";
 import { getCart, setCart } from '../../localState';
+
+const getParsedVariants = (arr, title) => arr.map((variant) => ({
+    ...variant,
+    title: variant.title === 'Default Title' ? title : variant.title
+}))
 
 export default ({
     pathContext: {
@@ -21,81 +26,99 @@ export default ({
     path
 }) => {
     const { variants, handle } = shopifyProduct;
+    const { data: cart } = useQuery(getCart);
+    const [parsedVariants] = useState(getParsedVariants(variants, title))
+    const [selectedVariant, setSelectedVariant] = useState(parsedVariants[0]);
+
     const [persistCart] = useMutation(setCart);
-    const [initCheckout, { data: checkout, loading: isCheckoutLoading }] = useMutation(
+    const [applyDiscount, discount] = useMutation(applyDiscountCode);
+    const [discountCode, updateDiscountCode] = useState('');
+    const [updateCart, { loading: isModifyCheckoutLoading }] = useMutation(
+        modifyCheckout,
+        {
+            onCompleted: ({ checkoutLineItemsReplace: existingCart }) => {
+                console.log('new items added to cart: ', existingCart);
+                persistCart({
+                    variables: {
+                        id: '1',
+                        cartId: cart.checkout.cartId,
+                        lineItems: cart.checkout.lineItems.concat([{ variantId: selectedVariant.id, quantity: 1 }]),
+                        totalPrice: existingCart.checkout.totalPriceV2.amount
+                    }
+                });
+            }
+        }
+    );
+    const [initCheckout, { loading: isCheckoutLoading }] = useMutation(
         createCheckout,
         {
             onCompleted: ({ checkoutCreate: newCart }) => {
                 console.log('new cart was created: ', newCart);
-                persistCart({ variables: { id: '1', cartId: 'newCart.checkout.id' }});
+                persistCart({
+                    variables: {
+                        id: '1',
+                        cartId: newCart.checkout.id,
+                        lineItems: [{ variantId: selectedVariant.id, quantity: 1 }],
+                        webUrl: newCart.checkout.webUrl,
+                        totalPrice: newCart.checkout.totalPriceV2.amount
+                    }
+                });
             }
         }
     );
-    const [applyDiscount, discount] = useMutation(applyDiscountCode);
-    const {
-        error: fetchInventoryError,
-        loading: isInventoryLoading,
-        data: freshInventory,
-        refetch: fetchFreshInventory
-    } = useQuery(checkInventory, { variables: { handle } });
-    const { data: cart, refetch: checkCart } = useQuery(getCart);
-    console.log('render!', cart);
-
-    const [discountCode, updateDiscountCode] = useState('');
-    const [parsedVariants] = useState(variants
-        .map((variant) => ({
-            ...variant,
-            title: variant.title === 'Default Title' ? title : variant.title
-        }))
-    );
-    const [selectedVariant, setSelectedVariant] = useState(parsedVariants[0]);
+    const { error: fetchInventoryError, loading: isInventoryLoading, data: freshInventory, refetch: fetchFreshInventory } = useQuery(checkInventory, { variables: { handle } });
     
     const handleSelectVariant = (e) => {
-        const newVariant = parsedVariants.find((node) => node.title === e.target.value);
-        setSelectedVariant(newVariant);
+        setSelectedVariant(parsedVariants.find((node) => node.title === e.target.value));
+    }
+
+    const handleUpdateDiscountCode = (e) => updateDiscountCode(e.target.value);
+
+    const modifyCart = () => {
+        console.log('modify Cart', cart);
+        updateCart({
+            variables: {
+                lineItems: cart.checkout.lineItems.concat({ variantId: selectedVariant.id, quantity: 1 }),
+                checkoutId: cart.checkout.cartId
+            }
+        })
     }
 
     const handleAddToCart = async () => {
-        console.log('heres the cart!', cart);
-        await checkCart();
-        if (!cart.checkout.cartId) {
-            try {
-                await fetchFreshInventory();
-                const isSelectedVariantAvailable = freshInventory.productByHandle
-                    .variants.edges
-                    .find(({ node }) => node.id === selectedVariant.id)
-                    .node.availableForSale
-                if (isSelectedVariantAvailable) {
-                    await initCheckout({
-                        variables: {
-                            input: {
-                                lineItems: [{ variantId: selectedVariant.id, quantity: 1 }]
-                            }
+        try {
+            await fetchFreshInventory();
+            const isSelectedVariantAvailable = freshInventory.productByHandle
+                .variants.edges
+                .find(({ node }) => node.id === selectedVariant.id)
+                .node.availableForSale
+            if (!cart.checkout.cartId && isSelectedVariantAvailable) {
+                await initCheckout({
+                    variables: {
+                        input: {
+                            lineItems: [{ variantId: selectedVariant.id, quantity: 1 }]
                         }
-                    })
-                }
+                    }
+                })
             }
-            catch(e) {
-                console.log(`Error creating checkout: ${e}`);
-                throw e;
+            else {
+                modifyCart();
+                console.log(`cart ${cart.id} needs to be modified, not initialized`);
             }
         }
-        else {
-            // woohoo we persisted the cart
-            // handle modify rather than init cart
-            console.log(`cart ${cart.id} needs to be modified, not initialized`);
+        catch(e) {
+            console.log(`Error creating checkout: ${e}`);
+            throw e;
         }
     };
 
-    const handleUpdateDiscountCode = (e) => updateDiscountCode(e.target.value);
     const handleApplyDiscount = async () => {
-        const checkoutId = checkout.data.checkoutCreate.checkout.id;
+        const checkoutId = cart.checkout.id;
         if (checkoutId) {
            try {
                 await applyDiscount({
                     variables: {
                         discountCode,
-                        checkoutId: checkout.data.checkoutCreate.checkout.id
+                        checkoutId: cart.checkout.id
                     }
                 })
                 console.log(`success applying code: ${discount}`);
@@ -106,20 +129,15 @@ export default ({
            }
         }
     }
-    const isBuyButtonDisabled = (
-        isInventoryLoading ||
-        fetchInventoryError ||
-        isCheckoutLoading
-    );
+    const isBuyButtonDisabled = (isInventoryLoading || fetchInventoryError || isCheckoutLoading || isModifyCheckoutLoading);
+    console.log(`cart`, cart)
     return (
         <Layout pageName="product-page">
             <h2>{title}</h2>
-            <p>{description}</p>
-            <span>{`Variant Id: ${selectedVariant.id}`}</span>
-            <span>{`Product Id: ${shopifyProduct.id}`}</span>
             {high !== low && <p>{`Price Ranging from $${low} to $${high}`}</p>}
+            <Img className="w-3/4" fluid={selectedVariant.localFile.childImageSharp.fluid} />
+            <p>{description}</p>
             <p>{`Price $${selectedVariant.price}`}</p>
-            <Img fluid={selectedVariant.localFile.childImageSharp.fluid} />
             <div className="actions w-full flex flex-col justify-center items-center my-5">
                 <select
                     className="border border-black w-1/2"

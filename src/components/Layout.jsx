@@ -12,7 +12,7 @@ library.add(
 require('../../styles/index.scss');
 
 export default ({ children, pageName = 'default' }) => (
-    <div className="global-container flex flex-col min-h-full">
+    <div className="global-container max-w-3xl m-auto flex justify-center flex-col min-h-full">
         <header className="py-10 px-5 align-center w-full flex justify-center">
             <h1 className="text-2xl">Claire Kendall Art</h1>
             <FontAwesomeIcon className="ml-auto" icon="shopping-cart"  />

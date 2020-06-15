@@ -23,6 +23,9 @@ export const client = new ApolloClient({
             }),
             fields: {
               cartId: () => variables.cartId,
+              lineItems: () => variables.lineItems,
+              webUrl: (existing) => variables.webUrl ? variables.webUrl : existing,
+              totalPrice: () => variables.totalPrice
             },
           });
           return null;
@@ -38,6 +41,9 @@ const initCache = () => {
         checkout {
           id
           cartId
+          lineItems
+          webUrl
+          totalPrice
         }
       }
     `,
@@ -45,6 +51,9 @@ const initCache = () => {
       checkout: {
         id: '1',
         cartId: '',
+        lineItems: [],
+        webUrl: '',
+        totalPrice: 0,
         __typename: 'Checkout',
       },
     },
@@ -55,10 +64,46 @@ initCache();
 client.onResetStore(initCache);
 
 export const modifyCheckout = gql`
-  mutation checkoutAttributesUpdateV2($checkoutId: ID!, $input: CheckoutAttributesUpdateV2Input!) {
-    checkoutAttributesUpdateV2(checkoutId: $checkoutId, input: $input) {
+  mutation checkoutLineItemsReplace($lineItems: [CheckoutLineItemInput!]!, $checkoutId: ID!) {
+    checkoutLineItemsReplace(lineItems: $lineItems, checkoutId: $checkoutId) {
       checkout {
         id
+        ready
+        taxExempt
+        lineItemsSubtotalPrice {
+          amount
+          currencyCode
+        }
+        totalPriceV2 {
+          amount
+          currencyCode
+        }
+      }
+      userErrors {
+        code
+        field
+        message
+      }
+    }
+  }
+`;
+
+export const createCheckout = gql`
+  mutation initCheckout($input: CheckoutCreateInput!) {
+    checkoutCreate(input: $input) {
+      checkout {
+        id
+        webUrl
+        ready
+        taxExempt
+        lineItemsSubtotalPrice {
+          amount
+          currencyCode
+        }
+        totalPriceV2 {
+          amount
+          currencyCode
+        }
       }
       checkoutUserErrors {
         code
@@ -99,32 +144,6 @@ export const checkInventory = gql`
     } 
   }
 `
-
-export const createCheckout = gql`
-  mutation initCheckout($input: CheckoutCreateInput!) {
-    checkoutCreate(input: $input) {
-      checkout {
-        id
-        webUrl
-        ready
-        taxExempt
-        lineItemsSubtotalPrice {
-          amount
-          currencyCode
-        }
-        totalPriceV2 {
-          amount
-          currencyCode
-        }
-      }
-      checkoutUserErrors {
-        code
-        field
-        message
-      }
-    }
-  }
-`;
 
 export const getShopDetails = gql`
     query test {
