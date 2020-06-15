@@ -1,78 +1,70 @@
-const path = require('path')
+/**
+ * Configure your Gatsby site with this file.
+ *
+ * See: https://www.gatsbyjs.org/docs/gatsby-config/
+ */
 
 require('dotenv').config({
   path: `.env`
-})
+});
 
 module.exports = {
   siteMetadata: {
     title: `Ckendall Art V2`,
     description: `Claire Kendall Art; V2.`,
     author: `Maxwell Kendall`,
+    pages: [
+      {
+        name: 'home',
+        link: '/'
+      },
+      {
+        name: 'Cart',
+        link: '/cart'
+      },
+      {
+        name: 'Portfolio',
+        link: '/portfolio'
+      },
+      {
+        name: 'Comissions',
+        link: '/commissions'
+      },
+      {
+        name: 'Shop',
+        link: '/cart'
+      }
+    ]
   },
   plugins: [
-    `gatsby-plugin-react-helmet`,
+    // styles
     {
-      resolve: `gatsby-source-filesystem`,
+      resolve: `gatsby-plugin-sass`,
       options: {
-        name: `images`,
-        path: `${__dirname}/src/images`,
+        postCssPlugins: [
+          require("tailwindcss"),
+          // Optional: Load custom Tailwind CSS configuration
+          // require("./tailwind.config.js"),
+        ],
       },
     },
+    // SEO
+    `gatsby-plugin-react-helmet`,
+    // Image Processing
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
-    `gatsby-plugin-layout`,
+    // for exposing the shopify storefront api
     {
-      resolve: `gatsby-plugin-manifest`,
+      resolve: "gatsby-source-shopify-local",
       options: {
-        name: `gatsby-starter-default`,
-        short_name: `starter`,
-        start_url: `/`,
-        background_color: `#663399`,
-        theme_color: `#663399`,
-        display: `minimal-ui`,
-        icon: `src/images/gatsby-icon.png`, // This path is relative to the root of the site.
+        url: `https://${process.env.SHOP_NAME}.com/api/2020-04/graphql`,
+        headers: {
+          'X-Shopify-Storefront-Access-Token': process.env.SHOPIFY_ACCESS_TOKEN,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
       },
     },
-    {
-      resolve: `gatsby-source-shopify`,
-      options: {
-        // The domain name of your Shopify shop. This is required.
-        // Example: 'gatsby-source-shopify-test-shop' if your Shopify address is
-        // 'gatsby-source-shopify-test-shop.myshopify.com'.
-        shopName: process.env.SHOP_NAME,
+  ]
+};
 
-        // An API access token to your Shopify shop. This is required.
-        // You can generate an access token in the "Manage private apps" section
-        // of your shop's Apps settings. In the Storefront API section, be sure
-        // to select "Allow this app to access your storefront data using the
-        // Storefront API".
-        // See: https://help.shopify.com/api/custom-storefronts/storefront-api/getting-started#authentication
-        accessToken: process.env.SHOPIFY_ACCESS_TOKEN,
-
-        // Set verbose to true to display a verbose output on `npm run develop`
-        // or `npm run build`. This prints which nodes are being fetched and how
-        // much time was required to fetch and process the data.
-        // Defaults to true.
-        verbose: true,
-      },
-    },
-    {
-      resolve: 'gatsby-plugin-root-import',
-      options: {
-        '~': path.join(__dirname, 'src/'),
-      },
-    },
-    {
-      resolve: `gatsby-plugin-google-analytics`,
-      options: {
-        trackingId: "UA-134421805-1",
-        anonymize: true,
-        respectDNT: true,
-      },
-    },
-    // this (optional) plugin enables Progressive Web App + Offline functionality
-    // To learn more, visit: https://gatsby.app/offline
-    // 'gatsby-plugin-offline',
-  ],
-}

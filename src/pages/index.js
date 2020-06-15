@@ -1,20 +1,43 @@
-import React from 'react'
-import { Link } from 'gatsby'
+import React from "react";
+import { useStaticQuery, graphql, Link } from "gatsby";
+import { kebabCase } from "lodash";
 
-import SEO from '~/components/seo'
-import ProductGrid from '~/components/ProductGrid'
+import Layout from "../components/Layout";
 
-const IndexPage = (props) => {
-  console.log("props", props);
+export default (props) => {
+  const { allShopifyProduct: { nodes }} = useStaticQuery(graphql`
+    query HomePageQuery {
+      allShopifyProduct {
+        nodes {
+          productType
+          handle
+          totalInventory
+          variants {
+            availableForSale
+            title
+          }
+          priceRange {
+            high
+            low
+          }
+          collection
+          title
+          slug
+        }
+      }
+    }  
+  `)
   return (
-    <>
-      <SEO title="Home" keywords={[`gatsby`, `application`, `react`]} />
-      <h1>Hi people</h1>
-      <p>Welcome to your new Shop powered by Gatsby and Shopify.</p>
-      <ProductGrid />
-      <Link to="/page-2/">Go to page 2</Link>
-    </>
+    <Layout pageName="home">
+        <ul className="px-5">
+          {nodes
+            .filter((node) => node.totalInventory !== 0)
+            .map((node) => (
+              <li>
+                <Link to={`${kebabCase(node.productType)}/${node.handle}`}>{node.title}</Link>
+              </li>
+            ))}
+        </ul>
+    </Layout>
   );
-};
-
-export default IndexPage
+}

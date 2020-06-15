@@ -1,46 +1,71 @@
-const path = require(`path`)
-const webpack = require('webpack');
+const path = require(`path`);
+const image = require('gatsby-image');
+const { kebabCase } = require('lodash');
 
-exports.createPages = ({ graphql, actions }) => {
+// need to do this in the template ☝
+exports.onCreateWebpackConfig = ({
+    stage,
+    rules,
+    loaders,
+    plugins,
+    actions,
+  }) => {
+    actions.setWebpackConfig({
+      plugins: [
+        plugins.define({
+            GATSBY_SHOP_NAME: JSON.stringify(process.env.SHOP_NAME),
+            GATSBY_ACCESS_TOKEN: JSON.stringify(process.env.SHOPIFY_ACCESS_TOKEN)
+        })
+      ]
+    })
+};
+
+exports.createPages = async ({ graphql, actions }) => {
   const { createPage } = actions
+  const productTemplate = path.resolve(`src/templates/Product.jsx`)
   return graphql(`
-    {
+    query GetProducts {
       allShopifyProduct {
-        edges {
-          node {
-            handle
+        nodes {
+          id
+          title
+          handle
+          description
+          collection
+          priceRange {
+            high
+            low
           }
+          productType
+          totalInventory
         }
       }
+    }  
+  `).then((result) => {
+    if (result.errors) {
+      throw result.errors
     }
-  `).then(result => {
-    result.data.allShopifyProduct.edges.forEach(({ node }) => {
+
+    console.log(`********* RESULT ${result}`);
+
+    // Create product pages.
+    result.data.allShopifyProduct.nodes.forEach((node) => {
       createPage({
-        path: `/product/${node.handle}/`,
-        component: path.resolve(`./src/templates/ProductPage/index.js`),
+        // Path for this page — required
+        path: `${kebabCase(node.productType)}/${node.handle}`,
+        component: productTemplate,
         context: {
-          // Data passed to context is available
-          // in page queries as GraphQL variables.
-          handle: node.handle,
+          // Add optional context data to be inserted
+          // as props into the page component..
+          //
+          // The context data can also be used as
+          // arguments to the page GraphQL query.
+          //
+          // The page "path" is always available as a GraphQL
+          // argument.
+          ...node
         },
       })
     })
   })
-}
-
-exports.onCreateWebpackConfig = ({
-  stage,
-  rules,
-  loaders,
-  plugins,
-  actions,
-}) => {
-  actions.setWebpackConfig({
-    plugins: [
-      plugins.define({
-          GATSBY_SHOP_NAME: JSON.stringify(process.env.SHOP_NAME),
-          GATSBY_ACCESS_TOKEN: JSON.stringify(process.env.SHOPIFY_ACCESS_TOKEN)
-      })
-    ]
-  })
-}
+};
