@@ -173,6 +173,7 @@ exports.onCreateNode = async ({
                         })
                         .then((resp) => {
                             if (i === arr.length - 1) {
+                                console.log("node", node);
                                 processFileNode(resp, arr[arr.length - 1], node);
                             }
                             return resp;
