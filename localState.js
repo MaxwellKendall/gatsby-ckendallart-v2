@@ -12,14 +12,14 @@ export const getCart = gql`
   } 
 `;
 
-export const setCart = gql`
-  mutation setCart(
+export const persistCart = gql`
+  mutation persistCart(
     $id: String,
     $cartId: String,
     $lineItems:[CheckoutLineItemInput!],
     $webUrl: String,
     $totalPrice: String
   ) {
-    setCart(id: $id, cartId: $cartId, lineItems: $lineItems, webUrl: $webUrl, totalPrice: $totalPrice) @client
+    persistCart(id: $id, cartId: $cartId, lineItems: $lineItems, webUrl: $webUrl, totalPrice: $totalPrice) @client
   }
 `;
