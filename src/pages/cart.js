@@ -34,8 +34,6 @@ export default ({
         return acc.concat(parsedProduct.map((variant) => ({ ...variant, productTitle: product.title })))
       }, []);
 
-  console.log('selectedProducts', selectedProducts, cart, products)
-
   return (
     <Layout pageName='order-summary'>
       <ul>

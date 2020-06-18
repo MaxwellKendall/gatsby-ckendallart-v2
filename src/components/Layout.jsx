@@ -23,6 +23,9 @@ library.add(
 require('../../styles/index.scss');
 
 export default ({ children, pageName = 'default' }) => {
+    const x = window === undefined
+        ? null
+        : window;
     const [setCart] = useMutation(persistCart);
     // using data truthy/falsy state for loading until this bug is fixed: https://github.com/apollographql/apollo-client/issues/6334#issuecomment-638981822
     const { data: isFetchExistingCartLoading } = useQuery(getCheckoutById, {
