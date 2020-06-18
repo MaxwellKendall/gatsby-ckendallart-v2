@@ -5,7 +5,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import Layout from "../components/Layout";
-import { createCheckout, applyDiscountCode, checkInventory, modifyCheckout } from "../../graphql";
+import { applyDiscountCode, checkInventory, modifyCheckout } from "../../graphql";
 import { getCart, setCart } from '../../localState';
 import { getParsedVariants } from '../helpers';
 
@@ -15,7 +15,7 @@ export default ({
     }
 }) => {
   const { data: { checkout: cart } } = useQuery(getCart);
-  const selectedProducts = products
+  const selectedVariants = products
       .filter(({ node }) => {
         return node.variants
           .some((variant) => {
@@ -31,20 +31,33 @@ export default ({
           .variants
           .filter((variant) => cart.lineItems.some((item) => item.variantId === variant.id))
 
-        return acc.concat(parsedProduct.map((variant) => ({ ...variant, productTitle: product.title })))
+        return acc.concat(
+          parsedProduct.map((variant) => ({
+            ...variant,
+            quantity: cart.lineItems.find((item) => item.variantId === variant.id).quantity,
+            productTitle: product.title
+          })))
       }, []);
+
+  const removeVariant = (id) => {
+    console.log('removing id', id);
+  };
 
   return (
     <Layout pageName='order-summary'>
       <ul>
-        {selectedProducts.map((product) => {
+        {selectedVariants.map((variant) => {
           return (
             <li>
-              {`${product.productTitle} (${product.title})`}
+              <strong>{`${variant.productTitle} (${variant.title})`}</strong>
+              <span> {`${variant.quantity}(x) at $${variant.price} each.`}</span>
+              <Img fluid={variant.localFile.childImageSharp.fluid} style={{ width: '300px' }} />
+              <FontAwesomeIcon icon="minus-circle" onClick={() => removeVariant(variant.id)} />
             </li>
           );
         })}
       </ul>
+      <span>{`Total: ${cart.totalPrice}`}</span>
     </Layout>
   );
 }
@@ -62,8 +75,8 @@ export const query = graphql`
             id
             localFile {
               childImageSharp {
-                fixed {
-                  base64
+                fluid(maxWidth: 300) {
+                  ...GatsbyImageSharpFluid
                 }
               }
             }

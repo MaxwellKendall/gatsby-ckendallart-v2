@@ -88,7 +88,6 @@ export default ({
     }
 
     const modifyCart = () => {
-        console.log('modify Cart', cart);
         updateCart({
             variables: {
                 lineItems: cart.lineItems.concat({ variantId: selectedVariant.id, quantity: 1 }),
