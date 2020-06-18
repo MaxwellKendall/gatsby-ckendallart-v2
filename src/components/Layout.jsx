@@ -20,6 +20,8 @@ library.add(
     faSpinner
 )
 
+const isSSR = typeof window === 'undefined';
+
 require('../../styles/index.scss');
 
 export default ({ children, pageName = 'default' }) => {
@@ -42,7 +44,7 @@ export default ({ children, pageName = 'default' }) => {
             })
         },
         variables: {
-            id: getCheckoutIdFromLocalStorage(window)
+            id: isSSR ? null : getCheckoutIdFromLocalStorage(window)
         }
     });
 
