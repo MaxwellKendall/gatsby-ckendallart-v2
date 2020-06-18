@@ -12,7 +12,7 @@
     "serve": "gatsby serve",
     "clean": "gatsby clean",
     "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1",
-    "pre-install": "npm run clean"
+    "preinstall": "npm run clean"
   },
   "dependencies": {
     "@apollo/client": "^3.0.0-rc.0",
