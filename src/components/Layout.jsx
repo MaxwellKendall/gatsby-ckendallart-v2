@@ -27,7 +27,7 @@ require('../../styles/index.scss');
 export default ({ children, pageName = 'default' }) => {
     const [setCart] = useMutation(persistCart);
     // using data truthy/falsy state for loading until this bug is fixed: https://github.com/apollographql/apollo-client/issues/6334#issuecomment-638981822
-    const { data: isFetchExistingCartLoading } = useQuery(getCheckoutById, {
+    const { data: isFetchExistingCartLoading, error: isFetchExistingCartErrored } = useQuery(getCheckoutById, {
         onCompleted: ({ node: remoteCart}) => {
             // set cart to whatever the remote cart is.
             setCart({
@@ -45,6 +45,11 @@ export default ({ children, pageName = 'default' }) => {
         }
     });
 
+    const showLoading = (
+        !isFetchExistingCartErrored ||
+        !isFetchExistingCartLoading
+    );
+
     return (
         <div className="global-container max-w-3xl m-auto flex justify-center flex-col min-h-full">
             <header className="py-10 px-5 align-center w-full flex justify-center">
@@ -54,8 +59,8 @@ export default ({ children, pageName = 'default' }) => {
                 </Link>
             </header>
             <main className={`${pageName} flex flex-col h-full flex-grow px-10`}>
-                {!isFetchExistingCartLoading && <FontAwesomeIcon icon="spinner" spin size="6x" />}
-                {isFetchExistingCartLoading && children}
+                {showLoading && <FontAwesomeIcon icon="spinner" spin size="6x" />}
+                {!showLoading && children}
             </main>
             <footer className='flex-shrink-0 p-5 text-center'>
                 {`Claire Kendall Art, ${new Date().getFullYear()}`}
