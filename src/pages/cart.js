@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
 import { graphql } from 'gatsby';
 import Img from "gatsby-image";
-import { useMutation, useQuery } from "@apollo/client";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+import CartContext from "../../globalState";
 import Layout from "../components/Layout";
-import { applyDiscountCode, checkInventory, modifyCheckout } from "../../graphql";
-import { getCart, setCart } from '../../localState';
 import { getParsedVariants } from '../helpers';
 
 export default ({
@@ -14,7 +12,8 @@ export default ({
       allShopifyProduct: { edges: products }
     }
 }) => {
-  const { data: { checkout: cart } } = useQuery(getCart);
+  const { cart, dispatch } = useContext(CartContext);
+  console.log('cart on cart page', cart, dispatch);
   const selectedVariants = products
       .filter(({ node }) => {
         return node.variants
@@ -39,9 +38,7 @@ export default ({
           })))
       }, []);
 
-  const removeVariant = (id) => {
-    console.log('removing id', id);
-  };
+  const removeVariant = () => console.log('hi there');
 
   return (
     <Layout pageName='order-summary'>

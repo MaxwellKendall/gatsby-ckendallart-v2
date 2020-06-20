@@ -1,11 +1,16 @@
 import React from 'react';
-// import { ApolloProvider } from '@apollo/react-hooks';
-import { ApolloProvider } from '@apollo/client';
+import CartContext, { useCart } from './globalState';
 
-import { client } from './graphql';
 
-export const wrapRootElement = ({ element }) => (
-    <ApolloProvider connectToDevTools={true} client={client}>
-        {element}
-    </ApolloProvider>
-);
+const Wrapper = ({ children }) => {
+    const [cartState, dispatch] = useCart();
+    return (
+        <CartContext.Provider value={{cart: cartState, dispatch }}>
+            {children}
+        </CartContext.Provider>
+    );
+}
+
+export const wrapRootElement = ({ element }) => {
+    return <Wrapper children={element} />;
+};
