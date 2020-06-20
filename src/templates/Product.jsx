@@ -7,7 +7,7 @@ import moment from 'moment';
 import CartContext from "../../globalState";
 import Layout from "../components/Layout";
 import { getParsedVariants, localStorageKey, getLineItemFromVariant } from '../helpers';
-import { initCheckout, addNewLineItemsToCart } from '../../client';
+import { initCheckout, addNewLineItemsToCart, fetchProductInventory } from '../../client';
 
 export default ({
     pathContext: {
@@ -34,7 +34,6 @@ export default ({
     }
 
     const modifyCart = (cartId) => {
-        console.log('cartId', cartId);
         return addNewLineItemsToCart(cartId, getLineItemFromVariant(selectedVariant))
             .then((resp) => {
                 console.log('modifyCart', resp)
@@ -45,26 +44,28 @@ export default ({
             });
     }
 
-    const handleAddToCart = () => {
+    const handleAddToCart = async () => {
         setIsLoading(true);
+        // TODO: We should update the buy button state based on the selected variants availableForSale property value.
+        const inventoryExists = await fetchProductInventory(shopifyProduct.id, 2);
+        console.log('next line');
+        if (!inventoryExists) return Promise.resolve();
         if (cart.id) {
-            modifyCart(cart.id)
+            return modifyCart(cart.id)
         }
-        else {
-            initCheckout()
-                .then((resp) => {
-                    const timeStamp = moment.now('DD MM YYYY hh:mm:ss');
-                    window.localStorage.setItem(localStorageKey, JSON.stringify({'id': resp.id, timeStamp }))
-                    dispatch({ type: 'INIT_CART', payload: resp });
-                    return resp
-                })
-                .then((newCart) => {
-                    modifyCart(newCart.id)
-                })
-                .catch((e) => {
-                    console.log('error initCheckout', e);
-                })
-        }
+        return initCheckout()
+            .then((resp) => {
+                const timeStamp = moment.now('DD MM YYYY hh:mm:ss');
+                window.localStorage.setItem(localStorageKey, JSON.stringify({'id': resp.id, timeStamp }))
+                dispatch({ type: 'INIT_CART', payload: resp });
+                return resp
+            })
+            .then((newCart) => {
+                modifyCart(newCart.id)
+            })
+            .catch((e) => {
+                console.log('error initCheckout', e);
+            })
     };
 
     const isBuyButtonDisabled = (

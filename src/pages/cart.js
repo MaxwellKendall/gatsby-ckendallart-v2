@@ -35,7 +35,8 @@ export default ({
           parsedProduct.map((variant) => ({
             ...variant,
             quantity: cart.lineItems.find((item) => item.variantId === variant.id).quantity,
-            productTitle: product.title
+            productTitle: product.title,
+            productId: product.id
           })))
       }, []);
 

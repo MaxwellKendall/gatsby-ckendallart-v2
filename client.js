@@ -42,3 +42,12 @@ export const removeFromCart = (checkoutId, lineItemIdsToRemove) => {
     return checkout; // Checkout with line item 'xyz' removed
   });
 };
+
+export const fetchProductInventory = (productId, requestedQuantity) => {
+  // remove hard code later.
+  return client.product.fetch('Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0LzQ1NDY2NTU2MTcwNzg=').then((product) => {
+    // Do something with the product
+    console.log('product', product)
+    return product.availableForSale;
+  });
+}
