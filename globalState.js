@@ -1,21 +1,27 @@
 import React, { useReducer } from 'react';
 
+import { parseLineItemsFromCheckout } from './src/helpers';
+
 const initialState = {
-    cartId: null,
+    id: null,
     lineItems: []
 };
 
 export const reducer = (state, action) => {
     switch (action.type) {
         case 'INIT_CART': {
+            return action.payload;
+        };
+        case 'INIT_REMOTE_CART': {
             return {
-                ...action.payload
-            }
+                ...action.payload,
+                lineItems: parseLineItemsFromCheckout(action.payload)
+            };
         };
         case 'ADD_TO_CART': {
             return {
-                ...state,
-                lineItems: state.lineItems.concat(action.payload)
+                ...action.payload,
+                lineItems: state.lineItems.concat(parseLineItemsFromCheckout(action.payload))
             };
         };
         case 'UPDATE_CART': {
@@ -32,8 +38,8 @@ export const reducer = (state, action) => {
         };
         case 'REMOVE_FROM_CART': {
             return {
-                ...state,
-                lineItems: state.lineItems.filter((item) => item.variantId !== action.payload.variantId)
+                ...action.payload,
+                lineItems: parseLineItemsFromCheckout(action.payload)
             };
         };
     }
