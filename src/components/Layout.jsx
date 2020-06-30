@@ -1,6 +1,12 @@
 import React, { useContext, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCopyright, faShoppingCart, faSpinner, faMinusCircle } from '@fortawesome/free-solid-svg-icons';
+import {
+    faCopyright,
+    faShoppingCart,
+    faSpinner,
+    faMinusCircle,
+    faPlusCircle
+} from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { Link } from 'gatsby';
 import moment from 'moment';
@@ -13,7 +19,8 @@ library.add(
     faCopyright,
     faShoppingCart,
     faSpinner,
-    faMinusCircle
+    faMinusCircle,
+    faPlusCircle
 );
 
 const isSSR = typeof window === 'undefined';
@@ -24,7 +31,7 @@ export default ({ children, pageName = 'default' }) => {
     const { cart, dispatch } = useContext(CartContext);
     useEffect(() => {
         const existingCart = JSON.parse(window.localStorage.getItem(localStorageKey));
-        if (existingCart) {
+        if (existingCart && !cart.id) {
             const ageOfCart = moment.duration(moment().diff(moment(existingCart.timeStamp))).asHours();
             const isCartExpired = ageOfCart > 23.9;
             if (isCartExpired) {

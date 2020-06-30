@@ -31,7 +31,7 @@ export const addNewLineItemsToCart = (checkoutId, lineItemsToAdd) => {
 
 export const updateExistingLineItemsInCart = (checkoutId, updatedLineItems) => {
   // Update the line item on the checkout (change the quantity or variant)
-  return client.checkout.updateLineItems(checkoutId, lineItemsToUpdate).then((checkout) => {
+  return client.checkout.updateLineItems(checkoutId, updatedLineItems).then((checkout) => {
    return checkout;
   });
 };
@@ -43,9 +43,9 @@ export const removeFromCart = (checkoutId, lineItemIdsToRemove) => {
   });
 };
 
-export const fetchProductInventory = (productId, requestedQuantity) => {
+export const fetchProductInventory = (productId) => {
   // remove hard code later.
-  return client.product.fetch('Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0LzQ1NDY2NTU2MTcwNzg=').then((product) => {
+  return client.product.fetch(productId).then((product) => {
     // Do something with the product
     console.log('product', product)
     return product.availableForSale;

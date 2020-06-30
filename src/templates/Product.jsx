@@ -23,7 +23,6 @@ export default ({
 }) => {
     const { cart, dispatch } = useContext(CartContext);
     const [isLoading, setIsLoading] = useState(false);
-    console.log('cart on product page', cart);
     const { variants, handle } = shopifyProduct;
     // Available & Selected Inventory
     const [parsedVariants] = useState(getParsedVariants(variants, title))
@@ -36,7 +35,6 @@ export default ({
     const modifyCart = (cartId) => {
         return addNewLineItemsToCart(cartId, getLineItemFromVariant(selectedVariant))
             .then((resp) => {
-                console.log('modifyCart', resp)
                 dispatch({ type: 'ADD_TO_CART', payload: resp });
             })
             .then(() => {
@@ -47,8 +45,7 @@ export default ({
     const handleAddToCart = async () => {
         setIsLoading(true);
         // TODO: We should update the buy button state based on the selected variants availableForSale property value.
-        const inventoryExists = await fetchProductInventory(shopifyProduct.id, 2);
-        console.log('next line');
+        const inventoryExists = await fetchProductInventory(shopifyProduct.productId);
         if (!inventoryExists) return Promise.resolve();
         if (cart.id) {
             return modifyCart(cart.id)
@@ -68,9 +65,6 @@ export default ({
             })
     };
 
-    const isBuyButtonDisabled = (
-        false
-    );
     return (
         <Layout pageName="product-page">
             <h2>{title}</h2>
@@ -90,11 +84,11 @@ export default ({
                 </select>
                 <button
                     className="border border-black w-1/2"
-                    disabled={isBuyButtonDisabled}
+                    disabled={isLoading}
                     onClick={handleAddToCart}>
-                    {isBuyButtonDisabled
+                    {isLoading
                         ? <FontAwesomeIcon icon="spinner" spin />
-                        : 'Buy'
+                        : 'Add to Cart'
                     }
                 </button>
             </div>
@@ -107,6 +101,7 @@ export const query = graphql`
         shopifyProduct(id: {eq: $id}) {
             id
             handle
+            productId
             variants {
                 price
                 title
