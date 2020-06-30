@@ -46,8 +46,6 @@ exports.createPages = async ({ graphql, actions }) => {
       throw result.errors
     }
 
-    console.log(`********* RESULT ${result}`);
-
     // Create product pages.
     result.data.allShopifyProduct.nodes.forEach((node) => {
       createPage({
