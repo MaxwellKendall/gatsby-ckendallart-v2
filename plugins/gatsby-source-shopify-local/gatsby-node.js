@@ -126,7 +126,7 @@ const processFileNode = (fileNode, previousImage, node) => {
             : [fileNode.base]
     }
 }
-
+// I think this should actually be exports.downloadMediaFiles! https://www.gatsbyjs.org/packages/gatsby-source-filesystem/
 exports.onCreateNode = async ({
     node,
     actions: { createNode },
