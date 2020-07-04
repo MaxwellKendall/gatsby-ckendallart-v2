@@ -31,7 +31,7 @@ export default ({
 
     const checkInventory = useCallback(async () => {
         setIsLoading(true);
-        const inventoryExists = await fetchProductInventory(shopifyProduct.productId);
+        const inventoryExists = await fetchProductInventory(selectedVariant.id);
         if (!inventoryExists) {
             setIsSoldOut(true);
         }

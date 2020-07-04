@@ -30,7 +30,7 @@ exports.sourceNodes = async ({ actions, createNodeId, createContentDigest }, opt
     // Data can come from anywhere, but for now create it manually
     const createNodeWithMeta = (id, content, name) => ({
         ...content,
-        id: createNodeId(`my-data-${id}`),
+        id: createNodeId(`${id}`),
         parent: null,
         children: [],
         internal: {
@@ -126,7 +126,7 @@ const processFileNode = (fileNode, previousImage, node) => {
             : [fileNode.base]
     }
 }
-// I think this should actually be exports.downloadMediaFiles! https://www.gatsbyjs.org/packages/gatsby-source-filesystem/
+// https://www.gatsbyjs.org/packages/gatsby-source-filesystem/
 exports.onCreateNode = async ({
     node,
     actions: { createNode },

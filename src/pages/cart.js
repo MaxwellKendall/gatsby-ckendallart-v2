@@ -53,7 +53,7 @@ const CartPage = ({
 
   const addVariant = async (lineItemId, productId, quantity, variantId) => {
     setIncrementIsLoading(true)
-    const isAvailable = await fetchProductInventory(productId)
+    const isAvailable = await fetchProductInventory(variantId, quantity + 1);
     if (!isAvailable) {
       setIsUnavailable(true);
       debounce(() => setIsUnavailable(false), 2000);

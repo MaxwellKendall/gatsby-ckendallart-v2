@@ -1,16 +1,30 @@
 /* eslint-disable no-undef */
 import Client from 'shopify-buy';
+import fetch from 'isomorphic-fetch';
 
 const client = Client.buildClient({
   domain: `${GATSBY_SHOP_NAME}.myshopify.com`,
   storefrontAccessToken: GATSBY_ACCESS_TOKEN
 });
 
-export const fetchProductInventory = (productId) => {
+const adminAPIBaseUrl = `https://emrik8wwe3.execute-api.us-east-1.amazonaws.com/TEST/inventory`;
+
+export const fetchProductInventory = (variantId, quantity = 1) => {
+  const parsedVariantId = window.atob(variantId).split('/').pop();
   // remove hard code later.
-  return client.product.fetch(productId).then((product) => {
-    // Do something with the product
-    return product.availableForSale;
+  return window.fetch(`${adminAPIBaseUrl}?variantId=${parsedVariantId}`, {
+    method: 'get',
+    mode: 'cors',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(({ body }) => {
+    console.log('body', body);
+    return body.variant.inventory_quantity >= quantity;
+  })
+  .catch((e) => {
+    console.log('Error fetching inventory', e);
   });
 }
 
