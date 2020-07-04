@@ -11,25 +11,26 @@ export const getCheckoutIdFromLocalStorage = (window) => {
 };
 
 export const getImages = (selectedVariantIds, products) => {
-    debugger;
     return products
         .filter((product) => {
             return product.variants.some((variant) => selectedVariantIds.includes(variant.id))
         })
         .reduce((acc, product) => {
-            const selectedVariant = product.variants.find((variant) => selectedVariantIds.includes(variant.id));
-            return {
-                ...acc,
-                [selectedVariant.id]: selectedVariant.localFile.childImageSharp.fluid
-            }
+            const selectedProductVariants = product.variants.filter((variant) => selectedVariantIds.includes(variant.id));
+            return selectedProductVariants.reduce((nestedAcc, variant) => {
+                return {
+                    ...nestedAcc,
+                    [variant.id]: variant.localFile.childImageSharp.fluid
+                };
+            }, acc);
         }, {});
 }
 
 const keysAndPathsForCustomAttributes = [
     ['productId', 'productId'],
-    ['pricePerUnit', 'variant.price'],
+    ['pricePerUnit', 'selectedVariant.price'],
     ['productTitle', 'title'],
-    ['variantTitle', 'variant.title'],
+    ['variantTitle', 'selectedVariant.title'],
     ['handle', 'handle'],
     ['collection', 'productType']
 ];
@@ -56,15 +57,6 @@ export const parseLineItemsFromRemoteCart = (cart, additionalCustomAttributes = 
         customAttributes: item.customAttributes.some((attr) => attr.key === 'lineItemId')
             ? item.customAttributes
             : item.customAttributes.concat([{ key: 'lineItemId', value: item.id }])
-        // customAttributes: item.customAttributes.length > 0 ? item.customAttributes : [
-        //     { key: 'lineItemId', value: item.id },
-        //     { key: 'productId', value: item.variant.product.id },
-        //     { key: 'pricePerUnit', value: `$${item.variant.price}` },
-        //     { key: 'productTitle', value: `${item.title}` },
-        //     { key: 'variantTitle', value: item.variant.title === 'Default Title' ? item.title : item.variant.title },
-        //     { key: 'handle', value: item.variant.product.handle },
-        //     ...additionalCustomAttributes.reduce((acc, attr) => acc.concat([{ key: attr.key, value: attr.value }]), [])
-        // ]
     }))
 };
 
@@ -84,12 +76,13 @@ export const parseDataFromRemoteCart = (cart, products) => {
         totalPrice,
         totalTax,
         webUrl,
+        lineItems,
         imagesByVariantId: getImages(lineItems.map((item) => item.variantId), products)
     };
 };
 
 export const getLineItemForAddToCart = (product) => [{
-    variantId: product.variant.id,
+    variantId: product.selectedVariant.id,
     quantity: 1,
     customAttributes: addCustomAttributesToLineItem(product)
 }];

@@ -16,40 +16,18 @@ export const reducer = (state, action) => {
             return action.payload;
         };
         case 'INIT_REMOTE_CART': {
-            console.log('action', action)
             return parseDataFromRemoteCart(action.payload, action.products)
         };
         case 'ADD_TO_CART': {
-            const dataForNewLineItem = parseDataFromRemoteCart(action.payload, action.products);
-            return {
-                ...dataForNewLineItem,
-                imagesByVariantId: {
-                    ...state.imagesByVariantId,
-                    ...dataForNewLineItem.imagesByVariantId
-                },
-                lineItems: parseLineItemsFromRemoteCart(action.payload, [{
-                    key: 'collection',
-                    value: action.collection
-                }])
-            };
+            return parseDataFromRemoteCart(action.payload, action.products);
         };
         case 'UPDATE_CART': {
-            console.log('action.payload for remove from cart', action.payload)
-            const dataForNewLineItem = parseDataFromRemoteCart(action.payload, action.products);
             return {
-                ...dataForNewLineItem,
-                imagesByVariantId: state.imagesByVariantId,
-                lineItems: state.lineItems
-                    .map((item) => {
-                        if (item.variantId === action.payload.variantId) {
-                            return parseLineItemsFromRemoteCart(action.payload)[0];
-                        }
-                        return item
-                    })
+                ...parseDataFromRemoteCart(action.payload, action.products),
+                imagesByVariantId: state.imagesByVariantId
             };
         };
         case 'REMOVE_FROM_CART': {
-            console.log('action.payload for remove from cart', action.payload)
             const dataForNewLineItem = parseDataFromRemoteCart(action.payload, action.products);
             return {
                 ...dataForNewLineItem,
@@ -57,8 +35,7 @@ export const reducer = (state, action) => {
                     ...Object.keys(state.imagesByVariantId)
                         .filter((key) => key !== action.payload.variantId)
                         .reduce((acc, key) => ({ [key]: state.imagesByVariantId[key] }))
-                },
-                lineItems: parseLineItemsFromRemoteCart(action.payload)
+                }
             };
         };
         case 'RESET_CART': {

@@ -51,11 +51,12 @@ export default ({ children, pageName = 'default' }) => {
         }
     }, []);
 
-    console.log('cart', cart);
     return (
         <div className="global-container max-w-3xl m-auto flex justify-center flex-col min-h-full">
             <header className="py-10 px-5 align-center w-full flex justify-center">
-                <h1 className="text-2xl">Claire Kendall Art</h1>
+                <Link to='/'>
+                    <h1 className="text-2xl">Claire Kendall Art</h1>
+                </Link>
                 <Link to='/cart'>
                     <FontAwesomeIcon className="ml-auto" icon="shopping-cart" />
                 </Link>

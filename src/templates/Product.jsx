@@ -51,7 +51,6 @@ export default ({
     }
 
     const modifyCart = (cartId) => {
-        debugger;
         const isExistingLineItem = isVariantInCart(cart, selectedVariant.id);
         if (isExistingLineItem) {
             const lineItemToUpdate = getLineItemForUpdateToCart(cart.lineItems, selectedVariant.id);
@@ -63,13 +62,12 @@ export default ({
                     setIsLoading(false);
                 });
         }
-        return addLineItemsToCart(cartId, getLineItemForAddToCart({ ...shopifyProduct, variant: selectedVariant }))
+        return addLineItemsToCart(cartId, getLineItemForAddToCart({ ...shopifyProduct, selectedVariant }))
             .then((payload) => {
-                console.log('payload', payload);
                 dispatch({
                     type: 'ADD_TO_CART',
                     payload,
-                    products: [shopifyProduct],
+                    products: products,
                     collection: kebabCase(productType)
                 });
             })
@@ -80,7 +78,6 @@ export default ({
 
     const handleAddToCart = async (e) => {
         e.preventDefault();
-        console.log('handleAddToCart')
         setIsLoading(true);
         if (cart.id) {
             return modifyCart(cart.id);
