@@ -14,6 +14,7 @@ import moment from 'moment';
 import CartContext from "../../globalState";
 import { localStorageKey } from '../helpers';
 import { fetchCart } from '../../client';
+import { useProducts } from '../graphql';
 
 library.add(
     faCopyright,
@@ -29,22 +30,28 @@ require('../../styles/index.scss');
 
 export default ({ children, pageName = 'default' }) => {
     const { cart, dispatch } = useContext(CartContext);
-    useEffect(() => {
-        const existingCart = JSON.parse(window.localStorage.getItem(localStorageKey));
-        if (existingCart && !cart.id) {
-            const ageOfCart = moment.duration(moment().diff(moment(existingCart.timeStamp))).asHours();
+    const products = useProducts();
+;    useEffect(() => {
+        const cartFromStorage = JSON.parse(window.localStorage.getItem(localStorageKey));
+        if (cartFromStorage && !cart.id) {
+            const ageOfCart = moment.duration(moment().diff(moment(cartFromStorage.timeStamp))).asHours();
             const isCartExpired = ageOfCart > 23.9;
             if (isCartExpired) {
                 window.localStorage.removeItem(localStorageKey);
             }
             else {
-                fetchCart(existingCart.id)
-                    .then((resp) => {
-                        dispatch({ type: 'INIT_REMOTE_CART', payload: resp })
+                fetchCart(cartFromStorage.id)
+                    .then((payload) => {
+                        dispatch({ type: 'INIT_REMOTE_CART', payload, products })
                     })
             }
         }
+        else if (!cartFromStorage && cart.id) {
+            dispatch({ 'type': 'RESET_CART' });
+        }
     }, []);
+
+    console.log('cart', cart);
     return (
         <div className="global-container max-w-3xl m-auto flex justify-center flex-col min-h-full">
             <header className="py-10 px-5 align-center w-full flex justify-center">

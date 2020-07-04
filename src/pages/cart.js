@@ -1,132 +1,108 @@
-import React, { useContext, useState, useEffect } from "react"
+import React, { useContext, useState } from "react"
 import { graphql, Link } from "gatsby"
 import Img from "gatsby-image"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 import CartContext from "../../globalState"
 import Layout from "../components/Layout"
+import { getCustomAttributeFromCartByVariantId } from "../helpers"
 import {
-  getParsedVariants,
-  getLineItemIdByVariantId,
-  getLineItemFromVariant,
-} from "../helpers"
-import {
-  removeFromCart,
+  removeLineItemsFromCart,
   fetchProductInventory,
-  updateExistingLineItemsInCart,
+  updateLineItemsInCart,
 } from "../../client"
+import { debounce, uniqueId, kebabCase } from "lodash"
+import { useProducts } from "../graphql"
 
-const getSelectedVariantsFromCart = (cart, products) => {
-	console.log('getSelectedVariantsFromCart called');
-	return products
-		.filter(({ node }) => {
-			return node.variants.some(variant => {
-				return cart.lineItems.some(
-					lineItem => lineItem.variantId === variant.id
-				)
-			})
-		})
-		.map(({ node }) => ({
-			...node,
-			variants: getParsedVariants(node.variants, node.title),
-		}))
-		.reduce((acc, product) => {
-			const parsedProduct = product.variants.filter(variant =>
-			cart.lineItems.some(item => item.variantId === variant.id)
-			)
-
-			return acc.concat(
-				parsedProduct.map(variant => ({
-					...variant,
-					quantity: cart.lineItems.find(item => item.variantId === variant.id)
-					.quantity,
-					productTitle: product.title,
-					productId: product.productId,
-				}))
-			)
-		}, [])
+const AddOrRemoveInventoryIcon = ({ isLoading, icon, handler }) => {
+  if (isLoading) {
+    return <FontAwesomeIcon icon="spinner" spin />;
+  }
+  return <FontAwesomeIcon icon={icon} onClick={handler} />;
 }
 
 const CartPage = ({
   data: {
-    allShopifyProduct: { edges: products },
+    allShopifyProduct: { nodes }
   }
 }) => {
-  const { cart, dispatch } = useContext(CartContext)
-  const [isLoading, setIsLoading] = useState(false)
-  const [selectedVariants, setSelectedVariants] = useState(
-    getSelectedVariantsFromCart(cart, products)
-  );
+  const products = useProducts();
+  const { cart, dispatch } = useContext(CartContext);
+  const [isIncrementLoading, setIncrementIsLoading] = useState(false)
+  const [isDecrementLoading, setDecrementIsLoading] = useState(false)
 
-  const updateSelectedVariants = () => {
-    setSelectedVariants(getSelectedVariantsFromCart(cart, products))
+  const [isUnavailable, setIsUnavailable] = useState(false);
+
+  const removeVariant = (lineItemId, quantity, variantId) => {
+    setDecrementIsLoading(true);
+    if (quantity > 1) {
+      // decrement the quantity
+      return updateLineItemsInCart(cart.id, [{ id: lineItemId, quantity: quantity - 1 }])
+        .then((payload) => {
+          dispatch({ type: "UPDATE_CART", payload: { ...payload, variantId: variantId }, products })
+          setDecrementIsLoading(false);
+        })
+    }
+    // remove the variant altogether
+    return removeLineItemsFromCart(cart.id, [lineItemId])
+      .then((payload) => {
+        dispatch({ type: "REMOVE_FROM_CART", payload, products })
+        setDecrementIsLoading(false);
+      })
   };
 
-  useEffect(() => {
-    updateSelectedVariants()
-  }, [cart]);
-
-  const removeVariant = (variantId) => {
-    const lineItemId = getLineItemIdByVariantId(cart, variantId)
-    return removeFromCart(cart.id, [lineItemId])
-      .then(resp => {
-        console.log("resp", resp)
-        dispatch({ type: "REMOVE_FROM_CART", payload: resp })
-      })
-      .then(() => {
-        updateSelectedVariants()
-      })
-  };
-
-  const addVariant = async (id) => {
-    setIsLoading(true)
-    const variant = selectedVariants.find(variant => variant.id === id)
-    const isAvailable = await fetchProductInventory(variant.productId)
-    if (!isAvailable) return Promise.resolve()
-    const existingLineItem = cart.lineItems.find((item) => item.variantId === id);
-    const lineItemId = getLineItemIdByVariantId(cart, id);
-      return updateExistingLineItemsInCart(cart.id, [{ id: lineItemId, quantity: existingLineItem.quantity++ }])
-      .then(resp => {
-        console.log('updateExistingLineItemsInCart', resp)
-        dispatch({ type: "UPDATE_CART", payload: resp })
-      })
-      .then(() => {
-        setIsLoading(false)
-      })
-      .then(() => {
-        updateSelectedVariants()
-      })
+  const addVariant = async (lineItemId, productId, quantity, variantId) => {
+    setIncrementIsLoading(true)
+    const isAvailable = await fetchProductInventory(productId)
+    if (!isAvailable) {
+      setIsUnavailable(true);
+      debounce(() => setIsUnavailable(false), 2000);
+      return;
+    }
+    return updateLineItemsInCart(cart.id, [{ id: lineItemId, quantity: quantity + 1 }])
+    .then(payload => {
+      dispatch({ type: "UPDATE_CART", payload: { ...payload, variantId: variantId }, products })
+    })
+    .then(() => {
+      setIncrementIsLoading(false);
+    })
   };
 
   return (
     <Layout pageName="order-summary">
+      {isUnavailable && <span>Out of stock! You got the last one! :)</span>}
       <ul>
-        {selectedVariants.map(variant => {
-          return (
-            <li>
-              <strong>{`${variant.id}`}</strong>
-              <strong>{`${variant.productTitle} (${variant.title})`}</strong>
-              <span>
-                {" "}
-                {`${variant.quantity}(x) at $${variant.price} each.`}
-              </span>
-              <Img
-                fluid={variant.localFile.childImageSharp.fluid}
-                style={{ width: "300px" }}
-              />
-              <FontAwesomeIcon
-                icon="minus-circle"
-                onClick={e => removeVariant(variant.id)}
-              />
-              <FontAwesomeIcon
-                icon="plus-circle"
-                onClick={e => addVariant(variant.id)}
-              />
-            </li>
-          )
-        })}
+        {cart.lineItems
+          .filter((item) => item.variantId)
+          .map(lineItem => {
+            const { variantId, quantity } = lineItem;
+            const image = cart.imagesByVariantId[variantId];
+            const lineItemId = getCustomAttributeFromCartByVariantId([lineItem], variantId, 'lineItemId');
+            const pricePerItem = getCustomAttributeFromCartByVariantId([lineItem], variantId, 'pricePerUnit');
+            const productTitle = getCustomAttributeFromCartByVariantId([lineItem], variantId, 'productTitle');
+            const variantTitle = getCustomAttributeFromCartByVariantId([lineItem], variantId, 'variantTitle');
+            const productId = getCustomAttributeFromCartByVariantId([lineItem], variantId, 'productId');
+            const handle = `${kebabCase(getCustomAttributeFromCartByVariantId([lineItem], variantId, 'collection'))}/${getCustomAttributeFromCartByVariantId([lineItem], variantId, 'handle')}`;
+            return (
+              <li key={uniqueId('')}>
+                <Link to={handle}>
+                  <Img
+                    fluid={image}
+                    style={{ width: "300px" }} />
+                  <strong>{`${productTitle} (${variantTitle})`}</strong>
+                  <span>
+                    {` ${quantity}(x) at ${pricePerItem} each.`}
+                  </span>
+                </Link>
+                <AddOrRemoveInventoryIcon isLoading={isDecrementLoading} icon='minus-circle' handler={(e) => removeVariant(lineItemId, quantity, variantId)} />
+                <AddOrRemoveInventoryIcon isLoading={isIncrementLoading} icon='plus-circle' handler={(e) => addVariant(lineItemId, productId, quantity, variantId)} />
+              </li>
+            )
+          })}
       </ul>
       <span>{`Total: ${cart.totalPrice ? cart.totalPrice : "$0.00"}`}</span>
+      <span>{`Total Tax Applied: ${cart.totalTax ? cart.totalTax : "$0.00"}`}</span>
+      <button><a href={cart.webUrl}>Checkout</a></button>
     </Layout>
   )
 }
@@ -134,20 +110,18 @@ const CartPage = ({
 export const query = graphql`
   query OrderSummary {
     allShopifyProduct {
-      edges {
-        node {
+      nodes {
+        title
+        productType
+        productId
+        variants {
+          price
           title
-          productType
-          productId
-          variants {
-            price
-            title
-            id
-            localFile {
-              childImageSharp {
-                fluid(maxWidth: 300) {
-                  ...GatsbyImageSharpFluid
-                }
+          id
+          localFile {
+            childImageSharp {
+              fluid(maxWidth: 300) {
+                ...GatsbyImageSharpFluid
               }
             }
           }

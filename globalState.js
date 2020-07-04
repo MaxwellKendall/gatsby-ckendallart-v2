@@ -1,10 +1,13 @@
 import React, { useReducer } from 'react';
-
-import { parseLineItemsFromCheckout } from './src/helpers';
+import { parseDataFromRemoteCart, parseLineItemsFromRemoteCart } from './src/helpers';
 
 const initialState = {
     id: null,
-    lineItems: []
+    totalPrice: null,
+    totalTax: null,
+    webUrl: null,
+    lineItems: [],
+    imagesByVariantId: {}
 };
 
 export const reducer = (state, action) => {
@@ -13,35 +16,57 @@ export const reducer = (state, action) => {
             return action.payload;
         };
         case 'INIT_REMOTE_CART': {
-            return {
-                ...action.payload,
-                lineItems: parseLineItemsFromCheckout(action.payload)
-            };
+            console.log('action', action)
+            return parseDataFromRemoteCart(action.payload, action.products)
         };
         case 'ADD_TO_CART': {
+            const dataForNewLineItem = parseDataFromRemoteCart(action.payload, action.products);
             return {
-                ...action.payload,
-                lineItems: state.lineItems.concat(parseLineItemsFromCheckout(action.payload))
+                ...dataForNewLineItem,
+                imagesByVariantId: {
+                    ...state.imagesByVariantId,
+                    ...dataForNewLineItem.imagesByVariantId
+                },
+                lineItems: parseLineItemsFromRemoteCart(action.payload, [{
+                    key: 'collection',
+                    value: action.collection
+                }])
             };
         };
         case 'UPDATE_CART': {
+            console.log('action.payload for remove from cart', action.payload)
+            const dataForNewLineItem = parseDataFromRemoteCart(action.payload, action.products);
             return {
-                ...state,
+                ...dataForNewLineItem,
+                imagesByVariantId: state.imagesByVariantId,
                 lineItems: state.lineItems
                     .map((item) => {
                         if (item.variantId === action.payload.variantId) {
-                            return action.payload;
+                            return parseLineItemsFromRemoteCart(action.payload)[0];
                         }
                         return item
                     })
             };
         };
         case 'REMOVE_FROM_CART': {
+            console.log('action.payload for remove from cart', action.payload)
+            const dataForNewLineItem = parseDataFromRemoteCart(action.payload, action.products);
             return {
-                ...action.payload,
-                lineItems: parseLineItemsFromCheckout(action.payload)
+                ...dataForNewLineItem,
+                imagesByVariantId: {
+                    ...Object.keys(state.imagesByVariantId)
+                        .filter((key) => key !== action.payload.variantId)
+                        .reduce((acc, key) => ({ [key]: state.imagesByVariantId[key] }))
+                },
+                lineItems: parseLineItemsFromRemoteCart(action.payload)
             };
         };
+        case 'RESET_CART': {
+            return initialState;
+        };
+        default: {
+            return state;
+        }
     }
 };
 

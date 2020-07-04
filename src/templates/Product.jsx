@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect, useCallback } from 'react';
 import { graphql } from 'gatsby';
 import Img from "gatsby-image";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -6,49 +6,84 @@ import moment from 'moment';
 
 import CartContext from "../../globalState";
 import Layout from "../components/Layout";
-import { getParsedVariants, localStorageKey, getLineItemFromVariant } from '../helpers';
-import { initCheckout, addNewLineItemsToCart, fetchProductInventory } from '../../client';
+import { getParsedVariants, localStorageKey, getLineItemForAddToCart, isVariantInCart, getLineItemForUpdateToCart } from '../helpers';
+import { initCheckout, addLineItemsToCart, fetchProductInventory, updateLineItemsInCart } from '../../client';
+import { useProducts } from '../graphql';
+import { uniqueId, kebabCase } from 'lodash';
 
 export default ({
     pathContext: {
-        id,
         title,
         description,
-        collection,
         priceRange: { high, low },
-        totalCount
     },
     data: { shopifyProduct },
     path
 }) => {
+    const { variants, productType } = shopifyProduct;
+    const products = useProducts();
     const { cart, dispatch } = useContext(CartContext);
     const [isLoading, setIsLoading] = useState(false);
-    const { variants, handle } = shopifyProduct;
+    const [isSoldOut, setIsSoldOut] = useState(false);
     // Available & Selected Inventory
     const [parsedVariants] = useState(getParsedVariants(variants, title))
     const [selectedVariant, setSelectedVariant] = useState(parsedVariants[0]);
+
+    const checkInventory = useCallback(async () => {
+        setIsLoading(true);
+        const inventoryExists = await fetchProductInventory(shopifyProduct.productId);
+        if (!inventoryExists) {
+            setIsSoldOut(true);
+        }
+        else {
+            setIsSoldOut(false);
+        }
+        setIsLoading(false);
+    }, [selectedVariant, setIsSoldOut, setIsLoading, cart.lineItems]);
+
+    useEffect(() => {
+        console.log('checking the inventory.... 👍👍👍👍');
+        checkInventory();
+    }, [checkInventory]);
 
     const handleSelectVariant = (e) => {
         setSelectedVariant(parsedVariants.find((node) => node.title === e.target.value));
     }
 
     const modifyCart = (cartId) => {
-        return addNewLineItemsToCart(cartId, getLineItemFromVariant(selectedVariant))
-            .then((resp) => {
-                dispatch({ type: 'ADD_TO_CART', payload: resp });
+        debugger;
+        const isExistingLineItem = isVariantInCart(cart, selectedVariant.id);
+        if (isExistingLineItem) {
+            const lineItemToUpdate = getLineItemForUpdateToCart(cart.lineItems, selectedVariant.id);
+            return updateLineItemsInCart(cartId, [{ ...lineItemToUpdate, quantity: lineItemToUpdate.quantity + 1 }])
+                .then((payload) => {
+                    dispatch({ type: 'UPDATE_CART', payload: { ...payload, variantId: selectedVariant.id }, products });
+                })
+                .then(() => {
+                    setIsLoading(false);
+                });
+        }
+        return addLineItemsToCart(cartId, getLineItemForAddToCart({ ...shopifyProduct, variant: selectedVariant }))
+            .then((payload) => {
+                console.log('payload', payload);
+                dispatch({
+                    type: 'ADD_TO_CART',
+                    payload,
+                    products: [shopifyProduct],
+                    collection: kebabCase(productType)
+                });
             })
             .then(() => {
                 setIsLoading(false);
             });
     }
 
-    const handleAddToCart = async () => {
+    const handleAddToCart = async (e) => {
+        e.preventDefault();
+        console.log('handleAddToCart')
         setIsLoading(true);
-        // TODO: We should update the buy button state based on the selected variants availableForSale property value.
-        const inventoryExists = await fetchProductInventory(shopifyProduct.productId);
-        if (!inventoryExists) return Promise.resolve();
         if (cart.id) {
-            return modifyCart(cart.id)
+            return modifyCart(cart.id);
         }
         return initCheckout()
             .then((resp) => {
@@ -69,7 +104,12 @@ export default ({
         <Layout pageName="product-page">
             <h2>{title}</h2>
             {high !== low && <p>{`Price Ranging from $${low} to $${high}`}</p>}
-            {selectedVariant.localFile && <Img className="w-3/4" fluid={selectedVariant.localFile.childImageSharp.fluid} />}
+            {selectedVariant.localFile && (
+                <>
+                    {isSoldOut && <span className="product-sold-out">Sold Out!</span>}
+                    <Img className="w-3/4" fluid={selectedVariant.localFile.childImageSharp.fluid} />
+                </>
+            )}
             <p>{description}</p>
             <p>{`Price $${selectedVariant.price}`}</p>
             <div className="actions w-full flex flex-col justify-center items-center my-5">
@@ -79,17 +119,15 @@ export default ({
                     onChange={handleSelectVariant}
                     value={selectedVariant.title}>
                     {parsedVariants.map((variant) => (
-                        <option value={variant.title}>{variant.title}</option>
+                        <option key={uniqueId('')} value={variant.title}>{variant.title}</option>
                     ))}
                 </select>
                 <button
                     className="border border-black w-1/2"
-                    disabled={isLoading}
+                    disabled={(isLoading || isSoldOut)}
                     onClick={handleAddToCart}>
-                    {isLoading
-                        ? <FontAwesomeIcon icon="spinner" spin />
-                        : 'Add to Cart'
-                    }
+                    {isLoading && <FontAwesomeIcon icon="spinner" spin />}
+                    {!isLoading && 'Add to Cart'}
                 </button>
             </div>
         </Layout>
@@ -102,6 +140,8 @@ export const query = graphql`
             id
             handle
             productId
+            productType
+            title
             variants {
                 price
                 title
