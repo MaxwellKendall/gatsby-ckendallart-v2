@@ -12,15 +12,16 @@ const adminAPIBaseUrl = `https://emrik8wwe3.execute-api.us-east-1.amazonaws.com/
 export const fetchProductInventory = (variantId, quantity = 1) => {
   const parsedVariantId = window.atob(variantId).split('/').pop();
   // remove hard code later.
-  return window.fetch(`${adminAPIBaseUrl}?variantId=${parsedVariantId}`, {
+  return fetch(`${adminAPIBaseUrl}?variantId=${parsedVariantId}`, {
     method: 'get',
     mode: 'cors',
     headers: {
       'Content-Type': 'application/json'
     }
   })
-  .then(({ body }) => {
-    console.log('body', body);
+  .then(async (data) => {
+    const { body } = await data.json();
+    console.log('number of variants remaining', body.variant.inventory_quantity);
     return body.variant.inventory_quantity >= quantity;
   })
   .catch((e) => {
