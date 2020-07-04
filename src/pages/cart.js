@@ -5,13 +5,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 import CartContext from "../../globalState"
 import Layout from "../components/Layout"
-import { getCustomAttributeFromCartByVariantId } from "../helpers"
+import { getCustomAttributeFromCartByVariantId, getInventoryDetails } from "../helpers"
 import {
   removeLineItemsFromCart,
   fetchProductInventory,
   updateLineItemsInCart,
 } from "../../client"
-import { debounce, uniqueId, kebabCase } from "lodash"
+import { debounce, uniqueId, kebabCase, delay } from "lodash"
 import { useProducts } from "../graphql"
 
 const AddOrRemoveInventoryIcon = ({ isLoading, icon, handler }) => {
@@ -51,12 +51,15 @@ const CartPage = ({
       })
   };
 
-  const addVariant = async (lineItemId, productId, quantity, variantId) => {
+  const addVariant = async (lineItemId, quantity, variantId) => {
     setIncrementIsLoading(true)
-    const isAvailable = await fetchProductInventory(variantId, quantity + 1);
-    if (!isAvailable) {
+    const [, remainingInventory] = await getInventoryDetails(variantId, cart)
+    if (remainingInventory === 0) {
       setIsUnavailable(true);
-      debounce(() => setIsUnavailable(false), 2000);
+      setIncrementIsLoading(false);
+      delay(() => {
+        setIsUnavailable(false);
+      }, 2000);
       return;
     }
     return updateLineItemsInCart(cart.id, [{ id: lineItemId, quantity: quantity + 1 }])
@@ -95,7 +98,7 @@ const CartPage = ({
                   </span>
                 </Link>
                 <AddOrRemoveInventoryIcon isLoading={isDecrementLoading} icon='minus-circle' handler={(e) => removeVariant(lineItemId, quantity, variantId)} />
-                <AddOrRemoveInventoryIcon isLoading={isIncrementLoading} icon='plus-circle' handler={(e) => addVariant(lineItemId, productId, quantity, variantId)} />
+                <AddOrRemoveInventoryIcon isLoading={isIncrementLoading} icon='plus-circle' handler={(e) => addVariant(lineItemId, quantity, variantId)} />
               </li>
             )
           })}

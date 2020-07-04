@@ -1,3 +1,5 @@
+import { fetchProductInventory } from "../../client";
+
 export const getParsedVariants = (arr, title) => arr.map((variant) => ({
     ...variant,
     title: variant.title === 'Default Title' ? title : variant.title
@@ -102,4 +104,12 @@ export const getLineItemForUpdateToCart = (lineItems, variantId) => {
     const lineItem = lineItems.find((item) => item.variantId === variantId);
     const lineItemId = getCustomAttributeFromCartByVariantId([lineItem], variantId, 'lineItemId');
     return { quantity: lineItem.quantity, id: lineItemId };
+};
+
+export const getInventoryDetails = (variantId, cart) => {
+    return fetchProductInventory(variantId)
+        .then((remoteQuantity) => {
+            const heldQuantity = cart.lineItems.find((item) => item.variantId === variantId)?.quantity || 0;
+            return [remoteQuantity, remoteQuantity - heldQuantity];
+        });
 };

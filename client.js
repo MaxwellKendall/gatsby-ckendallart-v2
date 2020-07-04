@@ -9,7 +9,7 @@ const client = Client.buildClient({
 
 const adminAPIBaseUrl = `https://emrik8wwe3.execute-api.us-east-1.amazonaws.com/TEST/inventory`;
 
-export const fetchProductInventory = (variantId, quantity = 1) => {
+export const fetchProductInventory = (variantId) => {
   const parsedVariantId = window.atob(variantId).split('/').pop();
   // remove hard code later.
   return fetch(`${adminAPIBaseUrl}?variantId=${parsedVariantId}`, {
@@ -22,7 +22,7 @@ export const fetchProductInventory = (variantId, quantity = 1) => {
   .then(async (data) => {
     const { body } = await data.json();
     console.log('number of variants remaining', body.variant.inventory_quantity);
-    return body.variant.inventory_quantity >= quantity;
+    return body.variant.inventory_quantity;
   })
   .catch((e) => {
     console.log('Error fetching inventory', e);

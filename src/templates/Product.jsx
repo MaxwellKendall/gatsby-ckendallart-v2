@@ -6,7 +6,7 @@ import moment from 'moment';
 
 import CartContext from "../../globalState";
 import Layout from "../components/Layout";
-import { getParsedVariants, localStorageKey, getLineItemForAddToCart, isVariantInCart, getLineItemForUpdateToCart } from '../helpers';
+import { getParsedVariants, localStorageKey, getLineItemForAddToCart, isVariantInCart, getLineItemForUpdateToCart, getInventoryDetails } from '../helpers';
 import { initCheckout, addLineItemsToCart, fetchProductInventory, updateLineItemsInCart } from '../../client';
 import { useProducts } from '../graphql';
 import { uniqueId, kebabCase } from 'lodash';
@@ -17,29 +17,28 @@ export default ({
         description,
         priceRange: { high, low },
     },
-    data: { shopifyProduct },
+    data: { shopifyProduct: product },
     path
 }) => {
-    const { variants, productType } = shopifyProduct;
-    const products = useProducts();
     const { cart, dispatch } = useContext(CartContext);
-    const [isLoading, setIsLoading] = useState(false);
-    const [isSoldOut, setIsSoldOut] = useState(false);
-    // Available & Selected Inventory
-    const [parsedVariants] = useState(getParsedVariants(variants, title))
+    const products = useProducts();
+    const { variants, productType } = product;
+    const parsedVariants = getParsedVariants(variants, title);
     const [selectedVariant, setSelectedVariant] = useState(parsedVariants[0]);
+    const [remoteInventory, setRemoteInventory] = useState(1);
+    const [remainingInventory, setRemainingInventory] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
 
     const checkInventory = useCallback(async () => {
         setIsLoading(true);
-        const inventoryExists = await fetchProductInventory(selectedVariant.id);
-        if (!inventoryExists) {
-            setIsSoldOut(true);
-        }
-        else {
-            setIsSoldOut(false);
-        }
+        const [
+            remoteQuantity,
+            remainingQuantity
+        ] = await getInventoryDetails(selectedVariant.id, cart);
+        setRemoteInventory(remoteQuantity);
+        setRemainingInventory(remainingQuantity);
         setIsLoading(false);
-    }, [selectedVariant, setIsSoldOut, setIsLoading, cart.lineItems]);
+    }, [selectedVariant, setRemainingInventory, setRemoteInventory, setIsLoading, cart.lineItems]);
 
     useEffect(() => {
         console.log('checking the inventory.... 👍👍👍👍');
@@ -62,7 +61,7 @@ export default ({
                     setIsLoading(false);
                 });
         }
-        return addLineItemsToCart(cartId, getLineItemForAddToCart({ ...shopifyProduct, selectedVariant }))
+        return addLineItemsToCart(cartId, getLineItemForAddToCart({ ...product, selectedVariant }))
             .then((payload) => {
                 dispatch({
                     type: 'ADD_TO_CART',
@@ -97,13 +96,19 @@ export default ({
             })
     };
 
+    const isAddToCartDisabled = (
+        isLoading ||
+        remoteInventory === 0 ||
+        remainingInventory === 0
+    );
+
     return (
         <Layout pageName="product-page">
             <h2>{title}</h2>
             {high !== low && <p>{`Price Ranging from $${low} to $${high}`}</p>}
             {selectedVariant.localFile && (
                 <>
-                    {isSoldOut && <span className="product-sold-out">Sold Out!</span>}
+                    {remoteInventory === 0 && <span className="product-sold-out">Sold Out!</span>}
                     <Img className="w-3/4" fluid={selectedVariant.localFile.childImageSharp.fluid} />
                 </>
             )}
@@ -121,7 +126,7 @@ export default ({
                 </select>
                 <button
                     className="border border-black w-1/2"
-                    disabled={(isLoading || isSoldOut)}
+                    disabled={isAddToCartDisabled}
                     onClick={handleAddToCart}>
                     {isLoading && <FontAwesomeIcon icon="spinner" spin />}
                     {!isLoading && 'Add to Cart'}
