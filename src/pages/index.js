@@ -1,6 +1,6 @@
 import React from "react";
 import { useStaticQuery, graphql, Link } from "gatsby";
-import { kebabCase } from "lodash";
+import { kebabCase, uniqueId } from "lodash";
 
 import Layout from "../components/Layout";
 
@@ -33,7 +33,7 @@ export default (props) => {
           {nodes
             .filter((node) => node.totalInventory !== 0)
             .map((node) => (
-              <li>
+              <li key={uniqueId('')}>
                 <Link to={`${kebabCase(node.productType)}/${node.handle}`}>{node.title}</Link>
               </li>
             ))}

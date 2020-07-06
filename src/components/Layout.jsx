@@ -8,7 +8,7 @@ import {
     faPlusCircle
 } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { Link } from 'gatsby';
+import { Link, useStaticQuery, graphql } from 'gatsby';
 import moment from 'moment';
 
 import CartContext from "../../globalState";
@@ -31,7 +31,20 @@ require('../../styles/index.scss');
 export default ({ children, pageName = 'default' }) => {
     const { cart, dispatch } = useContext(CartContext);
     const products = useProducts();
-;    useEffect(() => {
+    const { site: { siteMetadata: { pages } } } = useStaticQuery(graphql`
+        query getPages {
+            site {
+                siteMetadata {
+                    pages {
+                        name
+                        link
+                    }
+                }
+            }
+        }
+    `);
+
+    useEffect(() => {
         const cartFromStorage = JSON.parse(window.localStorage.getItem(localStorageKey));
         if (cartFromStorage && !cart.id) {
             const ageOfCart = moment.duration(moment().diff(moment(cartFromStorage.timeStamp))).asHours();
@@ -52,16 +65,28 @@ export default ({ children, pageName = 'default' }) => {
     }, []);
 
     return (
-        <div className="global-container max-w-3xl m-auto flex justify-center flex-col min-h-full">
-            <header className="py-10 px-5 align-center w-full flex justify-center">
-                <Link to='/'>
-                    <h1 className="text-2xl">Claire Kendall Art</h1>
-                </Link>
-                <Link to='/cart'>
-                    <FontAwesomeIcon className="ml-auto" icon="shopping-cart" />
-                </Link>
+        <div className="global-container m-auto flex justify-center flex-col min-h-full">
+            <header className="py-10 px-5 align-center w-full flex flex-col justify-center">
+                <div className="flex w-full">
+                    <Link to='/' className="m-auto">
+                        <h1 className="text-2xl">Claire Kendall Art</h1>
+                    </Link>
+                    <Link to='/cart' className="mr-10">
+                        <FontAwesomeIcon className="ml-auto" icon="shopping-cart" />
+                    </Link>
+                </div>
+                <ul className="flex align-center justify-center">
+                    {pages
+                        .map((page) => (
+                            <li className="p-5 mt-10">
+                                <Link to={page.link}>
+                                    {page.name.toUpperCase()}
+                                </Link>
+                            </li>
+                        ))}
+                </ul>
             </header>
-            <main className={`${pageName} flex flex-col h-full flex-grow px-10`}>
+            <main className={`${pageName} flex flex-col h-full flex-grow px-10 max-w-3xl`}>
                 {children}
             </main>
             <footer className='flex-shrink-0 p-5 text-center'>
