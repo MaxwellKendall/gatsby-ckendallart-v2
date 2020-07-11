@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faCopyright,
@@ -10,10 +10,13 @@ import {
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { Link, useStaticQuery, graphql } from 'gatsby';
 import moment from 'moment';
+import { delay } from 'lodash';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
+
 
 import CartContext from "../../globalState";
 import { localStorageKey } from '../helpers';
-import { fetchCart } from '../../client';
+import { fetchCart, subscribeToEmail, verifyCaptcha } from '../../client';
 import { useProducts } from '../graphql';
 
 library.add(
@@ -28,7 +31,21 @@ const isSSR = typeof window === 'undefined';
 
 require('../../styles/index.scss');
 
+const defaultSubscribeStatus = {
+    isLoading: false,
+    alreadyExists: false,
+    emailThatExists: '',
+    showConfirmation: false,
+    showError: false
+};
+
+let confirmationToast;
+
 export default ({ children, pageName = 'default' }) => {
+    const [userEmail, setUserEmail] = useState('');
+    const { executeRecaptcha } = useGoogleReCaptcha();
+    const [token, setToken] = useState('');
+    const [subscribeStatus, setSubscribeStatus] = useState(defaultSubscribeStatus);
     const { cart, dispatch } = useContext(CartContext);
     const products = useProducts();
     const { site: { siteMetadata: { pages } } } = useStaticQuery(graphql`
@@ -64,6 +81,58 @@ export default ({ children, pageName = 'default' }) => {
         }
     }, []);
 
+    const updateUserEmail = (e) => {
+        setUserEmail(e.target.value);
+    };
+
+    useEffect(() => {
+        return () => window.clearInterval(confirmationToast)
+    })
+
+    const handleSubscribe = () => {
+        setSubscribeStatus({ isLoading: true, alreadyExists: false });
+        return subscribeToEmail
+            .then((data) => {
+                subscribeStatus({
+                    ...defaultSubscribeStatus,
+                    alreadyExists: true,
+                    showConfirmation: true,
+                    emailThatExists: data.email_address
+                })
+                delay(() => setSubscribeStatus({ ...subscribeStatus, showConfirmation: false, showError: false }))
+            })
+            .catch((e) => {
+                if (e.title === 'Member Exists') {
+                    subscribeStatus({
+                        ...defaultSubscribeStatus,
+                        isLoading: false,
+                        alreadyExists: true,
+                        showError: true,
+                        emailThatExists: e.detail.split(' ')[0]
+                    })
+                }
+                else {
+                    setSubscribeStatus(defaultSubscribeStatus)
+                }
+                delay(() => setSubscribeStatus({ ...subscribeStatus, showConfirmation: false, showError: false }))
+            })
+    };
+
+
+    const handleSubmit = async (e) => {
+        setSubscribeStatus({ ...subscribeStatus, isLoading: true });
+        if (!executeRecaptcha) {
+            return;
+        }
+        const result = await executeRecaptcha('email_list');
+        verifyCaptcha(result)
+            .then((data) => {
+                if (data.success) {
+                    handleSubscribe();
+                }
+            })
+    };
+
     return (
         <div className="global-container m-auto flex justify-center flex-col min-h-full">
             <header className="py-10 px-5 align-center w-full flex flex-col justify-center">
@@ -86,12 +155,20 @@ export default ({ children, pageName = 'default' }) => {
                         ))}
                 </ul>
             </header>
-            <main className={`${pageName} flex flex-col h-full flex-grow px-10 max-w-3xl`}>
+            <main className={`${pageName} flex flex-col h-full self-center flex-grow px-10 max-w-3xl`}>
                 {children}
             </main>
             <footer className='flex-shrink-0 p-5 text-center'>
-                {`Claire Kendall Art, ${new Date().getFullYear()}`}
-                <FontAwesomeIcon className="ml-2" icon={['fas', 'copyright']}  />
+                <>
+                    <input type="hidden" name="u" value="ab3ec7367aea68f258236a7f3" />
+                    <input type="hidden" name="id" value="2e064274d9" />
+                    <input className="py-2 border border-black-500" type="email" name="MERGE0" value={userEmail} onChange={updateUserEmail} />
+                    <button type="submit" className="border border-black-500 py-2 px-5" onClick={handleSubmit}>
+                        Subscribe
+                    </button>
+                    {`Claire Kendall Art, ${new Date().getFullYear()}`}
+                    <FontAwesomeIcon className="ml-2" icon={['fas', 'copyright']} />
+                </>
             </footer>
         </div>
     );

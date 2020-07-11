@@ -8,4 +8,7 @@ body,
 #gatsby-focus-wrapper,
 .global-container {
     min-height: 100vh;
+    .grecaptcha-badge {
+        opacity: 0;
+    }
 }

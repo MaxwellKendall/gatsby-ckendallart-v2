@@ -2,12 +2,14 @@
 import Client from 'shopify-buy';
 import fetch from 'isomorphic-fetch';
 
+const customMiddleWareUrl = `https://emrik8wwe3.execute-api.us-east-1.amazonaws.com/Prod`;
+
 const client = Client.buildClient({
   domain: `${GATSBY_SHOP_NAME}.myshopify.com`,
   storefrontAccessToken: GATSBY_ACCESS_TOKEN
 });
 
-const adminAPIBaseUrl = `https://emrik8wwe3.execute-api.us-east-1.amazonaws.com/TEST/inventory`;
+const adminAPIBaseUrl = `${customMiddleWareUrl}/inventory`;
 
 export const fetchProductInventory = (variantId) => {
   const parsedVariantId = window.atob(variantId).split('/').pop();
@@ -20,13 +22,57 @@ export const fetchProductInventory = (variantId) => {
     }
   })
   .then(async (data) => {
-    const { body } = await data.json();
-    console.log('number of variants remaining', body.variant.inventory_quantity);
-    return body.variant.inventory_quantity;
+    const { body: { variant: { inventory_quantity: remainingInventory, fulfillment_service }} } = await data.json();
+    console.log('number of variants remaining', remainingInventory);
+    if (fulfillment_service === 'printful') return 999;
+    return remainingInventory;
   })
   .catch((e) => {
     console.log('Error fetching inventory', e);
   });
+}
+
+export const subscribeToEmail = (email) => {
+  return fetch(`${customMiddleWareUrl}/`, {
+    method: 'POST',
+    mode: 'cors',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      email_address: email,
+      status: 'subscribed',
+      merge_fields: {
+        MERGE0: email
+      }
+    })
+  })
+  .then(async (data) => {
+    const { email_address } = await data.json();
+    return email_address;
+  })
+  .catch((e) => {
+    const error = e.json();
+    return error;
+  })
+}
+
+export const verifyCaptcha = (token) => {
+  return fetch(`${customMiddleWareUrl}/recaptcha`, {
+    method: 'POST',
+    mode: 'cors',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ token })
+  })
+  .then(async (data) => {
+    const { success } = await data.json();
+    return success;
+  })
+  .catch((e) => {
+    return e;
+  })
 }
 
 export const initCheckout = () => {

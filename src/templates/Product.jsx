@@ -104,16 +104,16 @@ export default ({
 
     return (
         <Layout pageName="product-page">
-            <h2>{title}</h2>
-            {high !== low && <p>{`Price Ranging from $${low} to $${high}`}</p>}
+            <h2 className="text-center">{title}</h2>
+            {high !== low && <p className="text-center">{`Price Ranging from $${low} to $${high}`}</p>}
             {selectedVariant.localFile && (
                 <>
                     {remoteInventory === 0 && <span className="product-sold-out">Sold Out!</span>}
-                    <Img className="w-3/4" fluid={selectedVariant.localFile.childImageSharp.fluid} />
+                    <Img className="w-3/4 mx-auto" fluid={selectedVariant.localFile.childImageSharp.fluid} />
                 </>
             )}
-            <p>{description}</p>
-            <p>{`Price $${selectedVariant.price}`}</p>
+            <p className="text-center">{description}</p>
+            <p className="text-center">{`Price $${selectedVariant.price}`}</p>
             <div className="actions w-full flex flex-col justify-center items-center my-5">
                 <select
                     className="border border-black w-1/2"

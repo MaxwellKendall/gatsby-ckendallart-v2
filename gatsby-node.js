@@ -14,7 +14,8 @@ exports.onCreateWebpackConfig = ({
       plugins: [
         plugins.define({
             GATSBY_SHOP_NAME: JSON.stringify(process.env.SHOP_NAME),
-            GATSBY_ACCESS_TOKEN: JSON.stringify(process.env.SHOPIFY_ACCESS_TOKEN)
+            GATSBY_ACCESS_TOKEN: JSON.stringify(process.env.SHOPIFY_ACCESS_TOKEN),
+            GATSBY_SITE_KEY: JSON.stringify(process.env.RECAPTCHA_SITE_KEY)
         })
       ]
     })

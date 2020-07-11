@@ -37,6 +37,8 @@ module.exports = {
     ]
   },
   plugins: [
+    // re-captcha
+    `gatsby-plugin-recaptcha`,
     // styles
     {
       resolve: `gatsby-plugin-sass`,

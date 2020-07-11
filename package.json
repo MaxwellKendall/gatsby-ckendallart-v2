@@ -28,6 +28,7 @@
     "gatsby-plugin-manifest": "^2.4.9",
     "gatsby-plugin-offline": "^3.2.7",
     "gatsby-plugin-react-helmet": "^3.3.2",
+    "gatsby-plugin-recaptcha": "^1.0.5",
     "gatsby-plugin-sass": "^2.3.3",
     "gatsby-plugin-sharp": "^2.6.9",
     "gatsby-source-filesystem": "^2.3.8",
@@ -41,7 +42,10 @@
     "node-sass": "^4.14.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
+    "react-google-recaptcha-v3": "^1.5.2",
     "react-helmet": "^6.0.0",
+    "react-modal": "^3.11.2",
+    "react-recaptcha": "^2.3.10",
     "shopify-buy": "^2.10.0",
     "tailwindcss": "^1.4.6"
   },
