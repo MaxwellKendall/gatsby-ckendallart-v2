@@ -32,8 +32,8 @@ export const fetchProductInventory = (variantId) => {
   });
 }
 
-export const subscribeToEmail = (email) => {
-  return fetch(`${customMiddleWareUrl}/`, {
+export const subscribeToEmail = (email, status = 'subscribed') => {
+  return fetch(`${customMiddleWareUrl}/email-subscribe`, {
     method: 'POST',
     mode: 'cors',
     headers: {
@@ -41,15 +41,15 @@ export const subscribeToEmail = (email) => {
     },
     body: JSON.stringify({
       email_address: email,
-      status: 'subscribed',
+      status,
       merge_fields: {
         MERGE0: email
       }
     })
   })
-  .then(async (data) => {
-    const { email_address } = await data.json();
-    return email_address;
+  .then(async (resp) => {
+    const data = await resp.json();
+    return data;
   })
   .catch((e) => {
     const error = e.json();
@@ -64,11 +64,11 @@ export const verifyCaptcha = (token) => {
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ token })
+    body: JSON.stringify({ token: token })
   })
   .then(async (data) => {
-    const { success } = await data.json();
-    return success;
+    const resp = await data.json();
+    return resp;
   })
   .catch((e) => {
     return e;

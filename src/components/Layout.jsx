@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React, { useContext, useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -11,8 +12,6 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { Link, useStaticQuery, graphql } from 'gatsby';
 import moment from 'moment';
 import { delay } from 'lodash';
-import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
-
 
 import CartContext from "../../globalState";
 import { localStorageKey } from '../helpers';
@@ -33,17 +32,19 @@ require('../../styles/index.scss');
 
 const defaultSubscribeStatus = {
     isLoading: false,
-    alreadyExists: false,
-    emailThatExists: '',
+    subscribed: false,
+    emailAddress: '',
     showConfirmation: false,
-    showError: false
+    showError: false,
+    status: 'subscribed'
 };
 
 let confirmationToast;
+// show toast for 2s
+const toastDelay = 5000;
 
-export default ({ children, pageName = 'default' }) => {
+export const Layout = ({ children, pageName = 'default' }) => {
     const [userEmail, setUserEmail] = useState('');
-    const { executeRecaptcha } = useGoogleReCaptcha();
     const [token, setToken] = useState('');
     const [subscribeStatus, setSubscribeStatus] = useState(defaultSubscribeStatus);
     const { cart, dispatch } = useContext(CartContext);
@@ -79,58 +80,82 @@ export default ({ children, pageName = 'default' }) => {
         else if (!cartFromStorage && cart.id) {
             dispatch({ 'type': 'RESET_CART' });
         }
+
+        return () => window.clearTimeout(confirmationToast)
     }, []);
 
     const updateUserEmail = (e) => {
+        if (subscribeStatus.subscribed) {
+            setSubscribeStatus({ ...subscribeStatus, subscribed: false });
+        }
         setUserEmail(e.target.value);
     };
 
-    useEffect(() => {
-        return () => window.clearInterval(confirmationToast)
-    })
-
-    const handleSubscribe = () => {
+    const handleSubscribe = (status = 'subscribed') => {
         setSubscribeStatus({ isLoading: true, alreadyExists: false });
-        return subscribeToEmail
+        return subscribeToEmail(userEmail, status)
             .then((data) => {
-                subscribeStatus({
+                if (data.title === 'Member Exists') {
+                    throw(data);
+                }
+                setSubscribeStatus({
                     ...defaultSubscribeStatus,
-                    alreadyExists: true,
                     showConfirmation: true,
-                    emailThatExists: data.email_address
+                    subscribed: true,
+                    emailAddress: data.email_address,
+                    status
                 })
-                delay(() => setSubscribeStatus({ ...subscribeStatus, showConfirmation: false, showError: false }))
+                confirmationToast = delay(() => {
+                    setSubscribeStatus({
+                        ...subscribeStatus,
+                        showConfirmation: false,
+                        showError: false
+                    })
+                }, toastDelay);
             })
             .catch((e) => {
+                console.log('e', e);
                 if (e.title === 'Member Exists') {
-                    subscribeStatus({
-                        ...defaultSubscribeStatus,
+                    setSubscribeStatus({
+                        subscribed: true,
                         isLoading: false,
-                        alreadyExists: true,
+                        subscribed: true,
                         showError: true,
-                        emailThatExists: e.detail.split(' ')[0]
-                    })
+                        emailAddress: e.detail.split(' ')[0]
+                    });
+                    console.log('hello?');
+                    confirmationToast = delay(() => {
+                        console.log('yooo');
+                        setSubscribeStatus({
+                            ...subscribeStatus,
+                            showConfirmation: false,
+                            showError: false
+                        });
+                    }, toastDelay);
                 }
                 else {
                     setSubscribeStatus(defaultSubscribeStatus)
                 }
-                delay(() => setSubscribeStatus({ ...subscribeStatus, showConfirmation: false, showError: false }))
             })
     };
 
 
     const handleSubmit = async (e) => {
         setSubscribeStatus({ ...subscribeStatus, isLoading: true });
-        if (!executeRecaptcha) {
-            return;
-        }
-        const result = await executeRecaptcha('email_list');
-        verifyCaptcha(result)
-            .then((data) => {
-                if (data.success) {
-                    handleSubscribe();
-                }
-            })
+        window.grecaptcha.ready(() => {
+            window.grecaptcha.execute(GATSBY_SITE_KEY, { action: 'submit' })
+                .then((token) => {
+                    return verifyCaptcha(token)                    
+                })
+                .then((data) => {
+                    if (data.success) {
+                        handleSubscribe();
+                    }
+                    else if (!data.success) {
+                        handleSubscribe('pending')
+                    }
+                })
+        })
     };
 
     return (
@@ -159,12 +184,36 @@ export default ({ children, pageName = 'default' }) => {
                 {children}
             </main>
             <footer className='flex-shrink-0 p-5 text-center'>
+                {subscribeStatus.showError && (
+                    <p>Hey, {subscribeStatus.emailAddress} is already subscribed!</p>
+                )}
+                {subscribeStatus.showConfirmation && subscribeStatus.status === 'subscribed' && (
+                    <p>Hey, {subscribeStatus.emailAddress} welcome to the family!</p>
+                )}
+                {subscribeStatus.showConfirmation && subscribeStatus.status === 'pending' && (
+                    <>
+                        <p>Hey, {subscribeStatus.emailAddress} welcome to the family!</p>
+                        <strong>Please respond to our confirmation email and we'll keep you updated!</strong>
+                    </>
+                )}
                 <>
                     <input type="hidden" name="u" value="ab3ec7367aea68f258236a7f3" />
                     <input type="hidden" name="id" value="2e064274d9" />
                     <input className="py-2 border border-black-500" type="email" name="MERGE0" value={userEmail} onChange={updateUserEmail} />
-                    <button type="submit" className="border border-black-500 py-2 px-5" onClick={handleSubmit}>
-                        Subscribe
+                    <button
+                        disabled={subscribeStatus.subscribed}
+                        type="submit"
+                        className="border border-black-500 py-2 px-5"
+                        onClick={handleSubmit}>
+                        {subscribeStatus.isLoading && (
+                            <FontAwesomeIcon className="ml-2" icon={['fas', 'spinner']} spin />
+                        )}
+                        {!subscribeStatus.isLoading && !subscribeStatus.subscribed && (
+                            'Subscribe'
+                        )}
+                        {!subscribeStatus.isLoading && subscribeStatus.subscribed && (
+                            'Subscribed' 
+                        )}                        
                     </button>
                     {`Claire Kendall Art, ${new Date().getFullYear()}`}
                     <FontAwesomeIcon className="ml-2" icon={['fas', 'copyright']} />
@@ -173,3 +222,7 @@ export default ({ children, pageName = 'default' }) => {
         </div>
     );
 };
+
+Layout.displayName = "Layout";
+
+export default Layout;

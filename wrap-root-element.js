@@ -1,19 +1,21 @@
 /* eslint-disable no-undef */
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import CartContext, { useCart } from './globalState';
-import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3'
 
 const Wrapper = ({ children }) => {
     const [cartState, dispatch] = useCart();
     return (
-        <CartContext.Provider value={{cart: cartState, dispatch }}>
-            <GoogleReCaptchaProvider
-                reCaptchaKey={"6LdTV7AZAAAAAFUaM70A6L9-oMJuzQ2SklXXXUBU"}>
+        <>
+            <Helmet>
+                <script src={`https://www.google.com/recaptcha/api.js?render=${GATSBY_SITE_KEY}`}></script>
+            </Helmet>
+            <CartContext.Provider value={{cart: cartState, dispatch }}>
                 {children}
-            </GoogleReCaptchaProvider>
-        </CartContext.Provider>
+            </CartContext.Provider>
+        </>
     );
-}
+};
 
 export const wrapRootElement = ({ element }) => {
     return <Wrapper children={element} />;
