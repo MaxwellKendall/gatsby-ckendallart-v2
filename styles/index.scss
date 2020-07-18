@@ -9,6 +9,6 @@ body,
 .global-container {
     min-height: 100vh;
     .grecaptcha-badge {
-        opacity: 0;
+        visibility: hidden;
     }
 }

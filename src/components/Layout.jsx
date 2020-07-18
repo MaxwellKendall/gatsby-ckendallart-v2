@@ -217,6 +217,13 @@ export const Layout = ({ children, pageName = 'default' }) => {
                     </button>
                     {`Claire Kendall Art, ${new Date().getFullYear()}`}
                     <FontAwesomeIcon className="ml-2" icon={['fas', 'copyright']} />
+                    <p className="pt-10">
+                        This site is protected by reCAPTCHA and the Google
+                        <a href="https://policies.google.com/privacy"> Privacy Policy </a>
+                        and
+                        <a href="https://policies.google.com/terms"> Terms of Service </a>
+                        apply.
+                    </p>
                 </>
             </footer>
         </div>
