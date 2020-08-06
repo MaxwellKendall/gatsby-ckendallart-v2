@@ -26,6 +26,7 @@ export default ({
     const parsedVariants = getParsedVariants(variants, title);
     const [selectedVariant, setSelectedVariant] = useState(parsedVariants[0]);
     const [remoteInventory, setRemoteInventory] = useState(1);
+    const [quantity, setQuantity] = useState(1);
     const [remainingInventory, setRemainingInventory] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -53,7 +54,7 @@ export default ({
         const isExistingLineItem = isVariantInCart(cart, selectedVariant.id);
         if (isExistingLineItem) {
             const lineItemToUpdate = getLineItemForUpdateToCart(cart.lineItems, selectedVariant.id);
-            return updateLineItemsInCart(cartId, [{ ...lineItemToUpdate, quantity: lineItemToUpdate.quantity + 1 }])
+            return updateLineItemsInCart(cartId, [{ ...lineItemToUpdate, quantity }])
                 .then((payload) => {
                     dispatch({ type: 'UPDATE_CART', payload: { ...payload, variantId: selectedVariant.id }, products });
                 })
@@ -61,7 +62,7 @@ export default ({
                     setIsLoading(false);
                 });
         }
-        return addLineItemsToCart(cartId, getLineItemForAddToCart({ ...product, selectedVariant }))
+        return addLineItemsToCart(cartId, getLineItemForAddToCart({ ...product, selectedVariant }, quantity))
             .then((payload) => {
                 dispatch({
                     type: 'ADD_TO_CART',
@@ -102,6 +103,14 @@ export default ({
         remainingInventory === 0
     );
 
+    const handleChangeQuantity = (e) => {
+        e.preventDefault();
+        const newQuantity = parseInt(e.target.value, 10);
+        if (newQuantity <= remainingInventory && newQuantity >= 1) {
+            setQuantity(parseInt(e.target.value, 10));
+        }
+    }
+
     return (
         <Layout pageName="product-page">
             <h2 className="text-center">{title}</h2>
@@ -124,6 +133,11 @@ export default ({
                         <option key={uniqueId('')} value={variant.title}>{variant.title}</option>
                     ))}
                 </select>
+                    {remainingInventory > 1 && (
+                        <>
+                            <input className="border border-black px-2 text-center" type="number" value={quantity} onChange={handleChangeQuantity} />
+                        </>
+                    )}
                 <button
                     className="border border-black w-1/2"
                     disabled={isAddToCartDisabled}

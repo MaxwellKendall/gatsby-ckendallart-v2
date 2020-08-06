@@ -83,14 +83,13 @@ export const parseDataFromRemoteCart = (cart, products) => {
     };
 };
 
-export const getLineItemForAddToCart = (product) => [{
+export const getLineItemForAddToCart = (product, quantity) => [{
     variantId: product.selectedVariant.id,
-    quantity: 1,
+    quantity,
     customAttributes: addCustomAttributesToLineItem(product)
 }];
 
 export const getCustomAttributeFromCartByVariantId = (lineItems, variantId, key) => {
-    debugger;
     return lineItems
         .find((item) => item.variantId === variantId)
         .customAttributes
