@@ -6,7 +6,8 @@ import {
     faShoppingCart,
     faSpinner,
     faMinusCircle,
-    faPlusCircle
+    faPlusCircle,
+    faTimes
 } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { Link, useStaticQuery, graphql } from 'gatsby';
@@ -23,7 +24,8 @@ library.add(
     faShoppingCart,
     faSpinner,
     faMinusCircle,
-    faPlusCircle
+    faPlusCircle,
+    faTimes
 );
 
 const isSSR = typeof window === 'undefined';

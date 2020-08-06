@@ -16,9 +16,9 @@ import { useProducts } from "../graphql"
 
 const AddOrRemoveInventoryIcon = ({ isLoading, icon, handler }) => {
   if (isLoading) {
-    return <FontAwesomeIcon icon="spinner" spin />;
+    return <FontAwesomeIcon icon="spinner" spin className="mx-5" />;
   }
-  return <FontAwesomeIcon icon={icon} onClick={handler} />;
+  return <FontAwesomeIcon icon={icon} onClick={handler} className="mx-5" />;
 }
 
 const CartPage = ({
@@ -87,25 +87,28 @@ const CartPage = ({
             const productId = getCustomAttributeFromCartByVariantId([lineItem], variantId, 'productId');
             const handle = `${kebabCase(getCustomAttributeFromCartByVariantId([lineItem], variantId, 'collection'))}/${getCustomAttributeFromCartByVariantId([lineItem], variantId, 'handle')}`;
             return (
-              <li key={uniqueId('')}>
+              <li key={uniqueId('')} className="flex flex-col">
+                <FontAwesomeIcon icon='times' size="lg" className="self-end cursor-pointer" onClick={() => removeVariant(lineItemId, 0, variantId)} />
                 <Link to={handle}>
                   <Img
                     fluid={image}
                     style={{ width: "300px" }} />
-                  <strong>{`${productTitle} (${variantTitle})`}</strong>
-                  <span>
+                </Link>
+                <div className="flex justify-center w-full mb-5">
+                  <AddOrRemoveInventoryIcon isLoading={isDecrementLoading} icon='minus-circle' handler={(e) => removeVariant(lineItemId, quantity, variantId)} />
+                  <AddOrRemoveInventoryIcon isLoading={isIncrementLoading} icon='plus-circle' handler={(e) => addVariant(lineItemId, quantity, variantId)} />
+                </div>
+                <strong className="text-center w-full">{`${productTitle} (${variantTitle})`}</strong>
+                  <span className="text-center w-full">
                     {` ${quantity}(x) at ${pricePerItem} each.`}
                   </span>
-                </Link>
-                <AddOrRemoveInventoryIcon isLoading={isDecrementLoading} icon='minus-circle' handler={(e) => removeVariant(lineItemId, quantity, variantId)} />
-                <AddOrRemoveInventoryIcon isLoading={isIncrementLoading} icon='plus-circle' handler={(e) => addVariant(lineItemId, quantity, variantId)} />
               </li>
             )
           })}
       </ul>
-      <span>{`Total: ${cart.totalPrice ? cart.totalPrice : "$0.00"}`}</span>
-      <span>{`Total Tax Applied: ${cart.totalTax ? cart.totalTax : "$0.00"}`}</span>
-      <button><a href={cart.webUrl}>Checkout</a></button>
+      <span className="text-center w-full">{`Total: ${cart.totalPrice ? cart.totalPrice : "$0.00"}`}</span>
+      <span className="text-center w-full">{`Total Tax Applied: ${cart.totalTax ? cart.totalTax : "$0.00"}`}</span>
+      <button className="border border-black p-2 my-5"><a href={cart.webUrl}>Checkout</a></button>
     </Layout>
   )
 }
