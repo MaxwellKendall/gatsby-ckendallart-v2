@@ -175,7 +175,7 @@ export default (props) => {
                       {startCase(name).toUpperCase()}
                     </p>
                     <Link className="w-full text-center text-lg tracking-wide" to={`${productType}/${kebabCase(url)}`}>
-                        shop now >
+                        shop now {`>`}
                     </Link>
                   </li>
                 );
@@ -184,6 +184,7 @@ export default (props) => {
           </ul>
         </div>
         {/* Referrals */}
+        
         {/* Request Commission | Meet the Artist */}
     </Layout>
   );
