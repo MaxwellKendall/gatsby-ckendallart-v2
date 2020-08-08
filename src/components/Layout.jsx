@@ -1,13 +1,15 @@
 /* eslint-disable no-undef */
 import React, { useContext, useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Img from "gatsby-image";
 import {
     faCopyright,
     faShoppingCart,
     faSpinner,
     faMinusCircle,
     faPlusCircle,
-    faTimes
+    faTimes,
+    faSearch
 } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { Link, useStaticQuery, graphql } from 'gatsby';
@@ -17,7 +19,7 @@ import { delay } from 'lodash';
 import CartContext from "../../globalState";
 import { localStorageKey } from '../helpers';
 import { fetchCart, subscribeToEmail, verifyCaptcha } from '../../client';
-import { useProducts } from '../graphql';
+import { useProducts, usePages, useNavigation } from '../graphql';
 
 library.add(
     faCopyright,
@@ -25,7 +27,8 @@ library.add(
     faSpinner,
     faMinusCircle,
     faPlusCircle,
-    faTimes
+    faTimes,
+    faSearch
 );
 
 const isSSR = typeof window === 'undefined';
@@ -51,7 +54,10 @@ export const Layout = ({ children, pageName = 'default' }) => {
     const [subscribeStatus, setSubscribeStatus] = useState(defaultSubscribeStatus);
     const { cart, dispatch } = useContext(CartContext);
     const products = useProducts();
-    const { site: { siteMetadata: { pages } } } = useStaticQuery(graphql`
+    const {
+        site: { siteMetadata: { pages } },
+        imageSharp: { fluid: logo }
+    } = useStaticQuery(graphql`
         query getPages {
             site {
                 siteMetadata {
@@ -59,6 +65,11 @@ export const Layout = ({ children, pageName = 'default' }) => {
                         name
                         link
                     }
+                }
+            }
+            imageSharp(id: {eq: "cfb82677-496a-5987-8a95-22d7dc5de000"}) {
+                fluid(maxWidth: 300) {
+                    ...GatsbyImageSharpFluid
                 }
             }
         }
@@ -163,23 +174,37 @@ export const Layout = ({ children, pageName = 'default' }) => {
     return (
         <div className="global-container m-auto flex justify-center flex-col min-h-full">
             <header className="py-10 px-5 align-center w-full flex flex-col justify-center">
-                <div className="flex w-full">
-                    <Link to='/' className="m-auto">
-                        <h1 className="text-2xl">Claire Kendall Art</h1>
-                    </Link>
-                    <Link to='/cart' className="mr-10">
-                        <FontAwesomeIcon className="ml-auto" icon="shopping-cart" />
-                    </Link>
-                </div>
+                <Link to='/cart' className="ml-auto self-start">
+                    <FontAwesomeIcon icon="shopping-cart" />
+                </Link>
+                <Link to='/' className="m-auto">
+                    <h1 className="text-2xl">CLAIRE KENDALL</h1>
+                </Link>
                 <ul className="flex align-center justify-center">
-                    {pages
-                        .map((page) => (
-                            <li className="p-5 mt-10">
-                                <Link to={page.link}>
-                                    {page.name.toUpperCase()}
-                                </Link>
-                            </li>
-                        ))}
+                    {[
+                        <li className="p-5 mt-10">
+                            <FontAwesomeIcon icon="search" />
+                        </li>,
+                        ...pages.slice(0, 2)
+                            .map((page) => (
+                                <li className="p-5 mt-10">
+                                    <Link to={page.link}>
+                                        {page.name.toUpperCase()}
+                                    </Link>
+                                </li>
+                            )),
+                            <li className="p-5 my-8">
+                                <Img fluid={logo} className="w-40 h-12" />
+                            </li>,
+                        ...pages.slice(2, 4)
+                            .map((page) => (
+                                <li className="p-5 mt-10">
+                                    <Link to={page.link}>
+                                        {page.name.toUpperCase()}
+                                    </Link>
+                                </li>
+                            ))
+                    ]}
                 </ul>
             </header>
             <main className={`${pageName} flex flex-col h-full self-center flex-grow px-10 max-w-3xl`}>

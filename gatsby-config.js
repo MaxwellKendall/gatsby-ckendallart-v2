@@ -15,25 +15,26 @@ module.exports = {
     author: `Maxwell Kendall`,
     pages: [
       {
-        name: 'home',
-        link: '/'
-      },
-      {
-        name: 'Cart',
-        link: '/cart'
-      },
-      {
         name: 'Portfolio',
         link: '/portfolio'
       },
       {
-        name: 'Comissions',
+        name: 'Shop',
+        link: '/cart'
+      },
+      {
+        name: 'Commissions',
         link: '/commissions'
       },
       {
-        name: 'Shop',
-        link: '/cart'
-      }
+        name: 'About',
+        link: '/about'
+      },
+    ],
+    tagLine: [
+      'Obsession with Quality',
+      'Reverence for Beauty',
+      'Fine art made for you, with love.'
     ]
   },
   plugins: [
@@ -55,6 +56,12 @@ module.exports = {
     // Image Processing
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        path: `${__dirname}/src/images/`,
+      },
+    },
     // for exposing the shopify storefront api
     {
       resolve: "gatsby-source-shopify-local",
