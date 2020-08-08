@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useStaticQuery, Link, graphql } from "gatsby";
 import Img from "gatsby-image";
 import { kebabCase, uniqueId, startCase } from "lodash";
@@ -16,6 +16,11 @@ const tagLine = [
   'Reverence for Beauty',
   'Fine art made for you, with love.'
 ];
+
+const referrals = [
+  `“Claire listens - she was able to take my vision and duplicate it on canvas. She is a true talent - easy to work with and my finished masterpiece is a joy to sit and admire.” Debbie C. Charleston, S.C.`,
+  `"SQRLE is a real good painter. She paints real good." TKL BOI TKLVILLE, USA`
+]
 
 const parseImages = (images, section) => Object
   .keys(images)
@@ -36,6 +41,7 @@ const parseImages = (images, section) => Object
   });
 
 export default (props) => {
+  const [activeReferral, setActiveReferral] = useState(0);
   const homePageImages = useStaticQuery(graphql`
     query HomePage {
       heroMobile: allFile(filter: {name: {regex: "/hero/"}}) {
@@ -143,6 +149,22 @@ export default (props) => {
   const responsiveHeroImages = parseImages(homePageImages, 'hero');
   const featuredImages = parseImages(homePageImages, 'featured');
 
+  const nextReferral = (e) => {
+    e.preventDefault();
+    if (activeReferral === referrals.length - 1) {
+      return;
+    }
+    setActiveReferral(activeReferral + 1);
+  }
+
+  const previousReferral = (e) => {
+    e.preventDefault();
+    if (activeReferral === 0) {
+      return;
+    }
+    setActiveReferral(activeReferral - 1);
+  }
+
   return (
     <Layout pageName="home">
           <Img
@@ -184,7 +206,13 @@ export default (props) => {
           </ul>
         </div>
         {/* Referrals */}
-        
+        <div className="py-10 flex align-center">
+          <span className="mr-auto cursor-pointer rounded-full w-12 bg-pink-200 flex h-12 items-center justify-center self-center" onClick={previousReferral}>{`<`}</span>
+          <p className="self-center w-3/4">
+            {referrals[activeReferral]}
+          </p>
+          <span className="ml-auto cursor-pointer rounded-full w-12 bg-pink-200 flex h-12 items-center justify-center self-center" onClick={nextReferral}>{`>`}</span>
+        </div>
         {/* Request Commission | Meet the Artist */}
     </Layout>
   );
