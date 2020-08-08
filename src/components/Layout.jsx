@@ -19,7 +19,7 @@ import { delay } from 'lodash';
 import CartContext from "../../globalState";
 import { localStorageKey } from '../helpers';
 import { fetchCart, subscribeToEmail, verifyCaptcha } from '../../client';
-import { useProducts, usePages, useNavigation } from '../graphql';
+import { useProducts } from '../graphql';
 
 library.add(
     faCopyright,
@@ -67,7 +67,7 @@ export const Layout = ({ children, pageName = 'default' }) => {
                     }
                 }
             }
-            imageSharp(id: {eq: "cfb82677-496a-5987-8a95-22d7dc5de000"}) {
+            imageSharp(original: {src: {regex: "/logo/"}}) {
                 fluid(maxWidth: 300) {
                     ...GatsbyImageSharpFluid
                 }
@@ -173,14 +173,14 @@ export const Layout = ({ children, pageName = 'default' }) => {
 
     return (
         <div className="global-container m-auto flex justify-center flex-col min-h-full">
-            <header className="py-10 px-5 align-center w-full flex flex-col justify-center">
+            <header className="pt-10 px-5 align-center w-full flex flex-col justify-center">
                 <Link to='/cart' className="ml-auto self-start">
                     <FontAwesomeIcon icon="shopping-cart" />
                 </Link>
                 <Link to='/' className="m-auto">
                     <h1 className="text-2xl">CLAIRE KENDALL</h1>
                 </Link>
-                <ul className="flex align-center justify-center">
+                <ul className="flex flex-col align-center text-center justify-center md:flex-row">
                     {[
                         <li className="p-5 mt-10">
                             <FontAwesomeIcon icon="search" />
@@ -194,7 +194,7 @@ export const Layout = ({ children, pageName = 'default' }) => {
                                 </li>
                             )),
                             <li className="p-5 my-8">
-                                <Img fluid={logo} className="w-40 h-12" />
+                                <Img fluid={logo} className="w-40 mx-auto h-12" />
                             </li>,
                         ...pages.slice(2, 4)
                             .map((page) => (
@@ -207,7 +207,7 @@ export const Layout = ({ children, pageName = 'default' }) => {
                     ]}
                 </ul>
             </header>
-            <main className={`${pageName} flex flex-col h-full self-center flex-grow px-10 max-w-3xl`}>
+            <main className={`default-page ${pageName} flex flex-col w-full h-full self-center flex-grow`}>
                 {children}
             </main>
             <footer className='flex-shrink-0 p-5 text-center'>

@@ -2,13 +2,68 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+$tablet: 768px;
+$desktop: 1024px;
+$medium: 1200px;
+$large: 1400px;
+$monitor: 1740px;
+$huge-monitor: 2000px;
+$four-k-monitor: 2400px;
+
 html,
 body,
 #___gatsby,
 #gatsby-focus-wrapper,
 .global-container {
     min-height: 100vh;
+    
+    // Font defaults
+    font-size: 10px;
+    h1 {
+        font-size: 3rem;
+    }
+    h2 {
+        font-size: 2.5rem
+    }
+    h3 {
+        font-size: 2.25rem;
+    }
+    a,
+    p,
+    span,
+    strong,
+    svg {
+        font-size: 1.6rem;
+    }
+
     .grecaptcha-badge {
         visibility: hidden;
+    }
+    .default-page {
+        max-width: 1000px;
+        &.home {
+            .hero-img {
+                height: 20rem;
+                @media(min-width: $tablet) {
+                    height: 30rem;
+                }
+                // these styles work okay if there is no max-width on the page.
+                @media(min-width: $desktop) {
+                    height: 40rem;
+                }
+                // @media(min-width: $large) {
+                //     height: 50rem;
+                // }
+                // @media(min-width: $monitor) {
+                //     height: 55rem;
+                // }
+                // @media(min-width: $huge-monitor) {
+                //     height: 65rem;
+                // }
+                // @media(min-width: $four-k-monitor) {
+                //     height: 75rem;
+                // }
+            }
+        }
     }
 }
