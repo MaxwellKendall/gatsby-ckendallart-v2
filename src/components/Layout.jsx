@@ -1,3 +1,5 @@
+// https://iconmonstr.com/shopping-cart/ ICONS LOOK AMAZING
+
 /* eslint-disable no-undef */
 import React, { useContext, useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -193,8 +195,8 @@ export const Layout = ({ children, pageName = 'default' }) => {
                                     </Link>
                                 </li>
                             )),
-                            <li className="p-5 my-8">
-                                <Img fluid={logo} className="w-40 mx-auto h-12" />
+                            <li className="p-2 my-10">
+                                <Img fluid={logo} className="w-24 mx-auto h-12" />
                             </li>,
                         ...pages.slice(2, 4)
                             .map((page) => (
@@ -226,31 +228,39 @@ export const Layout = ({ children, pageName = 'default' }) => {
                 <>
                     <input type="hidden" name="u" value="ab3ec7367aea68f258236a7f3" />
                     <input type="hidden" name="id" value="2e064274d9" />
-                    <input className="py-2 border border-black-500" type="email" name="MERGE0" value={userEmail} onChange={updateUserEmail} />
-                    <button
-                        disabled={subscribeStatus.subscribed}
-                        type="submit"
-                        className="border border-black-500 py-2 px-5"
-                        onClick={handleSubmit}>
-                        {subscribeStatus.isLoading && (
-                            <FontAwesomeIcon className="ml-2" icon={['fas', 'spinner']} spin />
-                        )}
-                        {!subscribeStatus.isLoading && !subscribeStatus.subscribed && (
-                            'Subscribe'
-                        )}
-                        {!subscribeStatus.isLoading && subscribeStatus.subscribed && (
-                            'Subscribed' 
-                        )}                        
-                    </button>
-                    {`Claire Kendall Art, ${new Date().getFullYear()}`}
-                    <FontAwesomeIcon className="ml-2" icon={['fas', 'copyright']} />
-                    <p className="pt-10">
-                        This site is protected by reCAPTCHA and the Google
-                        <a href="https://policies.google.com/privacy"> Privacy Policy </a>
-                        and
-                        <a href="https://policies.google.com/terms"> Terms of Service </a>
-                        apply.
-                    </p>
+                    <div className="flex items-center justify-center w-full">
+                        <label className="pr-5 leading-7 tracking-widest">be the first to know</label>
+                        <input className="leading-7 border-solid border-black" type="email" name="MERGE0" value={userEmail} onChange={updateUserEmail} />
+                        <button
+                            disabled={subscribeStatus.subscribed}
+                            type="submit"
+                            className="ml-2 leading-7 px-5"
+                            onClick={handleSubmit}>
+                            {subscribeStatus.isLoading && (
+                                <FontAwesomeIcon className="ml-2" icon={['fas', 'spinner']} spin />
+                            )}
+                            {!subscribeStatus.isLoading && !subscribeStatus.subscribed && (
+                                'SUBSCRIBE'
+                            )}
+                            {!subscribeStatus.isLoading && subscribeStatus.subscribed && (
+                                'SUBSCRIBED' 
+                            )}                        
+                        </button>
+                    </div>
+                    <div className="text-xs mt-48">
+                        <p>
+                            {`Claire Kendall Art, ${new Date().getFullYear()}`}
+                            <FontAwesomeIcon className="ml-2" icon={['fas', 'copyright']} />
+                        </p>
+                        <p>
+                            This site is protected by reCAPTCHA and the Google
+                            <a href="https://policies.google.com/privacy"> Privacy Policy </a>
+                            and
+                            <a href="https://policies.google.com/terms"> Terms of Service </a>
+                            apply.
+                        </p>
+                        <span className="text-xs mt-5">{`Website Built w <3 by tKlBoI LLC`}</span>
+                    </div>
                 </>
             </footer>
         </div>

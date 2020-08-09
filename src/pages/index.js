@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useStaticQuery, Link, graphql } from "gatsby";
 import Img from "gatsby-image";
-import { kebabCase, uniqueId, startCase } from "lodash";
+import { kebabCase, uniqueId, startCase, groupBy, flatten } from "lodash";
 
 import Layout from "../components/Layout";
 
@@ -110,7 +110,7 @@ export default (props) => {
           name
         }
       },
-      otherMobile: allFile(filter: {name: {regex: "/commission|profile-pic/"}}) {
+      otherMobile: allFile(filter: {name: {regex: "/other/"}}) {
         nodes {
           id
           childImageSharp {
@@ -121,7 +121,7 @@ export default (props) => {
           name
         }
       },
-      otherTablet: allFile(filter: {name: {regex: "/commission|profile-pic/"}}) {
+      otherTablet: allFile(filter: {name: {regex: "/other/"}}) {
         nodes {
           id
           childImageSharp {
@@ -132,7 +132,7 @@ export default (props) => {
           name
         }
       },
-      otherDesktop: allFile(filter: {name: {regex: "/commission|profile-pic/"}}) {
+      otherDesktop: allFile(filter: {name: {regex: "/other/"}}) {
         nodes {
           id
           childImageSharp {
@@ -147,7 +147,10 @@ export default (props) => {
 `);
  
   const responsiveHeroImages = parseImages(homePageImages, 'hero');
-  const featuredImages = parseImages(homePageImages, 'featured');
+  const featuredImages = groupBy(flatten(parseImages(homePageImages, 'featured')), 'fileName');
+  const otherImages = groupBy(flatten(parseImages(homePageImages, 'other')), 'fileName');
+
+  console.log('otherimages', otherImages);
 
   const nextReferral = (e) => {
     e.preventDefault();
@@ -167,53 +170,76 @@ export default (props) => {
 
   return (
     <Layout pageName="home">
-          <Img
-            className="w-full hero-img"
-            fluid={responsiveHeroImages}
-            imgStyle={{ objectPosition: 'center 55%'}} />
-        <div className="flex flex-col mx-auto py-10 md:py-24">
-          {tagLine.map((str) => (
-            <h2 className="w-full py-2 text-center tracking-widest my-5 text-3xl">{str.toUpperCase()}</h2>
-          ))}
-          <Link to="/portfolio" className="w-3/5 tracking-wider border mt-10 text-center mx-auto border-black py-5 text-2xl">
-            EXPLORE PORTFOLIO
-          </Link>
-        </div>
-        <div className="w-full bg-gray-100 pb-10">
-          <h3 className="m-10 text-2xl tracking-widest">FEATURED WORK</h3>
-          <ul className="flex w-full">
-            {featuredImages
-              .map((arr, i) => arr[i])
-              .map((arr, i, srcArr) => {
-                const splitFileName = arr.fileName.split('--');
-                const name = splitFileName[1];
-                const productType = splitFileName[2];
-                const url = splitFileName[3];
-                const margin = i === 1;
-                return (
-                  <li className={`w-1/3 flex flex-col align-center ${margin ? 'mx-2' : ''}`}>
-                    <Img fluid={arr} style={{ height: '80%' }}/>
-                    <p className="w-full text-center mt-5 text-xl tracking-wide">
-                      {startCase(name).toUpperCase()}
-                    </p>
-                    <Link className="w-full text-center text-lg tracking-wide" to={`${productType}/${kebabCase(url)}`}>
-                        shop now {`>`}
-                    </Link>
-                  </li>
-                );
-              })
-            }
-          </ul>
-        </div>
-        {/* Referrals */}
-        <div className="py-10 flex align-center">
-          <span className="mr-auto cursor-pointer rounded-full w-12 bg-pink-200 flex h-12 items-center justify-center self-center" onClick={previousReferral}>{`<`}</span>
-          <p className="self-center w-3/4">
-            {referrals[activeReferral]}
-          </p>
-          <span className="ml-auto cursor-pointer rounded-full w-12 bg-pink-200 flex h-12 items-center justify-center self-center" onClick={nextReferral}>{`>`}</span>
-        </div>
-        {/* Request Commission | Meet the Artist */}
+      {/* I. HERO IMG */}
+      <Img
+        className="w-full hero-img"
+        fluid={responsiveHeroImages}
+        imgStyle={{ objectPosition: 'center 55%'}} />
+      {/* TAG LINE */}
+      <div className="flex flex-col mx-auto py-10 md:py-24">
+        {tagLine.map((str) => (
+          <h2 className="w-full py-2 text-center tracking-widest my-5 text-3xl">{str.toUpperCase()}</h2>
+        ))}
+        <Link to="/portfolio" className="w-3/5 tracking-wider border mt-10 text-center mx-auto border-black py-5 text-2xl">
+          EXPLORE PORTFOLIO
+        </Link>
+      </div>
+      {/* II. FEATURED WORK */}
+      <div className="w-full featured-work pb-10">
+        <h3 className="m-10 text-2xl tracking-widest">FEATURED WORK</h3>
+        <ul className="flex w-full">
+          {Object.keys(featuredImages)
+            .map((key, i) => {
+              const arrayOfImages = featuredImages[key];
+              const splitFileName = key.split('--');
+              const name = splitFileName[1];
+              const productType = splitFileName[2];
+              const url = splitFileName[3];
+              const margin = i === 1;
+              return (
+                <li className={`w-1/3 flex flex-col align-center ${margin ? 'mx-2' : ''}`}>
+                  <Img fluid={arrayOfImages} style={{ height: '80%' }}/>
+                  <p className="w-full text-center mt-5 text-xl tracking-wide">
+                    {startCase(name).toUpperCase()}
+                  </p>
+                  <Link className="w-full text-center text-lg tracking-wide" to={`${productType}/${kebabCase(url)}`}>
+                      shop now {`>`}
+                  </Link>
+                </li>
+              );
+            })
+          }
+        </ul>
+      </div>
+      {/* III. REFERRALS */}
+      <div className="py-24 flex align-center">
+        <span className="mr-auto cursor-pointer rounded-full w-20 arrow-elipse flex h-20 items-center justify-center self-center" onClick={previousReferral}>{`<`}</span>
+        <p className="self-center w-3/4">
+          {referrals[activeReferral]}
+        </p>
+        <span className="ml-auto cursor-pointer rounded-full w-20 arrow-elipse flex h-20 items-center justify-center self-center" onClick={nextReferral}>{`>`}</span>
+      </div>
+      {/* IV. REQUEST COMMISSION | MEET THE ARTIST */}
+      <ul className="py-10 flex">
+        {Object.keys(otherImages)
+          .sort((a, b) => a.includes('commission') ? -1 : 1)
+          .map((key) => {
+            const arrayOfImages = otherImages[key];
+            const splitFileName = key.split('--');
+            const section = startCase(splitFileName[1]).toLowerCase() === 'request commission'
+              ? { title: 'REQUEST COMMISSION', url: '/commission/request'}
+              : { title: 'MEET THE ARTIST', url: '/about' };
+            return (
+              <li className={`w-1/2 flex flex-col align-center mx-2`}>
+                <Img fluid={arrayOfImages} style={{ height: '80%' }}/>
+                <Link to={section.url} className="w-full cursor-pointer text-center mt-5 text-xl tracking-widest">
+                    {`${startCase(section.title).toUpperCase()} >`}
+                </Link>
+              </li>
+            )
+          })
+        }
+      </ul>
     </Layout>
   );
 }

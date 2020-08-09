@@ -10,6 +10,10 @@ $monitor: 1740px;
 $huge-monitor: 2000px;
 $four-k-monitor: 2400px;
 
+$sqrl-font-color: #231e0e;
+$sqrl-arrow-elipse: #dcd0d0;
+$sqrl-featured-work: #eeedf0;
+
 html,
 body,
 #___gatsby,
@@ -25,15 +29,29 @@ body,
     .default-page {
         max-width: 1000px;
         &.home {
+            h1,
+            h2,
+            h3,
+            p,
+            span,
+            a {
+                color: $sqrl-font-color;
+            }
+            .arrow-elipse {
+                background-color: $sqrl-arrow-elipse;
+            }
+            .featured-work {
+                background-color: $sqrl-featured-work;
+            }
             .hero-img {
                 height: 20rem;
                 @media(min-width: $tablet) {
-                    height: 30rem;
+                    height: 25rem;
                 }
                 // these styles work okay if there is no max-width on the page.
-                @media(min-width: $desktop) {
-                    height: 40rem;
-                }
+                // @media(min-width: $desktop) {
+                //     height: 40rem;
+                // }
                 // @media(min-width: $large) {
                 //     height: 50rem;
                 // }
@@ -47,6 +65,12 @@ body,
                 //     height: 75rem;
                 // }
             }
+        }
+    }
+    footer {
+        background: #eeedf0;
+        button {
+            background: #cdbdbd;
         }
     }
 }
