@@ -195,6 +195,7 @@ export default (props) => {
               const name = splitFileName[1];
               const productType = splitFileName[2];
               const url = splitFileName[3];
+              const productSize = splitFileName[4];
               const margin = i === 1;
               return (
                 <li className={`w-1/3 flex flex-col align-center ${margin ? 'mx-2' : ''}`}>
@@ -202,9 +203,16 @@ export default (props) => {
                   <p className="w-full text-center mt-5 text-xl tracking-wide">
                     {startCase(name).toUpperCase()}
                   </p>
-                  <Link className="w-full text-center text-lg tracking-wide" to={`${productType}/${kebabCase(url)}`}>
-                      shop now {`>`}
-                  </Link>
+                  {productSize && (
+                    <Link className="w-full text-center text-lg tracking-wide" to={`${productType}/${kebabCase(url)}-${productSize}`}>
+                        shop now {`>`}
+                    </Link>
+                  )}
+                  {!productSize && (
+                    <Link className="w-full text-center text-lg tracking-wide" to={`${productType}/${kebabCase(url)}`}>
+                        shop now {`>`}
+                    </Link>
+                  )}
                 </li>
               );
             })
