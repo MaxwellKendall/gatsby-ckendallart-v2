@@ -85,6 +85,7 @@ exports.sourceNodes = async ({ actions, createNodeId, createContentDigest }, opt
                             image: node.image.originalSrc
                         };
                     }),
+                    hasOnlyDefaultVariant: (variants.edges.length === 1),
                     title,
                     collection: collectionByHandle.title,
                     handle,
@@ -120,7 +121,7 @@ const processFileNode = (fileNode, previousImage, node) => {
             return variant;
         });
     }
-    else if (fileNode) {
+    if (fileNode) {
         node.optimizedImages = node.optimizedImages
             ? node.optimizedImages.concat([fileNode.base])
             : [fileNode.base]
@@ -154,7 +155,8 @@ exports.onCreateNode = async ({
                         if (fileNode === 'first') {
                             return createRemoteFileNode({
                                 url: image.url, // string that points to the URL of the image
-                                parentNodeId: image.id, // id of the parent node of the fileNode you are going to create
+                                // parentNodeId: image.id, // id of the parent node of the fileNode you are going to create
+                                parentNodeId: node.id,
                                 createNode, // helper function in gatsby-node to generate the node
                                 createNodeId, // helper function in gatsby-node to generate the node id
                                 cache, // Gatsby's cache
@@ -166,7 +168,8 @@ exports.onCreateNode = async ({
                         processFileNode(fileNode, previousImage, node);
                         return createRemoteFileNode({
                             url: image.url, // string that points to the URL of the image
-                            parentNodeId: image.id, // id of the parent node of the fileNode you are going to create
+                            // parentNodeId: image.id, // id of the parent node of the fileNode you are going to create
+                            parentNodeId: node.id,
                             createNode, // helper function in gatsby-node to generate the node
                             createNodeId, // helper function in gatsby-node to generate the node id
                             cache, // Gatsby's cache
@@ -174,7 +177,6 @@ exports.onCreateNode = async ({
                         })
                         .then((resp) => {
                             if (i === arr.length - 1) {
-                                console.log("node", node);
                                 processFileNode(resp, arr[arr.length - 1], node);
                             }
                             return resp;

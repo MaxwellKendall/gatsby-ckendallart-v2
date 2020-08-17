@@ -174,5 +174,33 @@ export const query = graphql`
                 weightUnit
             }
         }
+        productImages: allFile(filter: {parent: {id: {eq: $id}}}) {
+            nodes {
+              name
+              base
+              childImageSharp {
+                fluid(maxWidth:700) {
+                  ...GatsbyImageSharpFluid
+                }
+              }
+              parent {
+                id
+              }
+            }
+        }
+        productImageThumbnails: allFile(filter: {parent: {id: {eq: $id}}}) {
+            nodes {
+              name
+              base
+              childImageSharp {
+                fluid(maxWidth: 300) {
+                  ...GatsbyImageSharpFluid
+                }
+              }
+              parent {
+                id
+              }
+            }
+        }
     }
 `;
