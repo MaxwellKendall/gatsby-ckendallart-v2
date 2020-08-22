@@ -14,6 +14,31 @@ $sqrl-font-color: #231e0e;
 $sqrl-arrow-elipse: #dcd0d0;
 $sqrl-featured-work: #eeedf0;
 
+@font-face {
+    font-family: 'main';
+    src: url("/fonts/Nunito_Sans/NunitoSans-Regular.ttf") format("ttf");
+}
+
+@font-face {
+    font-family: 'main-bold';
+    src: url("/fonts/Nunito_Sans/NunitoSans-Bold.tff") format("ttf");
+}
+
+@font-face {
+    font-family: 'main-italic';
+    src: url("/fonts/Nunito_Sans/NunitoSans-Regular.ttf") format("ttf");
+}
+
+@font-face {
+    font-family: 'main-light';
+    src: url("/fonts/Nunito_Sans/NunitoSans-Light.ttf") format("ttf");
+}
+
+@font-face {
+    font-family: 'sans-serif';
+    src: url("/fonts/Italianno/Italianno-Regular.ttf") format("ttf");
+}
+
 html,
 body,
 #___gatsby,
@@ -23,11 +48,16 @@ body,
     // Font defaults
     font-size: 16px;
 
+    font-family: 'main', 'main-bold', 'main-italic', 'main-light';
+
     .grecaptcha-badge {
         visibility: hidden;
     }
     .default-page {
         max-width: 1000px;
+        .sans-serif {
+            font-family: 'sans-serif';
+        }
         &.home {
             h1,
             h2,

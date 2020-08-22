@@ -133,6 +133,7 @@ exports.GetAllProductsInCollection = gql`
                         productType
                         id
                         totalInventory
+                        tags
                         images(first: $first) {
                             edges {
                                 node {
