@@ -54,7 +54,8 @@ export const Layout = ({
     children,
     pageName = 'default',
     classNames = '',
-    flexDirection = 'column'
+    flexDirection = 'column',
+    maxWidth = '100rem'
 }) => {
     const [userEmail, setUserEmail] = useState('');
     const [token, setToken] = useState('');
@@ -216,7 +217,9 @@ export const Layout = ({
                     ]}
                 </ul>
             </header>
-            <main className={`default-page ${pageName} flex flex-wrap flex-${flexDirection} w-full h-full self-center flex-grow ${classNames}`}>
+            <main
+                style={{ maxWidth }}
+                className={`default-page ${pageName} flex flex-wrap flex-${flexDirection} w-full h-full self-center justify-center flex-grow ${classNames}`}>
                 {children}
             </main>
             <footer className='flex-shrink-0 p-5 text-center'>

@@ -64,7 +64,6 @@ body,
     }
 
     .default-page {
-        max-width: 1000px;
         background: $sqrl-background-color;
         @apply default-pd-y;
         &.home {

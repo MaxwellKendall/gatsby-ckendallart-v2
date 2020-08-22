@@ -112,41 +112,39 @@ export default ({
     }
 
     return (
-        <Layout pageName="product-page" flexDirection="row" classNames="flex-wrap">
+        <Layout pageName="product-page" flexDirection="row" classNames="flex-wrap" maxWidth="100rem">
             {selectedVariant.localFile && (
                 <>
                     {remoteInventory === 0 && <span className="product-sold-out">Sold Out!</span>}
-                    <Img className="w-full md:w-1/2 md:ml-5" fluid={selectedVariant.localFile.childImageSharp.fluid} />
+                    <Img className="w-full mx-auto md:mx-5" fixed={selectedVariant.localFile.childImageSharp.fixed} />
                 </>
             )}
-            <div className="product-desc flex flex-col items-center justify-start w-2/5 mx-auto">
-                <h2 className="text-center text-4xl tracking-wide">{title}</h2>
-                <p className="text-center text-2xl py-10 tracking-widest">{`$${selectedVariant.price}`}</p>
-                {high !== low && <p className="text-center text-sm italic">{`from $${low} to $${high}`}</p>}
-                <p className="text-center text-lg">{description}</p>
-            </div>
-            <div className="actions w-full flex flex-col justify-center items-center my-5">
-                <select
-                    className="border border-black w-1/2"
-                    name="variants"
-                    onChange={handleSelectVariant}
-                    value={selectedVariant.title}>
-                    {parsedVariants.map((variant) => (
-                        <option key={uniqueId('')} value={variant.title}>{variant.title}</option>
-                    ))}
-                </select>
-                    {remainingInventory > 1 && (
-                        <>
-                            <input className="border border-black px-2 text-center" type="number" value={quantity} onChange={handleChangeQuantity} />
-                        </>
+            <div className="product-desc flex flex-col items-center w-full lg:items-start my-5 lg:justify-start lg:w-1/4 xl:w-2/5 lg:mr-5 lg:my-0">
+                <h2 className="text-4xl tracking-wide text-center lg:text-left">{title}</h2>
+                <p className="text-2xl py-10 tracking-widest">{`$${selectedVariant.price}`}</p>
+                {high !== low && <p className="text-sm italic">{`from $${low} to $${high}`}</p>}
+                <div className="actions w-full flex flex-col my-5 justify-center items-center lg:justify-start">
+                    <button
+                        className="border text-white border-black w-64 py-5 px-2 text-xl uppercase mb-2"
+                        style={{ background: "#C097D0" }}
+                        disabled={isAddToCartDisabled}
+                        onClick={handleAddToCart}>
+                        {isLoading && <FontAwesomeIcon icon="spinner" spin />}
+                        {!isLoading && 'Add to Cart'}
+                    </button>
+                    {parsedVariants.length > 1 && (
+                        <select
+                            className="border border-black w-1/2"
+                            name="variants"
+                            onChange={handleSelectVariant}
+                            value={selectedVariant.title}>
+                            {parsedVariants.map((variant) => (
+                                <option key={uniqueId('')} value={variant.title}>{variant.title}</option>
+                            ))}
+                        </select>
                     )}
-                <button
-                    className="border border-black w-1/2"
-                    disabled={isAddToCartDisabled}
-                    onClick={handleAddToCart}>
-                    {isLoading && <FontAwesomeIcon icon="spinner" spin />}
-                    {!isLoading && 'Add to Cart'}
-                </button>
+                    <p className="text-lg py-10 tracking-wide px-10 lg:px-0">{description}</p>
+                </div>
             </div>
         </Layout>
     );
@@ -167,8 +165,8 @@ export const query = graphql`
                 sku
                 localFile {
                     childImageSharp {
-                      fluid(maxWidth:700) {
-                        ...GatsbyImageSharpFluid
+                      fixed(width:700) {
+                        ...GatsbyImageSharpFixed
                       }
                     }
                   }
@@ -181,8 +179,8 @@ export const query = graphql`
               name
               base
               childImageSharp {
-                fluid(maxWidth:700) {
-                  ...GatsbyImageSharpFluid
+                fixed(width:700) {
+                  ...GatsbyImageSharpFixed
                 }
               }
               parent {
@@ -195,8 +193,8 @@ export const query = graphql`
               name
               base
               childImageSharp {
-                fluid(maxWidth: 300) {
-                  ...GatsbyImageSharpFluid
+                fixed(width: 300) {
+                  ...GatsbyImageSharpFixed
                 }
               }
               parent {
