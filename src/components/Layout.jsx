@@ -182,21 +182,23 @@ export const Layout = ({ children, pageName = 'default' }) => {
                 <Link to='/' className="m-auto">
                     <h1 className="text-2xl">CLAIRE KENDALL</h1>
                 </Link>
-                <ul className="flex flex-col align-center text-center justify-center md:flex-row">
+                <ul className="flex flex-col items-center text-center justify-center md:flex-row">
                     {[
-                        <li className="p-5 mt-10">
+                        <li className="flex items-center p-5 mt-10">
                             <FontAwesomeIcon icon="search" />
                         </li>,
                         ...pages.slice(0, 2)
                             .map((page) => (
-                                <li className="p-5 mt-10">
+                                <li className="p-2 mt-10">
                                     <Link to={page.link}>
                                         {page.name.toUpperCase()}
                                     </Link>
                                 </li>
                             )),
-                            <li className="p-2 my-10">
-                                <Img fluid={logo} className="w-24 mx-auto h-12" />
+                            <li className="p-2 mt-10 ml-5">
+                                <Link to="/">
+                                    <Img fluid={logo} className="w-24 mx-auto h-12" />
+                                </Link>
                             </li>,
                         ...pages.slice(2, 4)
                             .map((page) => (

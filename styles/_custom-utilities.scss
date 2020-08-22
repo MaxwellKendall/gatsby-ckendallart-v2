@@ -1,0 +1,11 @@
+.flex-col-center {
+    @apply flex flex-col items-center justify-center mx-auto;
+}
+
+.default-pd-x {
+    @apply px-10;
+}
+
+.default-pd-y {
+    @apply py-24;
+}

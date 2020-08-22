@@ -176,7 +176,7 @@ export default (props) => {
         fluid={responsiveHeroImages}
         imgStyle={{ objectPosition: 'center 55%'}} />
       {/* TAG LINE */}
-      <div className="flex flex-col mx-auto py-10 md:py-24">
+      <div className="flex-col-center py-10 md:py-24">
         {tagLine.map((str) => (
           <h2 className="w-full py-2 text-center tracking-widest my-5 text-3xl">{str.toUpperCase()}</h2>
         ))}
@@ -186,8 +186,8 @@ export default (props) => {
       </div>
       {/* II. FEATURED WORK */}
       <div className="w-full featured-work pb-10">
-        <h3 className="m-10 text-2xl tracking-widest">FEATURED WORK</h3>
-        <ul className="flex w-full">
+        <h3 className="px-10 pt-10 text-2xl tracking-widest">FEATURED WORK</h3>
+        <ul className="p-10 flex w-full">
           {Object.keys(featuredImages)
             .map((key, i) => {
               const arrayOfImages = featuredImages[key];
@@ -222,7 +222,7 @@ export default (props) => {
       {/* III. REFERRALS */}
       <div className="py-24 flex align-center">
         <span className="mr-auto cursor-pointer rounded-full w-20 arrow-elipse flex h-20 items-center justify-center self-center" onClick={previousReferral}>{`<`}</span>
-        <p className="self-center w-3/4">
+        <p className="self-center w-3/4 script-font tracking-wide text-4xl opacity-75">
           {referrals[activeReferral]}
         </p>
         <span className="ml-auto cursor-pointer rounded-full w-20 arrow-elipse flex h-20 items-center justify-center self-center" onClick={nextReferral}>{`>`}</span>
