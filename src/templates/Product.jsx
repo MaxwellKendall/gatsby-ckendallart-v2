@@ -103,14 +103,6 @@ export default ({
         remainingInventory === 0
     );
 
-    const handleChangeQuantity = (e) => {
-        e.preventDefault();
-        const newQuantity = parseInt(e.target.value, 10);
-        if (newQuantity <= remainingInventory && newQuantity >= 1) {
-            setQuantity(parseInt(e.target.value, 10));
-        }
-    }
-
     return (
         <Layout pageName="product-page" flexDirection="row" classNames="flex-wrap" maxWidth="100rem">
             {selectedVariant.localFile && (
@@ -123,9 +115,9 @@ export default ({
                 <h2 className="text-4xl tracking-wide text-center lg:text-left">{title}</h2>
                 <p className="text-2xl py-10 tracking-widest">{`$${selectedVariant.price}`}</p>
                 {high !== low && <p className="text-sm italic">{`from $${low} to $${high}`}</p>}
-                <div className="actions w-full flex flex-col my-5 justify-center items-center lg:justify-start">
+                <div className="actions w-full flex flex-col my-5 justify-start items-start lg:justify-start">
                     <button
-                        className="border text-white border-black w-64 py-5 px-2 text-xl uppercase mb-2"
+                        className="border text-white border-black w-64 py-5 px-2 text-xl uppercase mb-2 self-center lg:self-start"
                         style={{ background: "#C097D0" }}
                         disabled={isAddToCartDisabled}
                         onClick={handleAddToCart}>
