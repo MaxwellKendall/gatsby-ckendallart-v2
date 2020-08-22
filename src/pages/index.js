@@ -228,7 +228,7 @@ export default (props) => {
         <span className="ml-auto cursor-pointer rounded-full w-20 arrow-elipse flex h-20 items-center justify-center self-center" onClick={nextReferral}>{`>`}</span>
       </div>
       {/* IV. REQUEST COMMISSION | MEET THE ARTIST */}
-      <ul className="py-10 flex">
+      <ul className="py-10 flex w-full">
         {Object.keys(otherImages)
           .sort((a, b) => a.includes('commission') ? -1 : 1)
           .map((key) => {

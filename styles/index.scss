@@ -20,6 +20,7 @@ $sqrl-font-color: #231e0e;
 $sqrl-arrow-elipse: #dcd0d0;
 $sqrl-featured-work: #eeedf0;
 $sqrl-background-color: #F5F5F7;
+$sqrl-footer-background: #EEEEF0;
 
 @font-face {
     font-family: 'Nunito Sans';
@@ -113,7 +114,7 @@ body,
         }
     }
     footer {
-        background: #eeedf0;
+        background: $sqrl-footer-background;
         button {
             background: #cdbdbd;
         }

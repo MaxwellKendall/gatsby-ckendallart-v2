@@ -50,7 +50,12 @@ let confirmationToast;
 // show toast for 2s
 const toastDelay = 5000;
 
-export const Layout = ({ children, pageName = 'default' }) => {
+export const Layout = ({
+    children,
+    pageName = 'default',
+    classNames = '',
+    flexDirection = 'column'
+}) => {
     const [userEmail, setUserEmail] = useState('');
     const [token, setToken] = useState('');
     const [subscribeStatus, setSubscribeStatus] = useState(defaultSubscribeStatus);
@@ -175,7 +180,7 @@ export const Layout = ({ children, pageName = 'default' }) => {
 
     return (
         <div className="global-container m-auto flex justify-center flex-col min-h-full">
-            <header className="pt-10 px-5 align-center w-full flex flex-col justify-center">
+            <header className="pt-10 px-5 align-center w-full flex flex-col justify-center mb-12">
                 <Link to='/cart' className="ml-auto self-start">
                     <FontAwesomeIcon icon="shopping-cart" />
                 </Link>
@@ -211,7 +216,7 @@ export const Layout = ({ children, pageName = 'default' }) => {
                     ]}
                 </ul>
             </header>
-            <main className={`default-page ${pageName} flex flex-col w-full h-full self-center flex-grow`}>
+            <main className={`default-page ${pageName} flex flex-wrap flex-${flexDirection} w-full h-full self-center flex-grow ${classNames}`}>
                 {children}
             </main>
             <footer className='flex-shrink-0 p-5 text-center'>
