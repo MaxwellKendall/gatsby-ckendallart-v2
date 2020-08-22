@@ -150,8 +150,6 @@ export default (props) => {
   const featuredImages = groupBy(flatten(parseImages(homePageImages, 'featured')), 'fileName');
   const otherImages = groupBy(flatten(parseImages(homePageImages, 'other')), 'fileName');
 
-  console.log('otherimages', otherImages);
-
   const nextReferral = (e) => {
     e.preventDefault();
     if (activeReferral === referrals.length - 1) {

@@ -11,6 +11,26 @@ import { initCheckout, addLineItemsToCart, fetchProductInventory, updateLineItem
 import { useProducts } from '../graphql';
 import { uniqueId, kebabCase } from 'lodash';
 
+const breakpointsByTshirtSize = {
+    small: `(min-width: 0px)`,
+    medium: `(min-width: 768px)`,
+    large: `(min-width: 1200px)`
+  };
+
+const responsiveProductImages = graphql`
+    fragment responsiveProductImages on ImageSharp {
+        small: fixed(width:300) {
+            ...GatsbyImageSharpFixed
+          }
+          medium: fixed(width:500) {
+            ...GatsbyImageSharpFixed
+          }
+          large: fixed(width:700) {
+            ...GatsbyImageSharpFixed
+          }
+    }
+`;
+
 export default ({
     pathContext: {
         title,
@@ -20,6 +40,8 @@ export default ({
     data: { shopifyProduct: product },
     path
 }) => {
+
+    console.log('product', product)
     const { cart, dispatch } = useContext(CartContext);
     const products = useProducts();
     const { variants, productType } = product;
@@ -103,15 +125,22 @@ export default ({
         remainingInventory === 0
     );
 
+    const responsiveVariantImages = Object
+        .keys(selectedVariant.localFile.childImageSharp)
+        .map((key) => ({
+            ...selectedVariant.localFile.childImageSharp[key],
+            media: breakpointsByTshirtSize[key]
+        }));
+
     return (
         <Layout pageName="product-page" flexDirection="row" classNames="flex-wrap" maxWidth="100rem">
             {selectedVariant.localFile && (
                 <>
                     {remoteInventory === 0 && <span className="product-sold-out">Sold Out!</span>}
-                    <Img className="w-full mx-auto md:mx-5" fixed={selectedVariant.localFile.childImageSharp.fixed} />
+                    <Img className="w-full mx-auto md:mx-5" fixed={responsiveVariantImages} />
                 </>
             )}
-            <div className="product-desc flex flex-col items-center w-full lg:items-start my-5 lg:justify-start lg:w-1/4 xl:w-2/5 lg:mr-5 lg:my-0">
+            <div className="product-desc flex flex-col items-center w-full lg:w-2/5 lg:items-start my-5 lg:justify-start lg:w-1/4 xl:w-2/5 lg:mr-5 lg:my-0">
                 <h2 className="text-4xl tracking-wide text-center lg:text-left">{title}</h2>
                 <p className="text-2xl py-10 tracking-widest">{`$${selectedVariant.price}`}</p>
                 {high !== low && <p className="text-sm italic">{`from $${low} to $${high}`}</p>}
@@ -157,11 +186,17 @@ export const query = graphql`
                 sku
                 localFile {
                     childImageSharp {
-                      fixed(width:700) {
-                        ...GatsbyImageSharpFixed
-                      }
+                        small: fixed(width:300) {
+                            ...GatsbyImageSharpFixed
+                          }
+                          medium: fixed(width:500) {
+                            ...GatsbyImageSharpFixed
+                          }
+                          large: fixed(width:700) {
+                            ...GatsbyImageSharpFixed
+                          }
                     }
-                  }
+                }
                 weight
                 weightUnit
             }
@@ -171,7 +206,7 @@ export const query = graphql`
               name
               base
               childImageSharp {
-                fixed(width:700) {
+                fixed(width:500) {
                   ...GatsbyImageSharpFixed
                 }
               }
