@@ -6,8 +6,8 @@ import { kebabCase, uniqueId, startCase, groupBy, flatten } from "lodash";
 import Layout from "../components/Layout";
 
 const imgBreakPointsByViewPort = {
-  mobile: `(min-width: 0px)`,
-  tablet: `(min-width: 768px)`,
+  mobile: `(min-width: 0px) and (max-width: 767px)`,
+  tablet: `(min-width: 768px) and (max-width: 1199px)`,
   desktop: `(min-width: 1200px)`
 };
 

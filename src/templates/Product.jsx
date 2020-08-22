@@ -11,11 +11,11 @@ import { initCheckout, addLineItemsToCart, fetchProductInventory, updateLineItem
 import { useProducts } from '../graphql';
 import { uniqueId, kebabCase } from 'lodash';
 
-const breakpointsByTshirtSize = {
-    small: `(min-width: 0px)`,
-    medium: `(min-width: 768px)`,
+const imgBreakPointsByTShirtSize = {
+    small: `(min-width: 0px) and (max-width: 767px)`,
+    medium: `(min-width: 768px) and (max-width: 1199px)`,
     large: `(min-width: 1200px)`
-  };
+};
 
 const responsiveProductImages = graphql`
     fragment responsiveProductImages on ImageSharp {
@@ -129,7 +129,7 @@ export default ({
         .keys(selectedVariant.localFile.childImageSharp)
         .map((key) => ({
             ...selectedVariant.localFile.childImageSharp[key],
-            media: breakpointsByTshirtSize[key]
+            media: imgBreakPointsByTShirtSize[key]
         }));
 
     return (
