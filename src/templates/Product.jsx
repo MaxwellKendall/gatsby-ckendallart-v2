@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useCallback } from 'react';
+import React, { useState, useContext, useEffect, useCallback, useRef } from 'react';
 import { graphql } from 'gatsby';
 import Img from "gatsby-image";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,12 +9,13 @@ import Layout from "../components/Layout";
 import { getParsedVariants, localStorageKey, getLineItemForAddToCart, isVariantInCart, getLineItemForUpdateToCart, getInventoryDetails } from '../helpers';
 import { initCheckout, addLineItemsToCart, fetchProductInventory, updateLineItemsInCart } from '../../client';
 import { useProducts } from '../graphql';
-import { uniqueId, kebabCase } from 'lodash';
+import { uniqueId, kebabCase, throttle } from 'lodash';
 
 const imgBreakPointsByTShirtSize = {
     small: `(min-width: 0px) and (max-width: 767px)`,
     medium: `(min-width: 768px) and (max-width: 1199px)`,
-    large: `(min-width: 1200px)`
+    large: `(min-width: 1200px)`,
+    hoverImg: ``
 };
 
 const responsiveProductImages = graphql`
@@ -40,7 +41,6 @@ export default ({
     data: { shopifyProduct: product },
     path
 }) => {
-
     console.log('product', product)
     const { cart, dispatch } = useContext(CartContext);
     const products = useProducts();
@@ -51,6 +51,16 @@ export default ({
     const [quantity, setQuantity] = useState(1);
     const [remainingInventory, setRemainingInventory] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
+    const [showZoom, setZoom] = useState(false);
+    const [hoverImageDimensions, setHoverImageDimensions] = useState({});
+    const [magnifyDimensions, setMagnifyDimensions] = useState({});
+    const imgRef = useRef(null);
+
+    useEffect(() => {
+        if (imgRef.current) {
+            setHoverImageDimensions(imgRef.current.getBoundingClientRect());
+        }
+    }, [imgRef.current])
 
     const checkInventory = useCallback(async () => {
         setIsLoading(true);
@@ -128,16 +138,67 @@ export default ({
     const responsiveVariantImages = Object
         .keys(selectedVariant.localFile.childImageSharp)
         .map((key) => ({
+            imgSize: key,
             ...selectedVariant.localFile.childImageSharp[key],
             media: imgBreakPointsByTShirtSize[key]
         }));
+
+    const toggleHover = () => {
+        setZoom(!showZoom);
+        setMagnifyDimensions({ left: 0, bottom: 0 });
+    }
+
+    const hoverImg = responsiveVariantImages.find((obj) => obj.imgSize === 'hoverImg');
+
+    const getCursorPos = (event) => {
+        event.persist();
+        if (event.target) {
+            const left = event.clientX - imgRef.current.getBoundingClientRect().left;
+            const top = event.clientY - imgRef.current.getBoundingClientRect().top;
+            console.log('vertical', event.clientY);
+            console.log('Horizontal', event.clientX);
+            // setMagnifyDimensions({ left: event.clientX, top: event.clientY });
+            setMagnifyDimensions({ left, top });
+        }
+    }
 
     return (
         <Layout pageName="product-page" flexDirection="row" classNames="flex-wrap" maxWidth="100rem">
             {selectedVariant.localFile && (
                 <>
                     {remoteInventory === 0 && <span className="product-sold-out">Sold Out!</span>}
-                    <Img className="w-full mx-auto md:mx-5" fixed={responsiveVariantImages} />
+                    <div
+                        ref={imgRef}
+                        onMouseEnter={toggleHover}>
+                        <Img
+                            className="w-full mx-auto md:mx-5"
+                            fixed={responsiveVariantImages} />
+                    </div>
+                    <div
+                        className={`${showZoom ? '' : ' hiddenz'} hover-img absolute overflow-hidden`}
+                        onMouseLeave={toggleHover}
+                        onMouseMove={getCursorPos}
+                        style={{
+                            width: `${hoverImageDimensions.width}px`,
+                            top: `${hoverImageDimensions.top}px`,
+                            height: `${hoverImageDimensions.height}px`,
+                            left: `${hoverImageDimensions.left}px`
+                        }}>
+                        {/* <div
+                            onMouseMoveCapture={getCursorPos}
+                            className={`absolute top-0 z-10 w-24 h-24 border-white rounded-full border-solid border-4  magnify`}
+                            style={{ bottom: magnifyDimensions.bottom, left: magnifyDimensions.left }} /> */}
+                        <Img
+                            fixed={hoverImg}
+                            imgStyle={{
+                                bottom: `${- magnifyDimensions.top}px`,
+                                left: `${- magnifyDimensions.left}px`
+                                // objectPosition: `${magnifyDimensions.top / hoverImageDimensions.height * 100}% ${magnifyDimensions.left / hoverImageDimensions.width * 100}%`
+                            }}
+                            style={{
+                                transform: 'scale(1.25)',
+                            }} />
+                    </div>
                 </>
             )}
             <div className="product-desc flex flex-col items-center w-full lg:w-2/5 lg:items-start my-5 lg:justify-start lg:w-1/4 xl:w-2/5 lg:mr-5 lg:my-0">
@@ -189,12 +250,15 @@ export const query = graphql`
                         small: fixed(width:300) {
                             ...GatsbyImageSharpFixed
                           }
-                          medium: fixed(width:500) {
+                        medium: fixed(width:500) {
                             ...GatsbyImageSharpFixed
-                          }
-                          large: fixed(width:700) {
+                        }
+                        large: fixed(width:700) {
                             ...GatsbyImageSharpFixed
-                          }
+                        }
+                        hoverImg: fixed(width:1000) {
+                            ...GatsbyImageSharpFixed
+                        }
                     }
                 }
                 weight
