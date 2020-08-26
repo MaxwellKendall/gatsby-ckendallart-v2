@@ -15,7 +15,12 @@ const imgBreakPointsByTShirtSize = {
     small: `(min-width: 0px) and (max-width: 767px)`,
     medium: `(min-width: 768px) and (max-width: 1199px)`,
     large: `(min-width: 1200px)`,
-    hoverImg: ``
+    hoverImg: {
+        small: `(min-width: 0px) and (max-width: 767px)`,
+        medium: `(min-width: 768px) and (max-width: 1199px)`,
+        large: `(min-width: 1200px)  and (max-width: 1799px)`,
+        xl: `(min-width: 1800px)`
+    }
 };
 
 const responsiveProductImages = graphql`
@@ -55,6 +60,7 @@ export default ({
     const [hoverImageDimensions, setHoverImageDimensions] = useState({});
     const [magnifyDimensions, setMagnifyDimensions] = useState({});
     const imgRef = useRef(null);
+    const magnifyImg = useRef(null);
 
     useEffect(() => {
         if (imgRef.current) {
@@ -145,61 +151,83 @@ export default ({
 
     const toggleHover = () => {
         setZoom(!showZoom);
-        setMagnifyDimensions({ left: 0, bottom: 0 });
+        setMagnifyDimensions({ left: 0, top: 0 });
     }
 
-    const hoverImg = responsiveVariantImages.find((obj) => obj.imgSize === 'hoverImg');
+    const responsiveHoverImgs = Object.keys(selectedVariant.localFile.hoverImgs)
+        .map((key) => ({
+            imgSize: key,
+            ...selectedVariant.localFile.hoverImgs[key],
+            media: imgBreakPointsByTShirtSize.hoverImg[key]
+        }))
+        ;
 
-    const getCursorPos = (event) => {
+    const getCursorPos = throttle((event) => {
         event.persist();
         if (event.target) {
-            const left = event.clientX - imgRef.current.getBoundingClientRect().left;
-            const top = event.clientY - imgRef.current.getBoundingClientRect().top;
-            console.log('vertical', event.clientY);
-            console.log('Horizontal', event.clientX);
-            // setMagnifyDimensions({ left: event.clientX, top: event.clientY });
-            setMagnifyDimensions({ left, top });
+            const {
+                height: magnifyImgHeight,
+                width: magnifyImgWidth
+            } = magnifyImg.current.imageRef.current.getBoundingClientRect();
+            const {
+                top: hoverImgTop,
+                width: hoverImgWidth,
+                height: hoverImgHeight,
+                left: hoverImgLeft
+            } = hoverImageDimensions;
+            const verticalOffset = magnifyImgHeight - hoverImgHeight;
+            const horizontalOffset = magnifyImgWidth - hoverImgWidth;
+            const newHoriztonalPosition = (event.clientX - hoverImgWidth);
+            const newVerticalPosition = (event.clientY - hoverImgTop);
+            console.log("magnifyImgHeight", magnifyImgHeight);
+            console.log("magnifyImgWidth", magnifyImgWidth);
+            console.log("verticalOffset", verticalOffset);
+            console.log("horizontalOffset", horizontalOffset);
+            console.log("newHoriztonalPosition", newHoriztonalPosition);
+            console.log("newVerticalPosition", newVerticalPosition);
+            setMagnifyDimensions({
+                left: newHoriztonalPosition > horizontalOffset ? horizontalOffset : newHoriztonalPosition,
+                top: newVerticalPosition > verticalOffset ? verticalOffset : newVerticalPosition
+            });
         }
-    }
+    }, 5)
 
     return (
         <Layout pageName="product-page" flexDirection="row" classNames="flex-wrap" maxWidth="100rem">
             {selectedVariant.localFile && (
-                <>
+                <div className="mx-auto md:mx-5">
                     {remoteInventory === 0 && <span className="product-sold-out">Sold Out!</span>}
                     <div
                         ref={imgRef}
                         onMouseEnter={toggleHover}>
                         <Img
-                            className="w-full mx-auto md:mx-5"
+                            className="w-full"
                             fixed={responsiveVariantImages} />
                     </div>
                     <div
                         className={`${showZoom ? '' : ' hiddenz'} hover-img absolute overflow-hidden`}
                         onMouseLeave={toggleHover}
-                        onMouseMove={getCursorPos}
+                        onPointerMoveCapture={getCursorPos}
+                        onTouchMoveCapture={getCursorPos}
                         style={{
                             width: `${hoverImageDimensions.width}px`,
                             top: `${hoverImageDimensions.top}px`,
                             height: `${hoverImageDimensions.height}px`,
                             left: `${hoverImageDimensions.left}px`
                         }}>
-                        {/* <div
-                            onMouseMoveCapture={getCursorPos}
-                            className={`absolute top-0 z-10 w-24 h-24 border-white rounded-full border-solid border-4  magnify`}
-                            style={{ bottom: magnifyDimensions.bottom, left: magnifyDimensions.left }} /> */}
                         <Img
-                            fixed={hoverImg}
+                            ref={magnifyImg}
+                            className="w-full"
+                            fixed={responsiveHoverImgs}
                             imgStyle={{
-                                bottom: `${- magnifyDimensions.top}px`,
-                                left: `${- magnifyDimensions.left}px`
-                                // objectPosition: `${magnifyDimensions.top / hoverImageDimensions.height * 100}% ${magnifyDimensions.left / hoverImageDimensions.width * 100}%`
+                                top: `${magnifyDimensions.top > 0 ? -magnifyDimensions.top : 0}px`,
+                                left: `${magnifyDimensions.left > 0 ? -magnifyDimensions.left : 0}px`,
                             }}
                             style={{
-                                transform: 'scale(1.25)',
+                                transform: 'transition all ease-in'
                             }} />
                     </div>
-                </>
+                </div>
             )}
             <div className="product-desc flex flex-col items-center w-full lg:w-2/5 lg:items-start my-5 lg:justify-start lg:w-1/4 xl:w-2/5 lg:mr-5 lg:my-0">
                 <h2 className="text-4xl tracking-wide text-center lg:text-left">{title}</h2>
@@ -256,7 +284,18 @@ export const query = graphql`
                         large: fixed(width:700) {
                             ...GatsbyImageSharpFixed
                         }
-                        hoverImg: fixed(width:1000) {
+                    }
+                    hoverImgs: childImageSharp {
+                        small: fixed(width:700) {
+                            ...GatsbyImageSharpFixed
+                        }
+                        medium: fixed(width:1000) {
+                            ...GatsbyImageSharpFixed
+                        }
+                        large: fixed(width:1300) {
+                            ...GatsbyImageSharpFixed
+                        }
+                        xl: fixed(width:1800) {
                             ...GatsbyImageSharpFixed
                         }
                     }
