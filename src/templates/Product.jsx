@@ -162,44 +162,35 @@ export default ({
             imgSize: key,
             ...selectedVariant.localFile.hoverImgs[key],
             media: imgBreakPointsByTShirtSize.hoverImg[key]
-        }))
-        ;
+        }));
+    
+    const debouncedMouseHandler = debounce(({ pageY, pageX }) => {
+        const {
+            height: magnifyImgHeight,
+            width: magnifyImgWidth
+        } = magnifyImg.current.imageRef.current.getBoundingClientRect();
+        const {
+            top: hoverImgTop,
+            width: hoverImgWidth,
+            height: hoverImgHeight,
+            left: hoverImgLeft
+        } = hoverImageDimensions;
+        const verticalImgDimensionDiff = magnifyImgHeight - hoverImgHeight;
+        const horizontalImgDimensionDiff = magnifyImgWidth - hoverImgWidth;
+        const horizontalPosition = (pageX - hoverImgLeft);
+        const verticalPosition = (pageY - hoverImgTop);
+        const horizontalPositionAsPercentage = ((horizontalPosition) / horizontalImgDimensionDiff) * 100;
+        const verticalPositionAsPercentage = ((verticalPosition) / verticalImgDimensionDiff) * 100;
+        setMagnifyDimensions({
+            left: horizontalPositionAsPercentage,
+            top: verticalPositionAsPercentage
+        });
+    }, 5)
 
-    const getCursorPos = (event) => {
+    const getCursorPosition = (event) => {
         event.persist();
-        if (event.target) {
-            const {
-                height: magnifyImgHeight,
-                width: magnifyImgWidth
-            } = magnifyImg.current.imageRef.current.getBoundingClientRect();
-            const {
-                top: hoverImgTop,
-                width: hoverImgWidth,
-                height: hoverImgHeight,
-                left: hoverImgLeft
-            } = hoverImageDimensions;
-            const verticalImgDimensionDiff = magnifyImgHeight - hoverImgHeight;
-            const horizontalImgDimensionDiff = magnifyImgWidth - hoverImgWidth;
-            const horizontalPosition = (event.clientX - hoverImgLeft);
-            const verticalPosition = (event.pageY - hoverImgTop);
-            const horizontalPositionAsPercentage = ((horizontalPosition - cursorPositionOffset) / horizontalImgDimensionDiff) * 100;
-            const verticalPositionAsPercentage = ((verticalPosition - cursorPositionOffset) / verticalImgDimensionDiff) * 100;
-            console.log("hoverImgHeight", hoverImgHeight);
-            console.log("hoverImgTop", hoverImgTop);
-            console.log("verticalPosition", verticalPosition);
-            console.log("verticalImgDimensionDiff", verticalImgDimensionDiff);
-            console.log("verticalPositionAsPercentage", verticalPositionAsPercentage);
-            console.log("event.clientY", event.clientY);
-            console.log("event.pageY", event.pageY);
-
-            setMagnifyDimensions({
-                left: horizontalPositionAsPercentage,
-                top: verticalPositionAsPercentage
-            });
-        }
-    };
-
-    const debouncedGetCursorPos = debounce(getCursorPos, 5);
+        debouncedMouseHandler(event);
+    }
 
     return (
         <Layout pageName="product-page" flexDirection="row" classNames="flex-wrap" maxWidth="100rem">
@@ -216,8 +207,8 @@ export default ({
                     <div
                         className={`${showZoom ? '' : ' hidden'} hover-img absolute overflow-hidden`}
                         onMouseLeave={toggleHover}
-                        onPointerMoveCapture={debouncedGetCursorPos}
-                        onTouchMoveCapture={debouncedGetCursorPos}
+                        onMouseMove={getCursorPosition}
+                        onTouchMove={getCursorPosition}
                         style={{
                             width: `${hoverImageDimensions.width}px`,
                             top: `${hoverImageDimensions.top}px`,
