@@ -9,7 +9,7 @@ import Layout from "../components/Layout";
 import { getParsedVariants, localStorageKey, getLineItemForAddToCart, isVariantInCart, getLineItemForUpdateToCart, getInventoryDetails } from '../helpers';
 import { initCheckout, addLineItemsToCart, fetchProductInventory, updateLineItemsInCart } from '../../client';
 import { useProducts } from '../graphql';
-import { uniqueId, kebabCase, throttle } from 'lodash';
+import { uniqueId, kebabCase, debounce } from 'lodash';
 
 const imgBreakPointsByTShirtSize = {
     small: `(min-width: 0px) and (max-width: 767px)`,
@@ -36,6 +36,9 @@ const responsiveProductImages = graphql`
           }
     }
 `;
+
+// not sure why this works
+const cursorPositionOffset = 25;
 
 export default ({
     pathContext: {
@@ -64,7 +67,7 @@ export default ({
 
     useEffect(() => {
         if (imgRef.current) {
-            setHoverImageDimensions(imgRef.current.getBoundingClientRect());
+            setHoverImageDimensions(imgRef.current.imageRef.current.getBoundingClientRect());
         }
     }, [imgRef.current])
 
@@ -162,7 +165,7 @@ export default ({
         }))
         ;
 
-    const getCursorPos = throttle((event) => {
+    const getCursorPos = (event) => {
         event.persist();
         if (event.target) {
             const {
@@ -175,22 +178,28 @@ export default ({
                 height: hoverImgHeight,
                 left: hoverImgLeft
             } = hoverImageDimensions;
-            const verticalOffset = magnifyImgHeight - hoverImgHeight;
-            const horizontalOffset = magnifyImgWidth - hoverImgWidth;
-            const newHoriztonalPosition = (event.clientX - hoverImgWidth);
-            const newVerticalPosition = (event.clientY - hoverImgTop);
-            console.log("magnifyImgHeight", magnifyImgHeight);
-            console.log("magnifyImgWidth", magnifyImgWidth);
-            console.log("verticalOffset", verticalOffset);
-            console.log("horizontalOffset", horizontalOffset);
-            console.log("newHoriztonalPosition", newHoriztonalPosition);
-            console.log("newVerticalPosition", newVerticalPosition);
+            const verticalImgDimensionDiff = magnifyImgHeight - hoverImgHeight;
+            const horizontalImgDimensionDiff = magnifyImgWidth - hoverImgWidth;
+            const horizontalPosition = (event.clientX - hoverImgLeft);
+            const verticalPosition = (event.pageY - hoverImgTop);
+            const horizontalPositionAsPercentage = ((horizontalPosition - cursorPositionOffset) / horizontalImgDimensionDiff) * 100;
+            const verticalPositionAsPercentage = ((verticalPosition - cursorPositionOffset) / verticalImgDimensionDiff) * 100;
+            console.log("hoverImgHeight", hoverImgHeight);
+            console.log("hoverImgTop", hoverImgTop);
+            console.log("verticalPosition", verticalPosition);
+            console.log("verticalImgDimensionDiff", verticalImgDimensionDiff);
+            console.log("verticalPositionAsPercentage", verticalPositionAsPercentage);
+            console.log("event.clientY", event.clientY);
+            console.log("event.pageY", event.pageY);
+
             setMagnifyDimensions({
-                left: newHoriztonalPosition > horizontalOffset ? horizontalOffset : newHoriztonalPosition,
-                top: newVerticalPosition > verticalOffset ? verticalOffset : newVerticalPosition
+                left: horizontalPositionAsPercentage,
+                top: verticalPositionAsPercentage
             });
         }
-    }, 5)
+    };
+
+    const debouncedGetCursorPos = debounce(getCursorPos, 5);
 
     return (
         <Layout pageName="product-page" flexDirection="row" classNames="flex-wrap" maxWidth="100rem">
@@ -198,17 +207,17 @@ export default ({
                 <div className="mx-auto md:mx-5">
                     {remoteInventory === 0 && <span className="product-sold-out">Sold Out!</span>}
                     <div
-                        ref={imgRef}
                         onMouseEnter={toggleHover}>
                         <Img
+                            ref={imgRef}
                             className="w-full"
                             fixed={responsiveVariantImages} />
                     </div>
                     <div
-                        className={`${showZoom ? '' : ' hiddenz'} hover-img absolute overflow-hidden`}
+                        className={`${showZoom ? '' : ' hidden'} hover-img absolute overflow-hidden`}
                         onMouseLeave={toggleHover}
-                        onPointerMoveCapture={getCursorPos}
-                        onTouchMoveCapture={getCursorPos}
+                        onPointerMoveCapture={debouncedGetCursorPos}
+                        onTouchMoveCapture={debouncedGetCursorPos}
                         style={{
                             width: `${hoverImageDimensions.width}px`,
                             top: `${hoverImageDimensions.top}px`,
@@ -220,8 +229,8 @@ export default ({
                             className="w-full"
                             fixed={responsiveHoverImgs}
                             imgStyle={{
-                                top: `${magnifyDimensions.top > 0 ? -magnifyDimensions.top : 0}px`,
-                                left: `${magnifyDimensions.left > 0 ? -magnifyDimensions.left : 0}px`,
+                                top: `${magnifyDimensions.top > 0 ? -magnifyDimensions.top : 0}%`,
+                                left: `${magnifyDimensions.left > 0 ? -magnifyDimensions.left : 0}%`,
                             }}
                             style={{
                                 transform: 'transition all ease-in'
