@@ -37,6 +37,25 @@ const responsiveProductImages = graphql`
     }
 `;
 
+const getResponsiveImages = (selectedVariant, hoverImgs = false) => {
+    if (!selectedVariant.localFile) return null;
+    if (hoverImgs) {
+        return Object.keys(selectedVariant.localFile.hoverImgs)
+            .map((key) => ({
+                imgSize: key,
+                ...selectedVariant.localFile.hoverImgs[key],
+                media: imgBreakPointsByTShirtSize.hoverImg[key]
+            }));
+    }
+    return Object
+        .keys(selectedVariant.localFile.childImageSharp)
+        .map((key) => ({
+            imgSize: key,
+            ...selectedVariant.localFile.childImageSharp[key],
+            media: imgBreakPointsByTShirtSize[key]
+        }));
+};
+
 export default ({
     pathContext: {
         title,
@@ -141,13 +160,7 @@ export default ({
         remainingInventory === 0
     );
 
-    const responsiveVariantImages = Object
-        .keys(selectedVariant?.localFile?.childImageSharp)
-        .map((key) => ({
-            imgSize: key,
-            ...selectedVariant?.localFile?.childImageSharp[key],
-            media: imgBreakPointsByTShirtSize[key]
-        }));
+    const responsiveVariantImages = getResponsiveImages(selectedVariant);
 
     const setImgZoom = (bool = !showZoom) => {
         if (showZoom === bool) return
@@ -155,12 +168,7 @@ export default ({
         setMagnifyDimensions({ left: 0, top: 0 });
     }
 
-    const responsiveHoverImgs = Object.keys(selectedVariant?.localFile?.hoverImgs)
-        .map((key) => ({
-            imgSize: key,
-            ...selectedVariant?.localFile?.hoverImgs[key],
-            media: imgBreakPointsByTShirtSize.hoverImg[key]
-        }));
+    const responsiveHoverImgs = getResponsiveImages(selectedVariant, true);
     
     const debouncedMouseHandler = debounce(({ clientY, clientX, pageY }) => {
         const {
