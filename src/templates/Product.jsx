@@ -164,7 +164,7 @@ export default ({
             media: imgBreakPointsByTShirtSize.hoverImg[key]
         }));
     
-    const debouncedMouseHandler = debounce(({ pageY, pageX }) => {
+    const debouncedMouseHandler = debounce((xPosition, yPosition) => {
         const {
             height: magnifyImgHeight,
             width: magnifyImgWidth
@@ -177,8 +177,8 @@ export default ({
         } = hoverImageDimensions;
         const verticalImgDimensionDiff = magnifyImgHeight - hoverImgHeight;
         const horizontalImgDimensionDiff = magnifyImgWidth - hoverImgWidth;
-        const horizontalPosition = (pageX - hoverImgLeft);
-        const verticalPosition = (pageY - hoverImgTop);
+        const horizontalPosition = (xPosition - hoverImgLeft);
+        const verticalPosition = (yPosition - hoverImgTop);
         const horizontalPositionAsPercentage = ((horizontalPosition) / horizontalImgDimensionDiff) * 100;
         const verticalPositionAsPercentage = ((verticalPosition) / verticalImgDimensionDiff) * 100;
         setMagnifyDimensions({
@@ -189,7 +189,7 @@ export default ({
 
     const getCursorPosition = (event) => {
         event.persist();
-        debouncedMouseHandler(event);
+        debouncedMouseHandler(event.clientX, event.clientY);
     }
 
     return (

@@ -21,11 +21,7 @@ const AddOrRemoveInventoryIcon = ({ isLoading, icon, handler }) => {
   return <FontAwesomeIcon icon={icon} onClick={handler} className="mx-5" />;
 }
 
-const CartPage = ({
-  data: {
-    allShopifyProduct: { nodes }
-  }
-}) => {
+const CartPage = () => {
   const products = useProducts();
   const { cart, dispatch } = useContext(CartContext);
   const [isIncrementLoading, setIncrementIsLoading] = useState(false)
@@ -112,29 +108,5 @@ const CartPage = ({
     </Layout>
   )
 }
-
-export const query = graphql`
-  query OrderSummary {
-    allShopifyProduct {
-      nodes {
-        title
-        productType
-        productId
-        variants {
-          price
-          title
-          id
-          localFile {
-            childImageSharp {
-              fluid(maxWidth: 300) {
-                ...GatsbyImageSharpFluid
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`
 
 export default CartPage

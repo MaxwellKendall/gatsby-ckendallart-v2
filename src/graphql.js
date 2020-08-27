@@ -36,31 +36,3 @@ export const useProducts = () => {
 
     return products;
 };
-
-
-const getAllProducts = graphql`
-    query HomePageQuery {
-        allShopifyProduct {
-            nodes { 
-                productType
-                handle
-                totalInventory
-                variants {
-                    availableForSale
-                    title
-                }
-                priceRange {
-                    high
-                    low
-                }
-                collection
-                title
-                slug
-            }
-        }
-}`;
-
-export const clientSideQueries = {
-    // This doesn't actually work :(
-    getAllProducts
-};
