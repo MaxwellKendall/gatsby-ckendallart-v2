@@ -33,6 +33,7 @@ exports.createPages = async ({ graphql, actions }) => {
           handle
           description
           collection
+          slug
           priceRange {
             high
             low
@@ -51,7 +52,8 @@ exports.createPages = async ({ graphql, actions }) => {
     result.data.allShopifyProduct.nodes.forEach((node) => {
       createPage({
         // Path for this page — required
-        path: `${kebabCase(node.productType)}/${node.handle}`,
+        // TODO U
+        path: node.slug,
         component: productTemplate,
         context: {
           // Add optional context data to be inserted

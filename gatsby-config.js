@@ -20,7 +20,7 @@ module.exports = {
       },
       {
         name: 'Shop',
-        link: '/cart'
+        link: '/shop'
       },
       {
         name: 'Commissions',

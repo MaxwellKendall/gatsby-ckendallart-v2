@@ -37,9 +37,6 @@ const responsiveProductImages = graphql`
     }
 `;
 
-// not sure why this works
-const cursorPositionOffset = 25;
-
 export default ({
     pathContext: {
         title,
@@ -152,8 +149,9 @@ export default ({
             media: imgBreakPointsByTShirtSize[key]
         }));
 
-    const toggleHover = () => {
-        setZoom(!showZoom);
+    const setImgZoom = (bool = !showZoom) => {
+        if (showZoom === bool) return
+        setZoom(bool);
         setMagnifyDimensions({ left: 0, top: 0 });
     }
 
@@ -164,7 +162,7 @@ export default ({
             media: imgBreakPointsByTShirtSize.hoverImg[key]
         }));
     
-    const debouncedMouseHandler = debounce((xPosition, yPosition) => {
+    const debouncedMouseHandler = debounce(({ clientY, clientX, pageY }) => {
         const {
             height: magnifyImgHeight,
             width: magnifyImgWidth
@@ -175,21 +173,23 @@ export default ({
             height: hoverImgHeight,
             left: hoverImgLeft
         } = hoverImageDimensions;
-        const verticalImgDimensionDiff = magnifyImgHeight - hoverImgHeight;
-        const horizontalImgDimensionDiff = magnifyImgWidth - hoverImgWidth;
-        const horizontalPosition = (xPosition - hoverImgLeft);
-        const verticalPosition = (yPosition - hoverImgTop);
-        const horizontalPositionAsPercentage = ((horizontalPosition) / horizontalImgDimensionDiff) * 100;
-        const verticalPositionAsPercentage = ((verticalPosition) / verticalImgDimensionDiff) * 100;
+        const horizontalDiff = magnifyImgWidth - hoverImgWidth;
+        const verticalDiff = magnifyImgHeight - hoverImgHeight;
+        const horizontalMax = (horizontalDiff / magnifyImgWidth) * 100;
+        const verticalMax = (verticalDiff / magnifyImgHeight) * 100;
+        const horizontalPosition = ((clientX - hoverImgLeft) / magnifyImgWidth) - (horizontalDiff / magnifyImgWidth);
+        const verticalPosition = (((clientY + pageY) - hoverImgTop) / magnifyImgHeight) - (verticalDiff / magnifyImgHeight);
+        const horizontalPositionAsPercentage = horizontalPosition * 100;
+        const verticalPositionAsPercentage = verticalPosition * 100;
         setMagnifyDimensions({
-            left: horizontalPositionAsPercentage,
-            top: verticalPositionAsPercentage
+            left: horizontalPositionAsPercentage > horizontalMax ? horizontalMax : horizontalPositionAsPercentage,
+            top: verticalPositionAsPercentage > verticalMax ? verticalMax : verticalPositionAsPercentage
         });
     }, 5)
 
     const getCursorPosition = (event) => {
         event.persist();
-        debouncedMouseHandler(event.clientX, event.clientY);
+        debouncedMouseHandler(event);
     }
 
     return (
@@ -198,7 +198,8 @@ export default ({
                 <div className="mx-auto md:mx-5">
                     {remoteInventory === 0 && <span className="product-sold-out">Sold Out!</span>}
                     <div
-                        onMouseEnter={toggleHover}>
+                        onMouseOver={() => setImgZoom(true)}
+                        onMouseEnter={() => setImgZoom(true)}>
                         <Img
                             ref={imgRef}
                             className="w-full"
@@ -206,7 +207,7 @@ export default ({
                     </div>
                     <div
                         className={`${showZoom ? '' : ' hidden'} hover-img absolute overflow-hidden`}
-                        onMouseLeave={toggleHover}
+                        onMouseLeave={() => setImgZoom(false)}
                         onMouseMove={getCursorPosition}
                         onTouchMove={getCursorPosition}
                         style={{
@@ -286,16 +287,7 @@ export const query = graphql`
                         }
                     }
                     hoverImgs: childImageSharp {
-                        small: fixed(width:700) {
-                            ...GatsbyImageSharpFixed
-                        }
                         medium: fixed(width:1000) {
-                            ...GatsbyImageSharpFixed
-                        }
-                        large: fixed(width:1300) {
-                            ...GatsbyImageSharpFixed
-                        }
-                        xl: fixed(width:1800) {
                             ...GatsbyImageSharpFixed
                         }
                     }
