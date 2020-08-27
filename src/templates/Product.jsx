@@ -142,10 +142,10 @@ export default ({
     );
 
     const responsiveVariantImages = Object
-        .keys(selectedVariant.localFile.childImageSharp)
+        .keys(selectedVariant?.localFile?.childImageSharp)
         .map((key) => ({
             imgSize: key,
-            ...selectedVariant.localFile.childImageSharp[key],
+            ...selectedVariant?.localFile?.childImageSharp[key],
             media: imgBreakPointsByTShirtSize[key]
         }));
 
@@ -155,10 +155,10 @@ export default ({
         setMagnifyDimensions({ left: 0, top: 0 });
     }
 
-    const responsiveHoverImgs = Object.keys(selectedVariant.localFile.hoverImgs)
+    const responsiveHoverImgs = Object.keys(selectedVariant?.localFile?.hoverImgs)
         .map((key) => ({
             imgSize: key,
-            ...selectedVariant.localFile.hoverImgs[key],
+            ...selectedVariant?.localFile?.hoverImgs[key],
             media: imgBreakPointsByTShirtSize.hoverImg[key]
         }));
     
