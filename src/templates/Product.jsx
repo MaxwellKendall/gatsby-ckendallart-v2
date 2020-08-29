@@ -56,6 +56,13 @@ const getResponsiveImages = (selectedVariant, hoverImgs = false) => {
         }));
 };
 
+const initialDimensionsState = {
+    top: 0,
+    left: 0,
+    width: 0,
+    height: 0
+};
+
 export default ({
     pathContext: {
         title,
@@ -76,8 +83,8 @@ export default ({
     const [remainingInventory, setRemainingInventory] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [showZoom, setZoom] = useState(false);
-    const [hoverImageDimensions, setHoverImageDimensions] = useState({});
-    const [magnifyDimensions, setMagnifyDimensions] = useState({});
+    const [hoverImageDimensions, setHoverImageDimensions] = useState(initialDimensionsState);
+    const [magnifyDimensions, setMagnifyDimensions] = useState(initialDimensionsState);
     const imgRef = useRef(null);
     const magnifyImg = useRef(null);
 
