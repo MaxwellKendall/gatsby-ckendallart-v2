@@ -291,7 +291,7 @@ export const query = graphql`
                 sku
                 localFile {
                     childImageSharp {
-                        small: fixed(width:300) {
+                        small: fixed(width:250) {
                             ...GatsbyImageSharpFixed
                           }
                         medium: fixed(width:500) {
