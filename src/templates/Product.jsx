@@ -268,7 +268,7 @@ export default ({
                             }} />
                     </div>
                     <span className="py-4">Other Images for {product.title}:</span>
-                    <ul className="flex justify-center md:justify-start w-full">
+                    <ul className="flex justify-center flex-wrap md:justify-start w-full">
                         {productImages.nodes.map(({ thumbnail }, i) => (
                             <li className="mr-2" onClick={(e) => handleProductImgClick(e, i)}>
                                 <Img fixed={thumbnail.fixed} />
