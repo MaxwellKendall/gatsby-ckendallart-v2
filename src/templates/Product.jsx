@@ -12,7 +12,7 @@ import { useProducts } from '../graphql';
 import { uniqueId, kebabCase, debounce } from 'lodash';
 
 const imgBreakPointsByTShirtSize = {
-    small: `(min-width: 0px) and (max-width: 767px)`,
+    small: `(min-width: 300px) and (max-width: 767px)`,
     medium: `(min-width: 768px) and (max-width: 1199px)`,
     large: `(min-width: 1200px)`,
     hoverImg: {
@@ -217,7 +217,7 @@ export default ({
                         className={`${showZoom ? '' : ' hidden'} hover-img absolute overflow-hidden`}
                         onMouseLeave={() => setImgZoom(false)}
                         onMouseMove={getCursorPosition}
-                        // onTouchMove={getCursorPosition}
+                        onTouchMove={getCursorPosition}
                         style={{
                             width: `${hoverImageDimensions.width}px`,
                             top: `${hoverImageDimensions.top}px`,
