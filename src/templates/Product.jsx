@@ -90,6 +90,7 @@ export default ({
 
     useEffect(() => {
         if (imgRef.current) {
+            window.alert(imgRef.current.imageRef.current.getBoundingClientRect());
             setHoverImageDimensions(imgRef.current.imageRef.current.getBoundingClientRect());
         }
     }, [imgRef.current])
@@ -220,7 +221,7 @@ export default ({
                             className="w-full"
                             fixed={responsiveVariantImages} />
                     </div>
-                    <div
+                    {/* <div
                         className={`${showZoom ? '' : ' hidden'} hover-img absolute overflow-hidden`}
                         onMouseLeave={() => setImgZoom(false)}
                         onMouseMove={getCursorPosition}
@@ -242,7 +243,7 @@ export default ({
                             style={{
                                 transform: 'transition all ease-in'
                             }} />
-                    </div>
+                    </div> */}
                 </div>
             )}
             <div className="product-desc flex flex-col items-center w-full lg:w-2/5 lg:items-start my-5 lg:justify-start lg:w-1/4 xl:w-2/5 lg:mr-5 lg:my-0">
