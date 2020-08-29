@@ -3,13 +3,21 @@ import { graphql } from 'gatsby';
 import Img from "gatsby-image";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import moment from 'moment';
+import { uniqueId, kebabCase, debounce } from 'lodash';
 
 import CartContext from "../../globalState";
 import Layout from "../components/Layout";
-import { getParsedVariants, localStorageKey, getLineItemForAddToCart, isVariantInCart, getLineItemForUpdateToCart, getInventoryDetails } from '../helpers';
-import { initCheckout, addLineItemsToCart, fetchProductInventory, updateLineItemsInCart } from '../../client';
+import {
+    getParsedVariants,
+    localStorageKey,
+    getLineItemForAddToCart,
+    isVariantInCart,
+    getLineItemForUpdateToCart,
+    getInventoryDetails,
+    updateLineItemsInCart
+} from '../helpers';
+import { initCheckout, addLineItemsToCart } from '../../client';
 import { useProducts } from '../graphql';
-import { uniqueId, kebabCase, debounce } from 'lodash';
 
 const imgBreakPointsByTShirtSize = {
     small: `(min-width: 0px) and (max-width: 767px)`,
@@ -23,23 +31,30 @@ const imgBreakPointsByTShirtSize = {
     }
 };
 
-const getResponsiveImages = (selectedVariant, hoverImgs = false) => {
-    if (!selectedVariant.localFile) return null;
-    if (hoverImgs) {
-        return Object.keys(selectedVariant.localFile.hoverImgs)
+const getResponsiveImages = ({ img }) => {
+    debugger;
+    if (!img) return null;
+    const rtrn = {
+        responsiveImgs: Object
+            .keys(img)
             .map((key) => ({
                 imgSize: key,
-                ...selectedVariant.localFile.hoverImgs[key],
-                media: imgBreakPointsByTShirtSize.hoverImg[key]
-            }));
-    }
-    return Object
-        .keys(selectedVariant.localFile.childImageSharp)
-        .map((key) => ({
-            imgSize: key,
-            ...selectedVariant.localFile.childImageSharp[key],
-            media: imgBreakPointsByTShirtSize[key]
-        }));
+                ...img[key].fixed,
+                media: imgBreakPointsByTShirtSize[key]
+            }))
+    };
+    if (img.hoverImgs) {
+        return {
+            responsiveHoverImgs: Object.keys(img.hoverImgs)
+                .map((key) => ({
+                    imgSize: key,
+                    ...img.hoverImgs[key],
+                    media: imgBreakPointsByTShirtSize.hoverImg[key]
+                })),
+            ...rtrn
+        };
+    };
+    return rtrn;
 };
 
 const initialDimensionsState = {
@@ -50,20 +65,24 @@ const initialDimensionsState = {
 };
 
 export default ({
+    id,
     pathContext: {
         title,
         description,
         priceRange: { high, low },
     },
-    data: { shopifyProduct: product },
+    data: { 
+        shopifyProduct: product,
+        productImages
+    },
     path
 }) => {
-    console.log('product', product)
     const { cart, dispatch } = useContext(CartContext);
     const products = useProducts();
     const { variants, productType } = product;
     const parsedVariants = getParsedVariants(variants, title);
     const [selectedVariant, setSelectedVariant] = useState(parsedVariants[0]);
+    const [selectedImg, setSelectedImg] = useState(getResponsiveImages(parsedVariants[0]));
     const [remoteInventory, setRemoteInventory] = useState(1);
     const [quantity, setQuantity] = useState(1);
     const [remainingInventory, setRemainingInventory] = useState(0);
@@ -74,10 +93,26 @@ export default ({
     const imgRef = useRef(null);
     const magnifyImg = useRef(null);
 
-    useEffect(() => {
+    const handleResize = debounce(() => {
+        // resize window, changing images, whateva
         if (imgRef.current && imgRef.current.imageRef.current) {
-            setHoverImageDimensions(imgRef.current.imageRef.current.getBoundingClientRect());
+            const { top, left, width, height } = imgRef.current.imageRef.current.getBoundingClientRect();
+            setHoverImageDimensions({
+                top: top + window?.pageYOffset,
+                left: left + window?.pageXOffset,
+                width,
+                height
+            });
         }
+    }, 10)
+
+    useEffect(() => {
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    useEffect(() => {
+        handleResize();
     }, [imgRef.current])
 
     const checkInventory = useCallback(async () => {
@@ -97,7 +132,9 @@ export default ({
     }, [checkInventory]);
 
     const handleSelectVariant = (e) => {
-        setSelectedVariant(parsedVariants.find((node) => node.title === e.target.value));
+        const selectedVariant = parsedVariants.find((node) => node.title === e.target.value);
+        setSelectedVariant(selectedVariant);
+        setSelectedImg(getResponsiveImages(selectedVariant));
     }
 
     const modifyCart = (cartId) => {
@@ -153,15 +190,11 @@ export default ({
         remainingInventory === 0
     );
 
-    const responsiveVariantImages = getResponsiveImages(selectedVariant);
-
     const setImgZoom = (bool = !showZoom) => {
         if (showZoom === bool) return
         setZoom(bool);
         setMagnifyDimensions({ left: 0, top: 0 });
     }
-
-    const responsiveHoverImgs = getResponsiveImages(selectedVariant, true);
     
     const debouncedMouseHandler = debounce(({ clientY, clientX, pageY }) => {
         const {
@@ -193,18 +226,27 @@ export default ({
         debouncedMouseHandler(event);
     }
 
+    const handleProductImgClick = (e, i) => {
+        e.preventDefault();
+        setSelectedImg(getResponsiveImages({ img: productImages.nodes[i] }));
+        handleResize();
+    }
+
+    console.log('height', hoverImageDimensions.height);
+
     return (
         <Layout pageName="product-page" flexDirection="row" classNames="flex-wrap" maxWidth="100rem">
-            {selectedVariant.localFile && (
-                <div className="mx-auto md:mx-5">
+            {selectedVariant.img && (
+                <div className="md:mx-5">
                     {remoteInventory === 0 && <span className="product-sold-out">Sold Out!</span>}
                     <div
+                        className="flex justify-center"
                         onMouseOver={() => setImgZoom(true)}
                         onMouseEnter={() => setImgZoom(true)}>
                         <Img
                             ref={imgRef}
                             className="w-full"
-                            fixed={responsiveVariantImages} />
+                            fixed={selectedImg.responsiveImgs} />
                     </div>
                     <div
                         className={`${showZoom ? '' : ' hidden'} hover-img absolute overflow-hidden`}
@@ -220,7 +262,7 @@ export default ({
                         <Img
                             ref={magnifyImg}
                             className="w-full"
-                            fixed={responsiveHoverImgs}
+                            fixed={selectedImg.responsiveHoverImgs}
                             imgStyle={{
                                 top: `${magnifyDimensions.top > 0 ? -magnifyDimensions.top : 0}%`,
                                 left: `${magnifyDimensions.left > 0 ? -magnifyDimensions.left : 0}%`,
@@ -229,6 +271,14 @@ export default ({
                                 transform: 'transition all ease-in'
                             }} />
                     </div>
+                    <span>Other Images for {product.title}:</span>
+                    <ul className="flex justify-center md:self-start md:items-start w-full">
+                        {productImages.nodes.map(({ thumbnail }, i) => (
+                            <li className="mr-2" onClick={(e) => handleProductImgClick(e, i)}>
+                                <Img fixed={thumbnail.fixed} />
+                            </li>
+                        ))}
+                    </ul>
                 </div>
             )}
             <div className="product-desc flex flex-col items-center w-full lg:w-2/5 lg:items-start my-5 lg:justify-start lg:w-1/4 xl:w-2/5 lg:mr-5 lg:my-0">
@@ -275,17 +325,21 @@ export const query = graphql`
                 title
                 id
                 sku
-                localFile {
-                    childImageSharp {
-                        small: fixed(width:250) {
+                img: localFile {
+                    small: childImageSharp {
+                        fixed(width:300) {
                             ...GatsbyImageSharpFixed
                           }
-                        medium: fixed(width:500) {
+                    }
+                    medium: childImageSharp {
+                        fixed(width:500) {
                             ...GatsbyImageSharpFixed
-                        }
-                        large: fixed(width:700) {
+                          }
+                    }
+                    large: childImageSharp {
+                        fixed(width:700) {
                             ...GatsbyImageSharpFixed
-                        }
+                          }
                     }
                     hoverImgs: childImageSharp {
                         small: fixed(width:500) {
@@ -302,30 +356,34 @@ export const query = graphql`
         }
         productImages: allFile(filter: {parent: {id: {eq: $id}}}) {
             nodes {
-              name
-              base
-              childImageSharp {
-                fixed(width:500) {
-                  ...GatsbyImageSharpFixed
+              thumbnail: childImageSharp {
+                    fixed(width:150) {
+                        ...GatsbyImageSharpFixed
+                    }
+               }
+                small: childImageSharp {
+                    fixed(width:300) {
+                        ...GatsbyImageSharpFixed
+                    }
                 }
-              }
-              parent {
-                id
-              }
-            }
-        }
-        productImageThumbnails: allFile(filter: {parent: {id: {eq: $id}}}) {
-            nodes {
-              name
-              base
-              childImageSharp {
-                fixed(width: 300) {
-                  ...GatsbyImageSharpFixed
+                medium: childImageSharp {
+                    fixed(width:500) {
+                        ...GatsbyImageSharpFixed
+                    }
                 }
-              }
-              parent {
-                id
-              }
+                large: childImageSharp {
+                    fixed(width:700) {
+                        ...GatsbyImageSharpFixed
+                    }
+                }
+                hoverImgs: childImageSharp {
+                    small: fixed(width:500) {
+                        ...GatsbyImageSharpFixed
+                    }
+                    medium: fixed(width:1000) {
+                        ...GatsbyImageSharpFixed
+                    }
+                }
             }
         }
     }
