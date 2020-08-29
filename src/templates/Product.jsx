@@ -12,30 +12,16 @@ import { useProducts } from '../graphql';
 import { uniqueId, kebabCase, debounce } from 'lodash';
 
 const imgBreakPointsByTShirtSize = {
-    small: `(max-width: 767px)`,
+    small: `(min-width: 0px) and (max-width: 767px)`,
     medium: `(min-width: 768px) and (max-width: 1199px)`,
     large: `(min-width: 1200px)`,
     hoverImg: {
-        small: `(min-width: 300px) and (max-width: 767px)`,
-        medium: `(min-width: 768px) and (max-width: 1199px)`,
-        large: `(min-width: 1200px)  and (max-width: 1799px)`,
-        xl: `(min-width: 1800px)`
+        small: `(min-width: 0px) and (max-width: 767px)`,
+        medium: `(min-width: 768px)`
+        // large: `(min-width: 1200px)  and (max-width: 1799px)`,
+        // xl: `(min-width: 1800px)`
     }
 };
-
-const responsiveProductImages = graphql`
-    fragment responsiveProductImages on ImageSharp {
-        small: fixed(width:300) {
-            ...GatsbyImageSharpFixed
-          }
-          medium: fixed(width:500) {
-            ...GatsbyImageSharpFixed
-          }
-          large: fixed(width:700) {
-            ...GatsbyImageSharpFixed
-          }
-    }
-`;
 
 const getResponsiveImages = (selectedVariant, hoverImgs = false) => {
     if (!selectedVariant.localFile) return null;

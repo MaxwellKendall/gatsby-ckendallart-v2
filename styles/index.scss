@@ -56,7 +56,8 @@ body,
     min-height: 100vh;    
     // Font defaults
     font-size: 16px;
-
+    width: 100%;
+    display: flex;
     font-family: 'Nunito Sans', 'Nunito Sans Bold', 'Nunito Sans Italic', 'Nunito Sans Light';
 
     .grecaptcha-badge {
