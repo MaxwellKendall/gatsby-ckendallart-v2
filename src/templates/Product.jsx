@@ -208,74 +208,71 @@ export default ({
     }
 
     return (
-        <>
-            {<p>{hoverImgDimensions}</p>}
-            <Layout pageName="product-page" flexDirection="row" classNames="flex-wrap" maxWidth="100rem">
-                {selectedVariant.localFile && (
-                    <div className="mx-auto md:mx-5">
-                        {remoteInventory === 0 && <span className="product-sold-out">Sold Out!</span>}
-                        {/* <div
-                            onMouseOver={() => setImgZoom(true)}
-                            onMouseEnter={() => setImgZoom(true)}>
-                            <Img
-                                ref={imgRef}
-                                className="w-full"
-                                fixed={responsiveVariantImages} />
-                        </div> */}
-                        <div
-                            className={`${showZoom ? '' : ' hidden'} hover-img absolute overflow-hidden`}
-                            onMouseLeave={() => setImgZoom(false)}
-                            onMouseMove={getCursorPosition}
-                            onTouchMove={getCursorPosition}
+        <Layout pageName="product-page" flexDirection="row" classNames="flex-wrap" maxWidth="100rem">
+            {selectedVariant.localFile && (
+                <div className="mx-auto md:mx-5">
+                    {remoteInventory === 0 && <span className="product-sold-out">Sold Out!</span>}
+                    {/* <div
+                        onMouseOver={() => setImgZoom(true)}
+                        onMouseEnter={() => setImgZoom(true)}>
+                        <Img
+                            ref={imgRef}
+                            className="w-full"
+                            fixed={responsiveVariantImages} />
+                    </div> */}
+                    <div
+                        className={`${showZoom ? '' : ' hidden'} hover-img absolute overflow-hidden`}
+                        onMouseLeave={() => setImgZoom(false)}
+                        onMouseMove={getCursorPosition}
+                        onTouchMove={getCursorPosition}
+                        style={{
+                            width: `${hoverImageDimensions.width}px`,
+                            top: `${hoverImageDimensions.top}px`,
+                            height: `${hoverImageDimensions.height}px`,
+                            left: `${hoverImageDimensions.left}px`
+                        }}>
+                        <Img
+                            ref={magnifyImg}
+                            className="w-full"
+                            fixed={responsiveHoverImgs}
+                            imgStyle={{
+                                top: `${magnifyDimensions.top > 0 ? -magnifyDimensions.top : 0}%`,
+                                left: `${magnifyDimensions.left > 0 ? -magnifyDimensions.left : 0}%`,
+                            }}
                             style={{
-                                width: `${hoverImageDimensions.width}px`,
-                                top: `${hoverImageDimensions.top}px`,
-                                height: `${hoverImageDimensions.height}px`,
-                                left: `${hoverImageDimensions.left}px`
-                            }}>
-                            <Img
-                                ref={magnifyImg}
-                                className="w-full"
-                                fixed={responsiveHoverImgs}
-                                imgStyle={{
-                                    top: `${magnifyDimensions.top > 0 ? -magnifyDimensions.top : 0}%`,
-                                    left: `${magnifyDimensions.left > 0 ? -magnifyDimensions.left : 0}%`,
-                                }}
-                                style={{
-                                    transform: 'transition all ease-in'
-                                }} />
-                        </div>
-                    </div>
-                )}
-                <div className="product-desc flex flex-col items-center w-full lg:w-2/5 lg:items-start my-5 lg:justify-start lg:w-1/4 xl:w-2/5 lg:mr-5 lg:my-0">
-                    <h2 className="text-4xl tracking-wide text-center lg:text-left">{title}</h2>
-                    <p className="text-2xl py-10 tracking-widest">{`$${selectedVariant.price}`}</p>
-                    {high !== low && <p className="text-sm italic">{`from $${low} to $${high}`}</p>}
-                    <div className="actions w-full flex flex-col my-5 justify-start items-start lg:justify-start">
-                        <button
-                            className="border text-white border-black w-64 py-5 px-2 text-xl uppercase mb-2 self-center lg:self-start"
-                            style={{ background: "#C097D0" }}
-                            disabled={isAddToCartDisabled}
-                            onClick={handleAddToCart}>
-                            {isLoading && <FontAwesomeIcon icon="spinner" spin />}
-                            {!isLoading && 'Add to Cart'}
-                        </button>
-                        {parsedVariants.length > 1 && (
-                            <select
-                                className="border border-black w-1/2"
-                                name="variants"
-                                onChange={handleSelectVariant}
-                                value={selectedVariant.title}>
-                                {parsedVariants.map((variant) => (
-                                    <option key={uniqueId('')} value={variant.title}>{variant.title}</option>
-                                ))}
-                            </select>
-                        )}
-                        <p className="text-lg py-10 tracking-wide px-10 lg:px-0">{description}</p>
+                                transform: 'transition all ease-in'
+                            }} />
                     </div>
                 </div>
-            </Layout>
-        </>
+            )}
+            <div className="product-desc flex flex-col items-center w-full lg:w-2/5 lg:items-start my-5 lg:justify-start lg:w-1/4 xl:w-2/5 lg:mr-5 lg:my-0">
+                <h2 className="text-4xl tracking-wide text-center lg:text-left">{title}</h2>
+                <p className="text-2xl py-10 tracking-widest">{`$${selectedVariant.price}`}</p>
+                {high !== low && <p className="text-sm italic">{`from $${low} to $${high}`}</p>}
+                <div className="actions w-full flex flex-col my-5 justify-start items-start lg:justify-start">
+                    <button
+                        className="border text-white border-black w-64 py-5 px-2 text-xl uppercase mb-2 self-center lg:self-start"
+                        style={{ background: "#C097D0" }}
+                        disabled={isAddToCartDisabled}
+                        onClick={handleAddToCart}>
+                        {isLoading && <FontAwesomeIcon icon="spinner" spin />}
+                        {!isLoading && 'Add to Cart'}
+                    </button>
+                    {parsedVariants.length > 1 && (
+                        <select
+                            className="border border-black w-1/2"
+                            name="variants"
+                            onChange={handleSelectVariant}
+                            value={selectedVariant.title}>
+                            {parsedVariants.map((variant) => (
+                                <option key={uniqueId('')} value={variant.title}>{variant.title}</option>
+                            ))}
+                        </select>
+                    )}
+                    <p className="text-lg py-10 tracking-wide px-10 lg:px-0">{description}</p>
+                </div>
+            </div>
+        </Layout>
     );
 };
 
