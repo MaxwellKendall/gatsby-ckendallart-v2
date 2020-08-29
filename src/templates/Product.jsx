@@ -217,7 +217,7 @@ export default ({
                         className={`${showZoom ? '' : ' hidden'} hover-img absolute overflow-hidden`}
                         onMouseLeave={() => setImgZoom(false)}
                         onMouseMove={getCursorPosition}
-                        onTouchMove={getCursorPosition}
+                        // onTouchMove={getCursorPosition}
                         style={{
                             width: `${hoverImageDimensions.width}px`,
                             top: `${hoverImageDimensions.top}px`,
