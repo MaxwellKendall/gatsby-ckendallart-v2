@@ -32,7 +32,6 @@ const imgBreakPointsByTShirtSize = {
 };
 
 const getResponsiveImages = ({ img }) => {
-    debugger;
     if (!img) return null;
     const rtrn = {
         responsiveImgs: Object
@@ -87,7 +86,7 @@ export default ({
     const [quantity, setQuantity] = useState(1);
     const [remainingInventory, setRemainingInventory] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
-    const [showZoom, setZoom] = useState(false);
+    const [isZoomed, setIsZoomed] = useState(false);
     const [hoverImageDimensions, setHoverImageDimensions] = useState(initialDimensionsState);
     const [magnifyDimensions, setMagnifyDimensions] = useState(initialDimensionsState);
     const imgRef = useRef(null);
@@ -190,9 +189,9 @@ export default ({
         remainingInventory === 0
     );
 
-    const setImgZoom = (bool = !showZoom) => {
-        if (showZoom === bool) return
-        setZoom(bool);
+    const setImgZoom = (bool) => {
+        if (isZoomed === bool) return
+        setIsZoomed(bool);
         setMagnifyDimensions({ left: 0, top: 0 });
     }
     
@@ -231,25 +230,21 @@ export default ({
         setSelectedImg(getResponsiveImages({ img: productImages.nodes[i] }));
         handleResize();
     }
-
-    console.log('height', hoverImageDimensions.height);
-
+    console.log('state', isZoomed)
     return (
         <Layout pageName="product-page" flexDirection="row" classNames="flex-wrap" maxWidth="100rem">
             {selectedVariant.img && (
                 <div className="md:mx-5">
                     {remoteInventory === 0 && <span className="product-sold-out">Sold Out!</span>}
-                    <div
-                        className="flex justify-center"
-                        onMouseOver={() => setImgZoom(true)}
-                        onMouseEnter={() => setImgZoom(true)}>
+                    <div className="flex justify-center">
                         <Img
                             ref={imgRef}
                             className="w-full"
                             fixed={selectedImg.responsiveImgs} />
                     </div>
                     <div
-                        className={`${showZoom ? '' : ' hidden'} hover-img absolute overflow-hidden`}
+                        className={`${isZoomed ? 'opacity-100' : ' opacity-0'} hover-img absolute overflow-hidden`}
+                        onMouseEnter={() => setImgZoom(true)}
                         onMouseLeave={() => setImgZoom(false)}
                         onMouseMove={getCursorPosition}
                         onTouchMove={getCursorPosition}
@@ -257,7 +252,8 @@ export default ({
                             width: `${hoverImageDimensions.width}px`,
                             top: `${hoverImageDimensions.top}px`,
                             height: `${hoverImageDimensions.height}px`,
-                            left: `${hoverImageDimensions.left}px`
+                            left: `${hoverImageDimensions.left}px`,
+                            transition: 'opacity .5s ease-in 0s'
                         }}>
                         <Img
                             ref={magnifyImg}
