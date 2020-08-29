@@ -213,14 +213,14 @@ export default ({
             {selectedVariant.localFile && (
                 <div className="mx-auto md:mx-5">
                     {remoteInventory === 0 && <span className="product-sold-out">Sold Out!</span>}
-                    <div
+                    {/* <div
                         onMouseOver={() => setImgZoom(true)}
                         onMouseEnter={() => setImgZoom(true)}>
                         <Img
                             ref={imgRef}
                             className="w-full"
                             fixed={responsiveVariantImages} />
-                    </div>
+                    </div> */}
                     {/* <div
                         className={`${showZoom ? '' : ' hidden'} hover-img absolute overflow-hidden`}
                         onMouseLeave={() => setImgZoom(false)}
