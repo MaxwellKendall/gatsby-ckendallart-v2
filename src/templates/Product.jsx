@@ -230,13 +230,13 @@ export default ({
         setSelectedImg(getResponsiveImages({ img: productImages.nodes[i] }));
         handleResize();
     }
-    console.log('state', isZoomed)
+
     return (
         <Layout pageName="product-page" flexDirection="row" classNames="flex-wrap" maxWidth="100rem">
             {selectedVariant.img && (
                 <div className="md:mx-5">
                     {remoteInventory === 0 && <span className="product-sold-out">Sold Out!</span>}
-                    <div className="flex justify-center">
+                    <div className="flex justify-center mb-4">
                         <Img
                             ref={imgRef}
                             className="w-full"
@@ -253,7 +253,7 @@ export default ({
                             top: `${hoverImageDimensions.top}px`,
                             height: `${hoverImageDimensions.height}px`,
                             left: `${hoverImageDimensions.left}px`,
-                            transition: 'opacity .5s ease-in 0s'
+                            transition: 'opacity .75s ease-in .25s'
                         }}>
                         <Img
                             ref={magnifyImg}
@@ -267,8 +267,8 @@ export default ({
                                 transform: 'transition all ease-in'
                             }} />
                     </div>
-                    <span>Other Images for {product.title}:</span>
-                    <ul className="flex justify-center md:self-start md:items-start w-full">
+                    <span className="py-4">Other Images for {product.title}:</span>
+                    <ul className="flex justify-center md:justify-start w-full">
                         {productImages.nodes.map(({ thumbnail }, i) => (
                             <li className="mr-2" onClick={(e) => handleProductImgClick(e, i)}>
                                 <Img fixed={thumbnail.fixed} />
