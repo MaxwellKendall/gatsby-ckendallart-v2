@@ -199,8 +199,9 @@ export default ({
                 <div className="mx-auto md:mx-5">
                     {remoteInventory === 0 && <span className="product-sold-out">Sold Out!</span>}
                     <div
-                        onMouseOver={() => setImgZoom(true)}
-                        onMouseEnter={() => setImgZoom(true)}>
+                        // onMouseOver={() => setImgZoom(true)}
+                        // onMouseEnter={() => setImgZoom(true)}>
+                        >
                         <Img
                             ref={imgRef}
                             className="w-full"
