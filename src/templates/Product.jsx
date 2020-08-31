@@ -83,6 +83,7 @@ export default ({
     const [selectedVariant, setSelectedVariant] = useState(parsedVariants[0]);
     const [selectedImg, setSelectedImg] = useState(getResponsiveImages(parsedVariants[0]));
     const [remoteInventory, setRemoteInventory] = useState(1);
+    const [eventCache, setEventCache] = useState([]);
     const [quantity, setQuantity] = useState(1);
     const [remainingInventory, setRemainingInventory] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
@@ -190,6 +191,10 @@ export default ({
     );
 
     const setImgZoom = (bool) => {
+        if (window?.clientWidth < 760) {
+            if (isZoomed) setIsZoomed(false);
+            return;
+        }
         if (isZoomed === bool) return
         setIsZoomed(bool);
         setMagnifyDimensions({ left: 0, top: 0 });
@@ -220,7 +225,7 @@ export default ({
         });
     }, 5)
 
-    const getCursorPosition = (event) => {
+    const handleHoverZoom = (event) => {
         event.persist();
         debouncedMouseHandler(event);
     }
@@ -246,8 +251,8 @@ export default ({
                         className={`${isZoomed ? 'opacity-100' : ' opacity-0'} hover-img absolute overflow-hidden`}
                         onMouseEnter={() => setImgZoom(true)}
                         onMouseLeave={() => setImgZoom(false)}
-                        onMouseMove={getCursorPosition}
-                        onTouchMove={getCursorPosition}
+                        onMouseMove={handleHoverZoom}
+                        onTouchMove={handleHoverZoom}
                         style={{
                             width: `${hoverImageDimensions.width}px`,
                             top: `${hoverImageDimensions.top}px`,
