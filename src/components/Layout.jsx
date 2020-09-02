@@ -60,6 +60,7 @@ export const Layout = ({
     const [userEmail, setUserEmail] = useState('');
     const [token, setToken] = useState('');
     const [subscribeStatus, setSubscribeStatus] = useState(defaultSubscribeStatus);
+    const [showMobileNav,  setShowMobileNav] = useState(false);
     const { cart, dispatch } = useContext(CartContext);
     const products = useProducts();
     const {
@@ -179,16 +180,36 @@ export const Layout = ({
         })
     };
 
+    const handleMenuToggle = () => {
+        console.log('showMobileNav', showMobileNav);
+        setShowMobileNav(!showMobileNav);
+    };
+
     return (
         <div className="global-container m-auto flex justify-center flex-col min-h-full">
-            <header className="pt-10 px-5 align-center w-full flex flex-col justify-center mb-12">
-                <Link to='/cart' className="ml-auto self-start">
-                    <FontAwesomeIcon icon="shopping-cart" />
+            <header className="p-5 md:pt-10 align-center w-full flex md:flex-col justify-center mb-12">
+                <button className="m-auto pl-5 md:hidden" onClick={handleMenuToggle}>
+                    {showMobileNav && (
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill-rule="evenodd" clip-rule="evenodd">
+                            <path d="M12 11.293l10.293-10.293.707.707-10.293 10.293 10.293 10.293-.707.707-10.293-10.293-10.293 10.293-.707-.707 10.293-10.293-10.293-10.293.707-.707 10.293 10.293z"/>
+                        </svg>
+                    )}
+                    {!showMobileNav && (
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill-rule="evenodd" clip-rule="evenodd">
+                            <path d="M24 18v1h-24v-1h24zm0-6v1h-24v-1h24zm0-6v1h-24v-1h24z" fill="#1040e2"/>
+                            <path d="M24 19h-24v-1h24v1zm0-6h-24v-1h24v1zm0-6h-24v-1h24v1z"/>
+                        </svg>
+                    )}
+                </button>
+                <Link to='/cart' className="ml-auto self-center order-2 pr-5 md:order-none md:self-start">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill-rule="evenodd" clip-rule="evenodd">
+                        <path d="M13.5 21c-.276 0-.5-.224-.5-.5s.224-.5.5-.5.5.224.5.5-.224.5-.5.5m0-2c-.828 0-1.5.672-1.5 1.5s.672 1.5 1.5 1.5 1.5-.672 1.5-1.5-.672-1.5-1.5-1.5m-6 2c-.276 0-.5-.224-.5-.5s.224-.5.5-.5.5.224.5.5-.224.5-.5.5m0-2c-.828 0-1.5.672-1.5 1.5s.672 1.5 1.5 1.5 1.5-.672 1.5-1.5-.672-1.5-1.5-1.5m16.5-16h-2.964l-3.642 15h-13.321l-4.073-13.003h19.522l.728-2.997h3.75v1zm-22.581 2.997l3.393 11.003h11.794l2.674-11.003h-17.861z" />
+                    </svg>
                 </Link>
-                <Link to='/' className="m-auto">
+                <Link to='/' className={`m-auto ${showMobileNav ? 'hidden' : ''}`}>
                     <h1 className="text-2xl">CLAIRE KENDALL</h1>
                 </Link>
-                <ul className="flex flex-col items-center text-center justify-center md:flex-row">
+                <ul className={`${showMobileNav ? 'show-mobile-nav' : 'hide-mobile-nav'} nav w-full flex-col items-center text-center justify-center md:flex md:flex-row`}>
                     {[
                         <li className="flex items-center p-5 mt-10">
                             <FontAwesomeIcon icon="search" />
@@ -201,7 +222,7 @@ export const Layout = ({
                                     </Link>
                                 </li>
                             )),
-                            <li className="p-2 mt-10 ml-5">
+                            <li className="hidden md:flex p-2 mt-10 ml-5">
                                 <Link to="/">
                                     <Img fluid={logo} className="w-24 mx-auto h-12" />
                                 </Link>

@@ -64,6 +64,19 @@ body,
         visibility: hidden;
     }
 
+    header .nav {
+        transition: all .5s ease-out 0s;
+        &.show-mobile-nav {
+            top: 0;
+            position: absolute;
+            display: flex;
+        }
+        &.hide-mobile-nav  {
+            top: -500px;
+            position: absolute;
+        }
+    }
+
     .default-page {
         background: $sqrl-background-color;
         @apply default-pd-y;
