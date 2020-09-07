@@ -17,7 +17,7 @@ exports.onCreateWebpackConfig = ({
             GATSBY_ACCESS_TOKEN: JSON.stringify(process.env.SHOPIFY_ACCESS_TOKEN),
             GATSBY_SITE_KEY: JSON.stringify(process.env.RECAPTCHA_SITE_KEY)
         })
-      ]
+      ],
     })
 };
 

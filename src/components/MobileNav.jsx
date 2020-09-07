@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'gatsby';
 import Img from "gatsby-image";
 
@@ -18,12 +18,12 @@ const CloseIcon = () => (
     </svg>
 )
 
-const NavIcon = ({ classNames = '', isOpen, onClick }) => (
+const NavIcon = ({ classNames = '', isNotClosed, onClick }) => (
     <button
         onClick={onClick}
         className={`${classNames}`} >
-        {isOpen && <CloseIcon />}
-        {!isOpen && <MenuIcon />}
+        {isNotClosed && <CloseIcon />}
+        {!isNotClosed && <MenuIcon />}
     </button>
 );
 
@@ -38,6 +38,17 @@ const MinusIcon = () => (
         <path d="M0 12v1h23v-1h-23z"/>
     </svg>
 );
+
+const expandedClassByToggleState = {
+    closing: 'mobile-nav-closing',
+    open: 'mobile-nav-opened'
+};
+
+const newStatusByCurrentStatus = {
+    open: 'closing',
+    closed: 'open',
+    closing: 'closed'
+};
 
 const ExpandableMenuIcon = ({
     name,
@@ -81,35 +92,51 @@ const ExpandableMenuIcon = ({
     );
 };
 
+let timeout = null;
+
 export default () => {
     const { pages, logo } = usePages();
-    const [isOpen, setIsOpen] = useState(false);
-    const toggleMenu = () => {
-        if (isOpen) {
-            setIsOpen(false);
+    const [menuExpandedStatus, setMenuExpandedStatus] = useState('closed');
+    const toggleMenuWithDelayedClose = (e, newStatus = newStatusByCurrentStatus[menuExpandedStatus]) => {
+        e.preventDefault();
+        if (newStatus === 'closing') {
+            setMenuExpandedStatus(newStatus);
+            timeout = window.setTimeout(() => {
+                setMenuExpandedStatus('closed');
+            }, 225);
         }
         else {
-            setIsOpen(true);
+            setMenuExpandedStatus(newStatus)
         }
     };
+
+    useEffect(() => {
+        if (timeout) {
+            return () => window.clearTimeout(timeout);
+        }
+    }, []);
+
+    const isNotClosed = (menuExpandedStatus === 'closing' || menuExpandedStatus === 'open');
+    console.log('status', menuExpandedStatus);
     return (
-        <header className="flex  py-5 md:hidden">
-            <NavIcon isOpen={isOpen} onClick={toggleMenu} classNames={`pl-5 ${isOpen ? 'hidden ': ''}`} />      
-            <Link to='/' className={`mx-auto ${isOpen ? 'hidden ': ''}`}>
+        <header className="flex py-5 md:hidden">
+            <NavIcon isNotClosed={isNotClosed} onClick={toggleMenuWithDelayedClose} classNames={`pl-5`} />      
+            <Link to='/' className={`mx-auto`}>
                 <h1 className="text-2xl">CLAIRE KENDALL</h1>
             </Link>
-            <Link to='/cart' className={`self-center pr-5 ${isOpen ? 'hidden ': ''}`}>
+            <Link to='/cart' className={`self-center pr-5`}>
                 <CartIcon />
             </Link>
-            {isOpen && (
-                <div className="w-full bg-white p-5 fixed z-10 top-0 bottom-0">
+            {isNotClosed && (
+                <div className={`${expandedClassByToggleState[menuExpandedStatus]} w-full bg-white p-5 fixed z-10`}>
                     <div className="flex">
-                        <Img fluid={logo} className="w-20 h-8 mr-auto self-start" />
-                        <NavIcon isOpen={isOpen} onClick={toggleMenu} classNames="ml-auto" />
+                        <Link to={"/"}>
+                            <Img fluid={logo} className="w-20 h-8 mr-auto self-start" />
+                        </Link>
+                        <NavIcon isNotClosed={isNotClosed} onClick={toggleMenuWithDelayedClose} classNames="ml-auto" />
                     </div>
                     <ul className={`w-full flex-col items-center text-center justify-center`}>
                         {pages.map((page) => {
-                            console.log('page', page)
                             if (page.isExpandable) {
                                 return <ExpandableMenuIcon {...page} />
                             } 
