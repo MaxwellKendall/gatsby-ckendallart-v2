@@ -31,7 +31,7 @@ const Arrow = ({
   if (direction === 'right') {
     return (
       <span
-      className="ml-auto cursor-pointer rounded-full w-20 arrow-elipse flex h-20 items-center justify-center self-center"
+      className="mx-auto cursor-pointer rounded-full w-10 arrow-elipse flex h-10 items-center justify-center self-center md:w-20 md:ml-auto md:h-20"
       onClick={onClick}>
         {`>`}
     </span>
@@ -39,7 +39,7 @@ const Arrow = ({
   }
   return (
     <span
-      className="mr-auto cursor-pointer rounded-full w-20 arrow-elipse flex h-20 items-center justify-center self-center"
+      className="mx-auto cursor-pointer rounded-full w-10 arrow-elipse flex h-10 items-center justify-center self-center md:w-20 md:mr-auto md:h-20"
       onClick={onClick}>
         {`<`}
     </span>
