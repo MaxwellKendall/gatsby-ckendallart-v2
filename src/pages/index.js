@@ -275,7 +275,7 @@ export default (props) => {
         <Arrow onClick={previousReferral} direction="right" onClick={nextReferral} />
       </div>
       {/* IV. REQUEST COMMISSION | MEET THE ARTIST */}
-      <ul className="py-10 flex w-full">
+      <ul className="py-10 flex flex-col md:flex-row w-full">
         {Object.keys(otherImages)
           .sort((a, b) => a.includes('commission') ? -1 : 1)
           .map((key) => {
@@ -285,7 +285,7 @@ export default (props) => {
               ? { title: 'REQUEST COMMISSION', url: '/commission/request'}
               : { title: 'MEET THE ARTIST', url: '/about' };
             return (
-              <li className={`w-1/2 flex flex-col align-center mx-2`}>
+              <li className={`w-full pb-4 md:pb-0 md:w-1/2 flex flex-col align-center mx-2`}>
                 <Img fluid={arrayOfImages} style={{ height: '80%' }}/>
                 <Link to={section.url} className="w-full cursor-pointer text-center mt-5 text-xl tracking-widest">
                     {`${startCase(section.title).toUpperCase()} >`}

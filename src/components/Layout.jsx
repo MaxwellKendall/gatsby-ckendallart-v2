@@ -181,13 +181,13 @@ export const Layout = ({
                 <>
                     <input type="hidden" name="u" value="ab3ec7367aea68f258236a7f3" />
                     <input type="hidden" name="id" value="2e064274d9" />
-                    <div className="flex items-center justify-center w-full">
+                    <div className="flex flex-col md:flex-row  items-center justify-center w-full">
                         <label className="pr-5 leading-7 tracking-widest">be the first to know</label>
-                        <input className="leading-7 border-solid border-black" type="email" name="MERGE0" value={userEmail} onChange={updateUserEmail} />
+                        <input className="leading-7 w-full px-10 md:px-0 md:w-auto border-solid border-black" type="email" name="MERGE0" value={userEmail} onChange={updateUserEmail} />
                         <button
                             disabled={subscribeStatus.subscribed}
                             type="submit"
-                            className="ml-2 leading-7 px-5"
+                            className="leading-7 w-full px-10 md:px-5 md:w-auto md:ml-2"
                             onClick={handleSubmit}>
                             {subscribeStatus.isLoading && (
                                 <FontAwesomeIcon className="ml-2" icon={['fas', 'spinner']} spin />
