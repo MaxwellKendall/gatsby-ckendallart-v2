@@ -20,7 +20,18 @@ module.exports = {
       },
       {
         name: 'Shop',
-        link: '/shop'
+        link: '/shop',
+        isExpandable: true,
+        childPages: [
+          {
+            name: 'Prints',
+            link: '/prints'
+          },
+          {
+            name: 'Originals',
+            link: '/originals'
+          }
+        ]
       },
       {
         name: 'Commissions',
@@ -28,7 +39,7 @@ module.exports = {
       },
       {
         name: 'About',
-        link: '/about'
+        link: '/about' 
       },
     ],
     tagLine: [
