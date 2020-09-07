@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { useStaticQuery, Link, graphql } from "gatsby";
 import Img from "gatsby-image";
+import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
 import { kebabCase, uniqueId, startCase, groupBy, flatten } from "lodash";
 
 import Layout from "../components/Layout";
+import 'pure-react-carousel/dist/react-carousel.es.css';
 
 const imgBreakPointsByViewPort = {
   mobile: `(min-width: 0px) and (max-width: 767px)`,
@@ -21,6 +23,28 @@ const referrals = [
   `“Claire listens - she was able to take my vision and duplicate it on canvas. She is a true talent - easy to work with and my finished masterpiece is a joy to sit and admire.” Debbie C. Charleston, S.C.`,
   `"SQRLE is a real good painter. She paints real good." TKL BOI TKLVILLE, USA`
 ]
+
+const Arrow = ({
+  direction,
+  onClick = () => {}
+}) => {
+  if (direction === 'right') {
+    return (
+      <span
+      className="ml-auto cursor-pointer rounded-full w-20 arrow-elipse flex h-20 items-center justify-center self-center"
+      onClick={onClick}>
+        {`>`}
+    </span>
+    );
+  }
+  return (
+    <span
+      className="mr-auto cursor-pointer rounded-full w-20 arrow-elipse flex h-20 items-center justify-center self-center"
+      onClick={onClick}>
+        {`<`}
+    </span>
+  );
+}
 
 const parseImages = (images, section) => Object
   .keys(images)
@@ -150,6 +174,8 @@ export default (props) => {
   const featuredImages = groupBy(flatten(parseImages(homePageImages, 'featured')), 'fileName');
   const otherImages = groupBy(flatten(parseImages(homePageImages, 'other')), 'fileName');
 
+  console.log('featuredImgs', featuredImages)
+
   const nextReferral = (e) => {
     e.preventDefault();
     if (activeReferral === referrals.length - 1) {
@@ -178,14 +204,37 @@ export default (props) => {
         {tagLine.map((str) => (
           <h2 className="w-full py-2 text-center tracking-widest my-5 text-3xl">{str.toUpperCase()}</h2>
         ))}
-        <Link to="/portfolio" className="w-3/5 tracking-wider border mt-10 text-center mx-auto border-black py-5 text-2xl">
+        <Link to="/portfolio" className="w-5/6 md:w-3/5 tracking-wider border mt-10 text-center mx-auto border-black py-5 text-2xl">
           EXPLORE PORTFOLIO
         </Link>
       </div>
       {/* II. FEATURED WORK */}
-      <div className="w-full featured-work pb-10">
-        <h3 className="px-10 pt-10 text-2xl tracking-widest">FEATURED WORK</h3>
-        <ul className="p-10 flex w-full">
+      <div className="w-full featured-work pb-5 lg:pb-10">
+        <h3 className="text-center md:px-10 pt-10 text-2xl tracking-widest">FEATURED WORK</h3>
+        <div className="flex lg:hidden">
+          <CarouselProvider
+            className="w-full"
+            naturalSlideWidth={780}
+            naturalSlideHeight={700}
+            totalSlides={3}>
+            <Slider>
+              {Object.keys(featuredImages)
+                .map((key, i) => (
+                  <Slide index={i}>
+                    <Link to="test">
+                      <Img fluid={featuredImages[key]} />
+                    </Link>
+                  </Slide>
+                ))
+              }
+            </Slider>
+            <div className="flex w-full justify-center">
+              <ButtonBack className="p-2"><Arrow direction="left" /></ButtonBack>
+              <ButtonNext className="p-2"><Arrow direction="right" /></ButtonNext>
+            </div>
+          </CarouselProvider>
+        </div>
+        <ul className="hidden lg:flex p-10 flex w-full">
           {Object.keys(featuredImages)
             .map((key, i) => {
               const arrayOfImages = featuredImages[key];
@@ -219,11 +268,11 @@ export default (props) => {
       </div>
       {/* III. REFERRALS */}
       <div className="py-24 flex align-center">
-        <span className="mr-auto cursor-pointer rounded-full w-20 arrow-elipse flex h-20 items-center justify-center self-center" onClick={previousReferral}>{`<`}</span>
+        <Arrow onClick={previousReferral} direction="left"/>
         <p className="self-center w-3/4 script-font tracking-wide text-4xl opacity-75">
           {referrals[activeReferral]}
         </p>
-        <span className="ml-auto cursor-pointer rounded-full w-20 arrow-elipse flex h-20 items-center justify-center self-center" onClick={nextReferral}>{`>`}</span>
+        <Arrow onClick={previousReferral} direction="right" onClick={nextReferral} />
       </div>
       {/* IV. REQUEST COMMISSION | MEET THE ARTIST */}
       <ul className="py-10 flex w-full">
