@@ -12,6 +12,7 @@
   "dependencies": {
     "@apollo/client": "^3.0.0-beta.50",
     "graphql": "^15.0.0",
-    "isomorphic-fetch": "^2.2.1"
+    "isomorphic-fetch": "^2.2.1",
+    "lodash": "^4.17.20"
   }
 }

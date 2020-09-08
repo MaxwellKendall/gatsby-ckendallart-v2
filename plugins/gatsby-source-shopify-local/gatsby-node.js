@@ -7,6 +7,7 @@ const {
     GetAllProductsInCollection,
     GetAllCollectionsAndAllProducts
 } = require('./queries');
+const { kebabCase } = require('lodash');
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
@@ -90,7 +91,7 @@ exports.sourceNodes = async ({ actions, createNodeId, createContentDigest }, opt
                     collection: collectionByHandle.title,
                     handle,
                     productType,
-                    slug: `${productType.toLowerCase()}/${collectionByHandle.handle}/${handle}`,
+                    slug: `${kebabCase(collectionByHandle.handle).toLowerCase()}/${handle}`,
                     totalInventory,
                     priceRange: {
                         high: priceRange.maxVariantPrice.amount,
