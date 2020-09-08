@@ -125,10 +125,13 @@ body,
                 @media(min-width: $tablet) {
                     height: 25rem;
                 }
+                @media(min-width: $large) {
+                    height: 30rem;
+                }
+                @media(min-width: $huge-monitor) {
+                    height: 40rem;
+                }
                 // these styles work okay if there is no max-width on the page.
-                // @media(min-width: $desktop) {
-                //     height: 40rem;
-                // }
                 // @media(min-width: $large) {
                 //     height: 50rem;
                 // }

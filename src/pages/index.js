@@ -31,7 +31,7 @@ const Arrow = ({
   if (direction === 'right') {
     return (
       <span
-      className="mx-auto cursor-pointer rounded-full w-10 arrow-elipse flex h-10 items-center justify-center self-center md:w-20 md:ml-auto md:h-20"
+      className="mx-auto cursor-pointer rounded-full w-10 arrow-elipse flex h-10 items-center justify-center self-center lg:w-20 lg:h-20 md:ml-auto"
       onClick={onClick}>
         {`>`}
     </span>
@@ -39,7 +39,7 @@ const Arrow = ({
   }
   return (
     <span
-      className="mx-auto cursor-pointer rounded-full w-10 arrow-elipse flex h-10 items-center justify-center self-center md:w-20 md:mr-auto md:h-20"
+      className="mx-auto cursor-pointer rounded-full w-10 arrow-elipse flex h-10 items-center justify-center self-center lg:w-20 lg:h-20 md:mr-auto"
       onClick={onClick}>
         {`<`}
     </span>
@@ -210,7 +210,7 @@ export default (props) => {
       </div>
       {/* II. FEATURED WORK */}
       <div className="w-full featured-work pb-5 lg:pb-10">
-        <h3 className="text-center md:px-10 pt-10 text-2xl tracking-widest">FEATURED WORK</h3>
+        <h3 className="text-center md:text-left md:px-10 pt-10 text-2xl tracking-widest">FEATURED WORK</h3>
         <div className="flex lg:hidden">
           <CarouselProvider
             className="w-full"
@@ -267,15 +267,15 @@ export default (props) => {
         </ul>
       </div>
       {/* III. REFERRALS */}
-      <div className="py-24 flex align-center">
+      <div className="py-12 md:py-24 flex align-center">
         <Arrow onClick={previousReferral} direction="left"/>
-        <p className="self-center w-3/4 script-font tracking-wide text-4xl opacity-75">
+        <p className="self-center text-center w-4/6 script-font tracking-wide text-4xl opacity-75 md:text-left">
           {referrals[activeReferral]}
         </p>
         <Arrow onClick={previousReferral} direction="right" onClick={nextReferral} />
       </div>
       {/* IV. REQUEST COMMISSION | MEET THE ARTIST */}
-      <ul className="py-10 flex flex-col md:flex-row w-full">
+      <ul className="pt-10 flex flex-col md:flex-row w-full">
         {Object.keys(otherImages)
           .sort((a, b) => a.includes('commission') ? -1 : 1)
           .map((key) => {
