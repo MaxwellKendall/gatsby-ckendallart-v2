@@ -42,6 +42,8 @@
     "react-helmet": "^6.0.0",
     "react-image-magnify": "^2.7.4",
     "react-modal": "^3.11.2",
+    "react-spring": "^9.0.0-rc.3",
+    "react-use-gesture": "^7.0.16",
     "shopify-buy": "^2.10.0",
     "tailwindcss": "^1.4.6"
   },

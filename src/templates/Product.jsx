@@ -4,6 +4,7 @@ import Img from "gatsby-image";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import moment from 'moment';
 import { uniqueId, kebabCase, debounce } from 'lodash';
+import { useMove, usePinch } from 'react-use-gesture';
 
 import CartContext from "../../globalState";
 import Layout from "../components/Layout";
@@ -83,8 +84,6 @@ export default ({
     const [selectedVariant, setSelectedVariant] = useState(parsedVariants[0]);
     const [selectedImg, setSelectedImg] = useState(getResponsiveImages(parsedVariants[0]));
     const [remoteInventory, setRemoteInventory] = useState(1);
-    const [eventCache, setEventCache] = useState([]);
-    const [quantity, setQuantity] = useState(1);
     const [remainingInventory, setRemainingInventory] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [isZoomed, setIsZoomed] = useState(false);
@@ -141,7 +140,7 @@ export default ({
         const isExistingLineItem = isVariantInCart(cart, selectedVariant.id);
         if (isExistingLineItem) {
             const lineItemToUpdate = getLineItemForUpdateToCart(cart.lineItems, selectedVariant.id);
-            return updateLineItemsInCart(cartId, [{ ...lineItemToUpdate, quantity }])
+            return updateLineItemsInCart(cartId, [{ ...lineItemToUpdate, quantity: lineItemToUpdate.quantity + 1 }])
                 .then((payload) => {
                     dispatch({ type: 'UPDATE_CART', payload: { ...payload, variantId: selectedVariant.id }, products });
                 })
@@ -149,7 +148,7 @@ export default ({
                     setIsLoading(false);
                 });
         }
-        return addLineItemsToCart(cartId, getLineItemForAddToCart({ ...product, selectedVariant }, quantity))
+        return addLineItemsToCart(cartId, getLineItemForAddToCart({ ...product, selectedVariant }, 1))
             .then((payload) => {
                 dispatch({
                     type: 'ADD_TO_CART',
@@ -200,7 +199,10 @@ export default ({
         setMagnifyDimensions({ left: 0, top: 0 });
     }
     
-    const debouncedMouseHandler = debounce(({ clientY, clientX, pageY }) => {
+    const mouseMoveHandler = useMove(({ xy: [clientX, clientY], event }) => {
+        event.persist();
+        const { pageY } = event;
+        console.log('heyooooo', clientX, clientY, pageY);
         const {
             height: magnifyImgHeight,
             width: magnifyImgWidth
@@ -223,18 +225,15 @@ export default ({
             left: horizontalPositionAsPercentage > horizontalMax ? horizontalMax : horizontalPositionAsPercentage,
             top: verticalPositionAsPercentage > verticalMax ? verticalMax : verticalPositionAsPercentage
         });
-    }, 5)
-
-    const handleHoverZoom = (event) => {
-        event.persist();
-        debouncedMouseHandler(event);
-    }
+    });
 
     const handleProductImgClick = (e, i) => {
         e.preventDefault();
         setSelectedImg(getResponsiveImages({ img: productImages.nodes[i] }));
         handleResize();
     }
+
+    console.log('dimensions', magnifyDimensions);
 
     return (
         <Layout pageName="product-page" flexDirection="row" classNames="flex-wrap" maxWidth="100rem">
@@ -248,28 +247,27 @@ export default ({
                             fixed={selectedImg.responsiveImgs} />
                     </div>
                     <div
-                        className={`${isZoomed ? 'opacity-100' : ' opacity-0'} hidden md:block hover-img absolute overflow-hidden`}
+                        className={`${isZoomed ? 'opacity-100' : ' opacity-0'} hover-img absolute overflow-hidden`}
                         onMouseEnter={() => setImgZoom(true)}
                         onMouseLeave={() => setImgZoom(false)}
-                        onMouseMove={handleHoverZoom}
-                        onTouchMove={handleHoverZoom}
                         style={{
                             width: `${hoverImageDimensions.width}px`,
                             top: `${hoverImageDimensions.top}px`,
                             height: `${hoverImageDimensions.height}px`,
                             left: `${hoverImageDimensions.left}px`,
                             transition: 'opacity .75s ease-in .25s'
-                        }}>
+                        }}
+                        {...mouseMoveHandler()}>
                         <Img
                             ref={magnifyImg}
                             className="w-full"
                             fixed={selectedImg.responsiveHoverImgs}
+                            style={{
+                                transform: 'transition all ease-in'
+                            }}
                             imgStyle={{
                                 top: `${magnifyDimensions.top > 0 ? -magnifyDimensions.top : 0}%`,
                                 left: `${magnifyDimensions.left > 0 ? -magnifyDimensions.left : 0}%`,
-                            }}
-                            style={{
-                                transform: 'transition all ease-in'
                             }} />
                     </div>
                     <span className="py-4">Other Images for {product.title}:</span>
