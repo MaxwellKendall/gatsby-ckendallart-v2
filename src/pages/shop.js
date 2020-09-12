@@ -5,9 +5,7 @@ import { Link } from 'gatsby';
 import Layout from '../components/Layout';
 import { useProducts } from "../graphql"
 
-export default ({
-
-}) => {
+export default () => {
     const products = useProducts();
     return (
         <Layout>

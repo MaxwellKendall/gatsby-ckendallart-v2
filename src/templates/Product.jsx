@@ -4,6 +4,7 @@ import Img from "gatsby-image";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import moment from 'moment';
 import { uniqueId, kebabCase, debounce } from 'lodash';
+import ReactImageMagnify from 'react-image-magnify';
 
 import CartContext from "../../globalState";
 import Layout from "../components/Layout";
@@ -18,6 +19,7 @@ import {
 } from '../helpers';
 import { initCheckout, addLineItemsToCart } from '../../client';
 import { useProducts } from '../graphql';
+import { getSrcFromFixed, getSrcSetAndSizesFromFixed, getHeightAndWidthFromFixed } from '../helpers/img';
 
 const imgBreakPointsByTShirtSize = {
     small: `(min-width: 0px) and (max-width: 767px)`,
@@ -83,8 +85,6 @@ export default ({
     const [selectedVariant, setSelectedVariant] = useState(parsedVariants[0]);
     const [selectedImg, setSelectedImg] = useState(getResponsiveImages(parsedVariants[0]));
     const [remoteInventory, setRemoteInventory] = useState(1);
-    const [eventCache, setEventCache] = useState([]);
-    const [quantity, setQuantity] = useState(1);
     const [remainingInventory, setRemainingInventory] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [isZoomed, setIsZoomed] = useState(false);
@@ -141,7 +141,7 @@ export default ({
         const isExistingLineItem = isVariantInCart(cart, selectedVariant.id);
         if (isExistingLineItem) {
             const lineItemToUpdate = getLineItemForUpdateToCart(cart.lineItems, selectedVariant.id);
-            return updateLineItemsInCart(cartId, [{ ...lineItemToUpdate, quantity }])
+            return updateLineItemsInCart(cartId, [{ ...lineItemToUpdate, quantity: lineItemToUpdate + 1 }])
                 .then((payload) => {
                     dispatch({ type: 'UPDATE_CART', payload: { ...payload, variantId: selectedVariant.id }, products });
                 })
@@ -149,7 +149,7 @@ export default ({
                     setIsLoading(false);
                 });
         }
-        return addLineItemsToCart(cartId, getLineItemForAddToCart({ ...product, selectedVariant }, quantity))
+        return addLineItemsToCart(cartId, getLineItemForAddToCart({ ...product, selectedVariant }, 1 ))
             .then((payload) => {
                 dispatch({
                     type: 'ADD_TO_CART',
@@ -236,51 +236,68 @@ export default ({
         handleResize();
     }
 
+    console.log('hover Imgs', getSrcSetAndSizesFromFixed(selectedImg.responsiveHoverImgs))
+
     return (
         <Layout pageName="product-page" flexDirection="row" classNames="flex-wrap" maxWidth="100rem">
             {selectedVariant.img && (
-                <div className="md:mx-5">
-                    {remoteInventory === 0 && <span className="product-sold-out">Sold Out!</span>}
-                    <div className="flex justify-center mb-4">
-                        <Img
-                            ref={imgRef}
-                            className="w-full"
-                            fixed={selectedImg.responsiveImgs} />
-                    </div>
-                    <div
-                        className={`${isZoomed ? 'opacity-100' : ' opacity-0'} hover-img absolute overflow-hidden`}
-                        onMouseEnter={() => setImgZoom(true)}
-                        onMouseLeave={() => setImgZoom(false)}
-                        onMouseMove={handleHoverZoom}
-                        onTouchMove={handleHoverZoom}
-                        style={{
-                            width: `${hoverImageDimensions.width}px`,
-                            top: `${hoverImageDimensions.top}px`,
-                            height: `${hoverImageDimensions.height}px`,
-                            left: `${hoverImageDimensions.left}px`,
-                            transition: 'opacity .75s ease-in .25s'
-                        }}>
-                        <Img
-                            ref={magnifyImg}
-                            className="w-full"
-                            fixed={selectedImg.responsiveHoverImgs}
-                            imgStyle={{
-                                top: `${magnifyDimensions.top > 0 ? -magnifyDimensions.top : 0}%`,
-                                left: `${magnifyDimensions.left > 0 ? -magnifyDimensions.left : 0}%`,
-                            }}
+                <>
+                    <div className="flex flex-col md:mx-5">
+                        {remoteInventory === 0 && <span className="product-sold-out">Sold Out!</span>}
+                        <div className="flex justify-center mb-4">
+                            <Img
+                                ref={imgRef}
+                                className="w-full"
+                                fixed={selectedImg.responsiveImgs} />
+                        </div>
+                        <div
+                            className={`${isZoomed ? 'opacity-100' : ' opacity-0'} hover-img absolute overflow-hidden`}
+                            onMouseEnter={() => setImgZoom(true)}
+                            onMouseLeave={() => setImgZoom(false)}
+                            onMouseMove={handleHoverZoom}
+                            onTouchMove={handleHoverZoom}
                             style={{
-                                transform: 'transition all ease-in'
+                                width: `${hoverImageDimensions.width}px`,
+                                top: `${hoverImageDimensions.top}px`,
+                                height: `${hoverImageDimensions.height}px`,
+                                left: `${hoverImageDimensions.left}px`,
+                                transition: 'opacity .75s ease-in .25s'
+                            }}>
+                            <Img
+                                ref={magnifyImg}
+                                className="w-full"
+                                fixed={selectedImg.responsiveHoverImgs}
+                                imgStyle={{
+                                    top: `${magnifyDimensions.top > 0 ? -magnifyDimensions.top : 0}%`,
+                                    left: `${magnifyDimensions.left > 0 ? -magnifyDimensions.left : 0}%`,
+                                }}
+                                style={{
+                                    transform: 'transition all ease-in'
+                                }} />
+                        </div>
+                        <span className="py-4">Other Images for {product.title}:</span>
+                        <ul className="flex justify-center flex-wrap md:justify-start w-full">
+                            {productImages.nodes.map(({ thumbnail }, i) => (
+                                <li className="mr-2" onClick={(e) => handleProductImgClick(e, i)}>
+                                    <Img fixed={thumbnail.fixed} />
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                    <div className="hidden">
+                        <ReactImageMagnify
+                            smallImage={{
+                                ...getSrcFromFixed(selectedImg.responsiveImgs),
+                                ...getSrcSetAndSizesFromFixed(selectedImg.responsiveImgs),
+                                ...getHeightAndWidthFromFixed(selectedImg.responsiveImgs)
+                            }}
+                            largeImage={{
+                                ...getSrcFromFixed(selectedImg.responsiveHoverImgs),
+                                ...getSrcSetAndSizesFromFixed(selectedImg.responsiveHoverImgs),
+                                ...getHeightAndWidthFromFixed(selectedImg.responsiveHoverImgs)
                             }} />
                     </div>
-                    <span className="py-4">Other Images for {product.title}:</span>
-                    <ul className="flex justify-center flex-wrap md:justify-start w-full">
-                        {productImages.nodes.map(({ thumbnail }, i) => (
-                            <li className="mr-2" onClick={(e) => handleProductImgClick(e, i)}>
-                                <Img fixed={thumbnail.fixed} />
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+                </>
             )}
             <div className="product-desc flex flex-col items-center w-full lg:w-2/5 lg:items-start my-5 lg:justify-start lg:w-1/4 xl:w-2/5 lg:mr-5 lg:my-0">
                 <h2 className="text-4xl tracking-wide text-center lg:text-left">{title}</h2>

@@ -9,6 +9,7 @@ export const useProducts = () => {
                         productType
                         handle
                         totalInventory
+                        id
                         variants {
                             id
                             localFile {
