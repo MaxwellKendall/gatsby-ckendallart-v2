@@ -258,16 +258,9 @@ export default (props) => {
                   <p className="w-full text-center mt-5 text-xl tracking-wide">
                     {startCase(name).toUpperCase()}
                   </p>
-                  {productSize && (
-                    <Link className="w-full text-center text-lg tracking-wide" to={getFeaturedImgUrl(key)}>
-                        shop now {`>`}
-                    </Link>
-                  )}
-                  {!productSize && (
-                    <Link className="w-full text-center text-lg tracking-wide" to={getFeaturedImgUrl(key)}>
-                        shop now {`>`}
-                    </Link>
-                  )}
+                  <Link className="w-full text-center text-lg tracking-wide" to={getFeaturedImgUrl(key)}>
+                      shop now {`>`}
+                  </Link>
                 </li>
               );
             })
