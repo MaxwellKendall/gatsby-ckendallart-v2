@@ -246,7 +246,7 @@ export default ({
     const otherProducts = otherImagesInCollection
         .nodes
         .filter((product) => (
-            product.variants.some((variant) => variant.img.small) &&
+            product.variants.some((variant) => variant.img) &&
             product.handle !== handle
         ))
         .slice(0, 3)
