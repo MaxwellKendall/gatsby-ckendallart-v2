@@ -233,6 +233,11 @@ export default ({
         handleResize();
     }
 
+    const handleMouseEnter = () => {
+        if (window.innerWidth < 768) return;
+        setImgZoom(true);
+    }
+
     console.log('dimensions', magnifyDimensions);
 
     return (
@@ -248,7 +253,7 @@ export default ({
                     </div>
                     <div
                         className={`${isZoomed ? 'opacity-100' : ' opacity-0'} hover-img absolute overflow-hidden`}
-                        onMouseEnter={() => setImgZoom(true)}
+                        onMouseEnter={handleMouseEnter}
                         onMouseLeave={() => setImgZoom(false)}
                         style={{
                             width: `${hoverImageDimensions.width}px`,
