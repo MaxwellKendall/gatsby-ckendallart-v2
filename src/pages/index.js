@@ -22,7 +22,20 @@ const tagLine = [
 const referrals = [
   `“Claire listens - she was able to take my vision and duplicate it on canvas. She is a true talent - easy to work with and my finished masterpiece is a joy to sit and admire.” Debbie C. Charleston, S.C.`,
   `"SQRLE is a real good painter. She paints real good." TKL BOI TKLVILLE, USA`
-]
+];
+
+const getFeaturedImgUrl = (imgName) => {
+  const splitFileName = imgName.split('--');
+  const name = splitFileName[1];
+  const productType = splitFileName[2];
+  const url = splitFileName[3];
+  const productSize = splitFileName[4];
+
+  if  (productSize) {
+    return `${productType}/${kebabCase(url)}-${productSize}`;
+  }
+  return `${productType}/${kebabCase(url)}`;
+}
 
 const Arrow = ({
   direction,
@@ -220,11 +233,11 @@ export default (props) => {
             <Slider>
               {Object.keys(featuredImages)
                 .map((key, i) => (
-                  <Slide index={i}>
-                    <Link to="test">
-                      <Img fluid={featuredImages[key]} />
-                    </Link>
-                  </Slide>
+                    <Slide index={i}>
+                      <Link to={getFeaturedImgUrl(key)}>
+                        <Img fluid={featuredImages[key]} />
+                      </Link>
+                    </Slide>
                 ))
               }
             </Slider>
@@ -238,11 +251,6 @@ export default (props) => {
           {Object.keys(featuredImages)
             .map((key, i) => {
               const arrayOfImages = featuredImages[key];
-              const splitFileName = key.split('--');
-              const name = splitFileName[1];
-              const productType = splitFileName[2];
-              const url = splitFileName[3];
-              const productSize = splitFileName[4];
               const margin = i === 1;
               return (
                 <li className={`w-1/3 flex flex-col align-center ${margin ? 'mx-2' : ''}`}>
@@ -251,12 +259,12 @@ export default (props) => {
                     {startCase(name).toUpperCase()}
                   </p>
                   {productSize && (
-                    <Link className="w-full text-center text-lg tracking-wide" to={`${productType}/${kebabCase(url)}-${productSize}`}>
+                    <Link className="w-full text-center text-lg tracking-wide" to={getFeaturedImgUrl(key)}>
                         shop now {`>`}
                     </Link>
                   )}
                   {!productSize && (
-                    <Link className="w-full text-center text-lg tracking-wide" to={`${productType}/${kebabCase(url)}`}>
+                    <Link className="w-full text-center text-lg tracking-wide" to={getFeaturedImgUrl(key)}>
                         shop now {`>`}
                     </Link>
                   )}
