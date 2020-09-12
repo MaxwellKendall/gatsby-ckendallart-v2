@@ -251,7 +251,7 @@ export default (props) => {
             .map((key, i) => {
               const arrayOfImages = featuredImages[key];
               const margin = i === 1;
-              const name = imgName.split('--')[1];
+              const name = key.split('--')[1];
               return (
                 <li className={`w-1/3 flex flex-col align-center ${margin ? 'mx-2' : ''}`}>
                   <Img fluid={arrayOfImages} style={{ height: '80%' }}/>
