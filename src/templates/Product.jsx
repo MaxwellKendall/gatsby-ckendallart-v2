@@ -235,7 +235,10 @@ export default ({
     }
 
     return (
-        <Layout pageName="product-page" flexDirection="row" classNames="flex-wrap" maxWidth="100rem">
+        <Layout pageName="product-page" flexDirection="row" classNames="flex-wrap lg:justify-start" maxWidth="100rem">
+            <h2 className="text-xl md:text-2xl lg:text-4xl tracking-wide text-center w-full lg:hidden">{title}</h2>
+            <p className="text-lg py-2 md:text-xl lg:text-2xl lg:py-10 tracking-widest w-full text-center lg:hidden">{`$${selectedVariant.price}`}</p>
+            {high !== low && <p className="text-sm italic lg:hidden">{`from $${low} to $${high}`}</p>}
             {selectedVariant.img && (
                 <div className="md:mx-5">
                     {remoteInventory === 0 && <span className="product-sold-out">Sold Out!</span>}
@@ -270,8 +273,8 @@ export default ({
                                 transform: 'transition all ease-in'
                             }} />
                     </div>
-                    <span className="py-4">Other Images for {product.title}:</span>
-                    <ul className="flex justify-center flex-wrap md:justify-start w-full">
+                    <p className="py-4 w-full text-center lg:text-start">Other Images for {product.title}:</p>
+                    <ul className="flex justify-center flex-wrap w-full">
                         {productImages.nodes.map(({ thumbnail }, i) => (
                             <li className="mr-2" onClick={(e) => handleProductImgClick(e, i)}>
                                 <Img fixed={thumbnail.fixed} />
@@ -280,13 +283,13 @@ export default ({
                     </ul>
                 </div>
             )}
-            <div className="product-desc flex flex-col items-center w-full lg:w-2/5 lg:items-start my-5 lg:justify-start lg:w-1/4 xl:w-2/5 lg:mr-5 lg:my-0">
-                <h2 className="text-4xl tracking-wide text-center lg:text-left">{title}</h2>
-                <p className="text-2xl py-10 tracking-widest">{`$${selectedVariant.price}`}</p>
-                {high !== low && <p className="text-sm italic">{`from $${low} to $${high}`}</p>}
-                <div className="actions w-full flex flex-col my-5 justify-start items-start lg:justify-start">
+            <div className="product-desc flex flex-col items-center w-full my-5 lg:w-1/4 xl:w-1/3 lg:mr-5 lg:my-0">
+                <h2 className="hidden lg:inline text-4xl tracking-wide text-center">{title}</h2>
+                <p className="hidden lg:inline text-2xl py-10 tracking-widest">{`$${selectedVariant.price}`}</p>
+                {high !== low && <p className="hidden lg:flex text-sm italic">{`from $${low} to $${high}`}</p>}
+                <div className="actions w-full flex flex-col my-5 justify-start items-center">
                     <button
-                        className="border text-white border-black w-64 py-5 px-2 text-xl uppercase mb-2 self-center lg:self-start"
+                        className="border text-white border-black w-64 py-5 px-2 text-xl uppercase mb-2 self-center"
                         style={{ background: "#C097D0" }}
                         disabled={isAddToCartDisabled}
                         onClick={handleAddToCart}>
@@ -331,12 +334,12 @@ export const query = graphql`
                           }
                     }
                     medium: childImageSharp {
-                        fixed(width:500) {
+                        fixed(width:700) {
                             ...GatsbyImageSharpFixed
                           }
                     }
                     large: childImageSharp {
-                        fixed(width:700) {
+                        fixed(width:850) {
                             ...GatsbyImageSharpFixed
                           }
                     }
