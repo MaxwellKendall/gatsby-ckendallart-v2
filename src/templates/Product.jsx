@@ -83,8 +83,6 @@ export default ({
     const [selectedVariant, setSelectedVariant] = useState(parsedVariants[0]);
     const [selectedImg, setSelectedImg] = useState(getResponsiveImages(parsedVariants[0]));
     const [remoteInventory, setRemoteInventory] = useState(1);
-    const [eventCache, setEventCache] = useState([]);
-    const [quantity, setQuantity] = useState(1);
     const [remainingInventory, setRemainingInventory] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [isZoomed, setIsZoomed] = useState(false);
@@ -141,7 +139,7 @@ export default ({
         const isExistingLineItem = isVariantInCart(cart, selectedVariant.id);
         if (isExistingLineItem) {
             const lineItemToUpdate = getLineItemForUpdateToCart(cart.lineItems, selectedVariant.id);
-            return updateLineItemsInCart(cartId, [{ ...lineItemToUpdate, quantity }])
+            return updateLineItemsInCart(cartId, [{ ...lineItemToUpdate, quantity: lineItemToUpdate.quantity + 1 }])
                 .then((payload) => {
                     dispatch({ type: 'UPDATE_CART', payload: { ...payload, variantId: selectedVariant.id }, products });
                 })
@@ -149,7 +147,7 @@ export default ({
                     setIsLoading(false);
                 });
         }
-        return addLineItemsToCart(cartId, getLineItemForAddToCart({ ...product, selectedVariant }, quantity))
+        return addLineItemsToCart(cartId, getLineItemForAddToCart({ ...product, selectedVariant }, 1))
             .then((payload) => {
                 dispatch({
                     type: 'ADD_TO_CART',
