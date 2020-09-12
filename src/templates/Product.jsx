@@ -256,7 +256,7 @@ export default ({
                             top: `${hoverImageDimensions.top}px`,
                             height: `${hoverImageDimensions.height}px`,
                             left: `${hoverImageDimensions.left}px`,
-                            transition: 'opacity .75s ease-in .25s'
+                            transition: 'opacity .25s ease-in .05s'
                         }}>
                         <Img
                             ref={magnifyImg}
