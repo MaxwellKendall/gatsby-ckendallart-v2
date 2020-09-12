@@ -248,7 +248,7 @@ export default ({
                             fixed={selectedImg.responsiveImgs} />
                     </div>
                     <div
-                        className={`${isZoomed ? 'opacity-100' : ' opacity-0'} hover-img absolute overflow-hidden`}
+                        className={`${isZoomed ? 'opacity-100' : ' opacity-0'} hidden md:block hover-img absolute overflow-hidden`}
                         onMouseEnter={() => setImgZoom(true)}
                         onMouseLeave={() => setImgZoom(false)}
                         onMouseMove={handleHoverZoom}
