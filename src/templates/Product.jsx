@@ -191,7 +191,7 @@ export default ({
     );
 
     const setImgZoom = (bool) => {
-        if (window?.clientWidth < 760) {
+        if (window?.innerWidth < 760) {
             if (isZoomed) setIsZoomed(false);
             return;
         }
