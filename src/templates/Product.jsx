@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useCallback, useRef } from 'react';
-import { graphql } from 'gatsby';
+import { graphql, Link } from 'gatsby';
 import Img from "gatsby-image";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import moment from 'moment';
@@ -30,6 +30,15 @@ const imgBreakPointsByTShirtSize = {
         // xl: `(min-width: 1800px)`
     }
 };
+
+const getLowestPrice = (otherProducts) => {
+    return otherProducts
+        .reduce((lowestPrice, { priceRange: { low: currentPrice }}) => {
+            if (lowestPrice === null) return `$${Number(currentPrice).toFixed(2)}`;
+            if (currentPrice > lowestPrice) return `$${Number(currentPrice).toFixed(2)}`;
+            return lowestPrice;
+        }, null);
+}
 
 const getResponsiveImages = ({ img }) => {
     if (!img) return null;
@@ -72,13 +81,13 @@ export default ({
     },
     data: { 
         shopifyProduct: product,
-        productImages
-    },
-    path
+        productImages,
+        otherImagesInCollection
+    }
 }) => {
     const { cart, dispatch } = useContext(CartContext);
     const products = useProducts();
-    const { variants, productType } = product;
+    const { variants, productType, handle, collection } = product;
     const parsedVariants = getParsedVariants(variants, title);
     const [selectedVariant, setSelectedVariant] = useState(parsedVariants[0]);
     const [selectedImg, setSelectedImg] = useState(getResponsiveImages(parsedVariants[0]));
@@ -234,6 +243,14 @@ export default ({
         handleResize();
     }
 
+    const otherProducts = otherImagesInCollection
+        .nodes
+        .filter((product) => (
+            product.variants.some((variant) => variant.img.small) &&
+            product.handle !== handle
+        ))
+        .slice(0, 3)
+
     return (
         <Layout pageName="product-page" flexDirection="row" classNames="flex-wrap lg:justify-start" maxWidth="100rem">
             <h2 className="text-xl md:text-2xl lg:text-4xl tracking-wide text-center w-full lg:hidden">{title}</h2>
@@ -273,8 +290,7 @@ export default ({
                                 transform: 'transition all ease-in'
                             }} />
                     </div>
-                    <p className="py-4 w-full text-center lg:text-start">Other Images for {product.title}:</p>
-                    <ul className="flex justify-center flex-wrap w-full">
+                    <ul className="flex justify-start flex-wrap w-full">
                         {productImages.nodes.map(({ thumbnail }, i) => (
                             <li className="mr-2" onClick={(e) => handleProductImgClick(e, i)}>
                                 <Img fixed={thumbnail.fixed} />
@@ -307,20 +323,36 @@ export default ({
                             ))}
                         </select>
                     )}
-                    <p className="text-lg py-10 tracking-wide px-10 lg:px-0">{description}</p>
+                    <p className="text-lg py-10 tracking-wide px-5 lg:px-0">{description}</p>
                 </div>
             </div>
+            <h3 className="pt-10 pb-5 pl-5 w-full text-xl">More {collection} from {getLowestPrice(otherProducts)}</h3>
+            <ul className="pl-5 flex flex-wrap justify-center items-center">
+                {otherProducts
+                    .map((product, i) => {
+                        const { responsiveImgs } = getResponsiveImages(product.variants[0]);
+                        return (
+                            <li className={i === 1 ? 'px-5' : ''}>
+                                <Link to={product.slug}>
+                                    <Img fixed={responsiveImgs} />
+                                </Link>
+                            </li>
+                        );
+                    })
+                }
+            </ul>
         </Layout>
     );
 };
 
 export const query = graphql`
-    query GetProduct($id: String) {
+    query GetProduct($id: String, $collection: String ) {
         shopifyProduct(id: {eq: $id}) {
             id
             handle
             productId
             productType
+            collection
             title
             variants {
                 price
@@ -384,6 +416,36 @@ export const query = graphql`
                     }
                     medium: fixed(width:1000) {
                         ...GatsbyImageSharpFixed
+                    }
+                }
+            }
+        }
+        otherImagesInCollection: allShopifyProduct(filter: {collection: {eq: $collection }}) {
+            nodes {
+                id
+                title
+                handle
+                slug
+                priceRange {
+                    low
+                }
+                variants {
+                    img: localFile {
+                        small: childImageSharp {
+                            fixed(width:150) {
+                                ...GatsbyImageSharpFixed
+                            }
+                        }
+                        medium: childImageSharp {
+                            fixed(width:300) {
+                                ...GatsbyImageSharpFixed
+                            }
+                        }
+                        large: childImageSharp {
+                            fixed(width:425) {
+                                ...GatsbyImageSharpFixed
+                            }
+                        }
                     }
                 }
             }
