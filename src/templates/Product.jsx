@@ -21,8 +21,8 @@ import { useProducts } from '../graphql';
 
 const imgBreakPointsByTShirtSize = {
     small: `(min-width: 0px) and (max-width: 767px)`,
-    medium: `(min-width: 768px) and (max-width: 1199px)`,
-    large: `(min-width: 1200px)`,
+    medium: `(min-width: 768px) and (max-width: 1399px)`,
+    large: `(min-width: 1400px)`,
     hoverImg: {
         small: `(min-width: 0px) and (max-width: 767px)`,
         medium: `(min-width: 768px)`
@@ -252,7 +252,7 @@ export default ({
         .slice(0, 3)
 
     return (
-        <Layout pageName="product-page" flexDirection="row" classNames="flex-wrap lg:justify-start" maxWidth="100rem">
+        <Layout pageName="product-page" flexDirection="row" classNames="flex-wrap" maxWidth="100rem">
             <h2 className="text-xl md:text-2xl lg:text-4xl tracking-wide text-center w-full lg:hidden">{title}</h2>
             <p className="text-lg py-2 md:text-xl lg:text-2xl lg:py-10 tracking-widest w-full text-center lg:hidden">{`$${selectedVariant.price}`}</p>
             {high !== low && <p className="text-sm italic lg:hidden">{`from $${low} to $${high}`}</p>}
