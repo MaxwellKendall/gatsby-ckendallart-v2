@@ -401,12 +401,12 @@ export const query = graphql`
                     }
                 }
                 medium: childImageSharp {
-                    fixed(width:500) {
+                    fixed(width:700) {
                         ...GatsbyImageSharpFixed
                     }
                 }
                 large: childImageSharp {
-                    fixed(width:700) {
+                    fixed(width:850) {
                         ...GatsbyImageSharpFixed
                     }
                 }
