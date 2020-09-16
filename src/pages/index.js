@@ -222,7 +222,7 @@ export default (props) => {
       </div>
       {/* II. FEATURED WORK */}
       <div className="w-full featured-work pb-5 lg:pb-10">
-        <h3 className="text-center md:text-left md:px-10 pt-10 text-2xl tracking-widest">FEATURED WORK</h3>
+        <h3 className="text-2xl tracking-widest text-center py-4 md:text-left md:px-10 md:pt-10">FEATURED WORK</h3>
         <div className="flex lg:hidden">
           <CarouselProvider
             className="w-full"
