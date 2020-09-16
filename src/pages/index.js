@@ -254,11 +254,11 @@ export default (props) => {
               const name = key.split('--')[1];
               return (
                 <li className={`w-1/3 flex flex-col align-center ${margin ? 'mx-2' : ''}`}>
-                  <Img fluid={arrayOfImages} style={{ height: '80%' }}/>
-                  <p className="w-full text-center mt-5 text-xl tracking-wide">
-                    {startCase(name).toUpperCase()}
-                  </p>
-                  <Link className="w-full text-center text-lg tracking-wide" to={getFeaturedImgUrl(key)}>
+                  <Link className="w-full text-center h-full text-lg tracking-wide" to={getFeaturedImgUrl(key)}>
+                    <Img fluid={arrayOfImages} style={{ height: '80%' }} />
+                    <p className="w-full text-center mt-5 text-xl tracking-wide">
+                      {startCase(name).toUpperCase()}
+                    </p>
                       shop now {`>`}
                   </Link>
                 </li>
