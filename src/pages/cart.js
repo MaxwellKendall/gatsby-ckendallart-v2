@@ -86,7 +86,7 @@ const CartPage = () => {
                 <FontAwesomeIcon icon='times' size="lg" className="self-end cursor-pointer" onClick={() => removeVariant(lineItemId, 0, variantId)} />
                 <Link to={handle}>
                   <Img
-                    fluid={image}
+                    fixed={image}
                     style={{ width: "300px" }} />
                 </Link>
                 <div className="flex justify-center w-full mb-5">

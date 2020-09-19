@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useStaticQuery, graphql } from 'gatsby';
+import { getResponsiveImages } from './img';
 
 export const useProducts = () => {
     const { allShopifyProduct: { nodes: products } } = useStaticQuery(
@@ -13,9 +14,19 @@ export const useProducts = () => {
                         variants {
                             id
                             localFile {
-                                childImageSharp {
-                                    fluid(maxWidth: 300) {
-                                        ...GatsbyImageSharpFluid
+                                small: childImageSharp {
+                                    fixed(width: 300) {
+                                        ...GatsbyImageSharpFixed
+                                    }
+                                }
+                                medium: childImageSharp {
+                                    fixed(width: 500) {
+                                        ...GatsbyImageSharpFixed
+                                    }
+                                }
+                                large: childImageSharp {
+                                    fixed(width: 700) {
+                                        ...GatsbyImageSharpFixed
                                     }
                                 }
                             }
@@ -52,9 +63,9 @@ export const useAllProducts = () => {
     return useProducts();
 };
 
-export const getDefaultProductImage = ({ variants }) => {
+export const getDefaultProductImage = (product) => {
     // Considering the most expensive variant to be the default. 
-    const defaultVariant = variants
+    const defaultVariant = product.variants
         .filter(({ localFile }) => localFile)
         .reduce((acc, variant) => {
             if (!acc) return variant;
@@ -62,7 +73,10 @@ export const getDefaultProductImage = ({ variants }) => {
             return acc;
         }, null);
     if (defaultVariant && defaultVariant.localFile) {
-        return defaultVariant.localFile.childImageSharp.fluid;
+        return getResponsiveImages({
+            img: defaultVariant.localFile
+        })
+        .responsiveImgs;
     }
     return null;
 }

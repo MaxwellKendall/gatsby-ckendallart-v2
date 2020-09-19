@@ -18,18 +18,7 @@ import {
 } from '../helpers';
 import { initCheckout, addLineItemsToCart } from '../../client';
 import { useAllProducts } from '../helpers/products';
-
-const imgBreakPointsByTShirtSize = {
-    small: `(min-width: 0px) and (max-width: 767px)`,
-    medium: `(min-width: 768px) and (max-width: 1399px)`,
-    large: `(min-width: 1400px)`,
-    hoverImg: {
-        small: `(min-width: 0px) and (max-width: 767px)`,
-        medium: `(min-width: 768px)`
-        // large: `(min-width: 1200px)  and (max-width: 1799px)`,
-        // xl: `(min-width: 1800px)`
-    }
-};
+import { getResponsiveImages } from '../helpers/img';
 
 const getLowestPrice = (otherProducts) => {
     return otherProducts
@@ -39,31 +28,6 @@ const getLowestPrice = (otherProducts) => {
             return lowestPrice;
         }, null);
 }
-
-const getResponsiveImages = ({ img }) => {
-    if (!img) return null;
-    const rtrn = {
-        responsiveImgs: Object
-            .keys(img)
-            .map((key) => ({
-                imgSize: key,
-                ...img[key].fixed,
-                media: imgBreakPointsByTShirtSize[key]
-            }))
-    };
-    if (img.hoverImgs) {
-        return {
-            responsiveHoverImgs: Object.keys(img.hoverImgs)
-                .map((key) => ({
-                    imgSize: key,
-                    ...img.hoverImgs[key],
-                    media: imgBreakPointsByTShirtSize.hoverImg[key]
-                })),
-            ...rtrn
-        };
-    };
-    return rtrn;
-};
 
 const initialDimensionsState = {
     top: 0,
@@ -366,12 +330,12 @@ export const query = graphql`
                           }
                     }
                     medium: childImageSharp {
-                        fixed(width:700) {
+                        fixed(width:500) {
                             ...GatsbyImageSharpFixed
                           }
                     }
                     large: childImageSharp {
-                        fixed(width:850) {
+                        fixed(width:700) {
                             ...GatsbyImageSharpFixed
                           }
                     }
@@ -401,12 +365,12 @@ export const query = graphql`
                     }
                 }
                 medium: childImageSharp {
-                    fixed(width:700) {
+                    fixed(width:500) {
                         ...GatsbyImageSharpFixed
                     }
                 }
                 large: childImageSharp {
-                    fixed(width:850) {
+                    fixed(width:700) {
                         ...GatsbyImageSharpFixed
                     }
                 }

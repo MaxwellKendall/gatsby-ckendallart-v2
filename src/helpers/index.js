@@ -22,7 +22,7 @@ export const getImages = (selectedVariantIds, products) => {
             return selectedProductVariants.reduce((nestedAcc, variant) => {
                 return {
                     ...nestedAcc,
-                    [variant.id]: variant.localFile.childImageSharp.fluid
+                    [variant.id]: variant.localFile.childImageSharp.fixed
                 };
             }, acc);
         }, {});

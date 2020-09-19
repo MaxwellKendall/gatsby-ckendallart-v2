@@ -29,9 +29,9 @@ export default () => {
             </Link>
             <ul className={`w-full flex-col items-center text-center justify-center md:flex md:flex-row`}>
                 {[
-                    <li className="flex items-center p-5 mt-10">
-                        <SearchIcon />
-                    </li>,
+                    // <li className="flex items-center p-5 mt-10 text-xl md:text-lg">
+                    //     <SearchIcon />
+                    // </li>,
                     ...pages.slice(0, 2)
                         .map((page) => {
                             if (page.isExpandable) {
@@ -40,21 +40,21 @@ export default () => {
                                 );
                             }
                             return  (
-                                <li className="p-2 mt-10">
+                                <li className="p-2 mt-10 text-xl md:text-lg">
                                     <Link to={page.link}>
                                         {page.name.toUpperCase()}
                                     </Link>
                                 </li>
                             )
                         }),
-                        <li className="hidden md:flex p-2 mt-10 ml-5">
+                        <li className="hidden md:flex p-2 mt-10 ml-5 text-xl md:text-lg">
                             <Link to="/">
                                 <Img fluid={logo} className="w-24 mx-auto h-12" />
                             </Link>
                         </li>,
                     ...pages.slice(2, 4)
                         .map((page) => (
-                            <li className="p-5 mt-10">
+                            <li className="p-5 mt-10 text-xl md:text-lg">
                                 <Link to={page.link}>
                                     {page.name.toUpperCase()}
                                 </Link>

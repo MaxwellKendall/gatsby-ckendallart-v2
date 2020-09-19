@@ -61,14 +61,14 @@ export const ExpandableMenuIcon = ({
     };
     if (expanded) {
         return (
-            <li className="p-2 mt-10 text-xl">
+            <li className="p-2 mt-10 text-xl md:text-lg relative">
                 <Link to={link}>
                     {name.toUpperCase()}
                 </Link>
                 <button onClick={toggleExpand} className="focus:outline-none ml-5">
                     <MinusIcon />
                 </button>
-                <ul>
+                <ul className="absolute">
                     {childPages.map((childPage) => (
                         <li className="p-2 mt-2 text-sm">
                             <Link to={`/${childPage.name.toLowerCase()}`}>
@@ -81,7 +81,7 @@ export const ExpandableMenuIcon = ({
         );
     }
     return (
-        <li className="p-2 mt-10 text-xl">
+        <li className="p-2 mt-10 text-xl md:text-lg">
             {name.toUpperCase()}
             <button onClick={toggleExpand} className="focus:outline-none ml-5">
                 <PlusIcon />
@@ -139,7 +139,7 @@ export default () => {
                                 return <ExpandableMenuIcon {...page} />
                             } 
                             return (
-                                <li className="p-2 mt-10 text-xl">
+                                <li className="p-2 mt-10 text-xl md:text-lg">
                                     <Link to={page.link}>
                                         {page.name.toUpperCase()}
                                     </Link>

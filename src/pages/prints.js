@@ -3,7 +3,8 @@ import { Link } from 'gatsby';
 import Img from 'gatsby-image';
 
 import Layout from '../components/Layout';
-import { useAllPrints, getDefaultProductImage } from "../helpers/products"
+import ShopGrid from '../components/ShopGrid';
+import { useAllPrints } from "../helpers/products"
 
 export default ({
 
@@ -11,18 +12,7 @@ export default ({
     const products = useAllPrints();
     return (
         <Layout>
-            {products
-                .map((product) => ({ ...product, img: getDefaultProductImage(product)}))
-                .filter(({ img }) => img)
-                .map((product) => {
-                    return (
-                        <Link to={product.slug} className="p-5">
-                            {product.title}
-                            <Img fluid={product.img} />
-                        </Link>
-                    );
-                })
-            }
+             <ShopGrid products={products} />
         </Layout>
     );
 }
