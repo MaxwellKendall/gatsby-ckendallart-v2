@@ -155,10 +155,9 @@ export default ({
             })
     };
 
-    const isAddToCartDisabled = (
-        isLoading ||
-        remoteInventory === 0 ||
-        remainingInventory === 0
+    const isSoldOut = (
+        remoteInventory <= 0 ||
+        remainingInventory <= 0
     );
 
     const setImgZoom = (bool) => {
@@ -214,6 +213,8 @@ export default ({
             product.handle !== handle
         ))
         .slice(0, 3)
+    
+    console.log('product', product);
 
     return (
         <Layout pageName="product-page" flexDirection="row" classNames="flex-wrap" maxWidth="100rem">
@@ -271,10 +272,11 @@ export default ({
                     <button
                         className="border text-white border-black w-64 py-5 px-2 text-xl uppercase mb-2 self-center"
                         style={{ background: "#C097D0" }}
-                        disabled={isAddToCartDisabled}
+                        disabled={(isSoldOut || isLoading)}
                         onClick={handleAddToCart}>
                         {isLoading && <FontAwesomeIcon icon="spinner" spin />}
-                        {!isLoading && 'Add to Cart'}
+                        {!isLoading && !isSoldOut && 'Add to Cart'}
+                        {isSoldOut && !isLoading && 'SOLD OUT'}
                     </button>
                     {parsedVariants.length > 1 && (
                         <select
