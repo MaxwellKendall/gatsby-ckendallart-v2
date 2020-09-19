@@ -8,12 +8,11 @@ export default ({
     products
 }) => {
     const imgRef = useRef(null);
-    const [titleDimensions, setTitleDimensions] = useState({ width: 0 });
+    const [titleDimensions, setTitleDimensions] = useState({ width: 300 });
 
     const handleResize = () => {
-        if (imgRef.current.imageRef) {
+        if (imgRef.current.imageRef && imgRef.current.imageRef.current) {
             const { width } = imgRef.current.imageRef.current.getBoundingClientRect();
-            console.log('dimensions', imgRef.current.imageRef.current.getBoundingClientRect());
             setTitleDimensions({ width });
         }
     }
@@ -45,12 +44,12 @@ export default ({
                                         SOLD
                                     </span>
                                 )}
-                                <span 
-                                    className="opacity-75 font-semibold text-base md:text-xl py-5 mb-5 bottom-0 absolute flex flex-wrap items-center justify-center bg-gray-300 tracking-widest text-center"
+                                <span
+                                    className="opacity-75 font-semibold text-base md:text-xl py-5 mb-5 bottom-0 absolute flex flex-wrap items-center justify-center bg-gray-300 tracking-widest text-center w-full"
                                     style={{ ...titleDimensions, marginBottom: '7px' }}>
-                                    {title.toUpperCase()}
-                                    {variants.length > 1 && <span className="w-full text-center">from ${parseInt(lowestPrice, 10).toFixed(2)}</span>}
-                                    {variants.length === 1 && <span className="w-full text-center">${parseInt(lowestPrice, 10).toFixed(2)}</span>}
+                                        {title.toUpperCase()}{titleDimensions.width}
+                                        {variants.length > 1 && <span className="w-full text-center">from ${parseInt(lowestPrice, 10).toFixed(2)}</span>}
+                                        {variants.length === 1 && <span className="w-full text-center">${parseInt(lowestPrice, 10).toFixed(2)}</span>}
                                 </span>
                             </div>
                         </Link>
