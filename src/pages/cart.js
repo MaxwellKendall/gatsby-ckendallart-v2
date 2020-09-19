@@ -66,8 +66,6 @@ const CartPage = () => {
     })
   };
 
-  console.log('cart', cart);
-
   return (
     <Layout pageName="order-summary">
       {isUnavailable && <span>Out of stock! You got the last one! :)</span>}
@@ -82,11 +80,15 @@ const CartPage = () => {
             const productTitle = getCustomAttributeFromCartByVariantId([lineItem], variantId, 'productTitle');
             const variantTitle = getCustomAttributeFromCartByVariantId([lineItem], variantId, 'variantTitle');
             const productId = getCustomAttributeFromCartByVariantId([lineItem], variantId, 'productId');
-            const handle = `${kebabCase(getCustomAttributeFromCartByVariantId([lineItem], variantId, 'collection'))}/${getCustomAttributeFromCartByVariantId([lineItem], variantId, 'handle')}`;
+            const collection = getCustomAttributeFromCartByVariantId([lineItem], variantId, 'collection');
+            const handle = getCustomAttributeFromCartByVariantId([lineItem], variantId, 'handle');
+            const slug = collection.toLowerCase() === 'print'
+              ? `/prints/${handle}`
+              : `/originals/${handle}`;
             return (
               <li key={uniqueId('')} className="flex flex-col">
                 <FontAwesomeIcon icon='times' size="lg" className="self-end cursor-pointer" onClick={() => removeVariant(lineItemId, 0, variantId)} />
-                <Link to={handle}>
+                <Link to={slug}>
                   <Img fixed={responsiveImgs} />
                 </Link>
                 <div className="flex justify-center w-full mb-5">
