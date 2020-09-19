@@ -66,6 +66,8 @@ const CartPage = () => {
     })
   };
 
+  console.log('cart', cart);
+
   return (
     <Layout pageName="order-summary">
       {isUnavailable && <span>Out of stock! You got the last one! :)</span>}
@@ -74,7 +76,7 @@ const CartPage = () => {
           .filter((item) => item.variantId)
           .map(lineItem => {
             const { variantId, quantity } = lineItem;
-            const image = cart.imagesByVariantId[variantId];
+            const { responsiveImgs } = cart.imagesByVariantId[variantId];
             const lineItemId = getCustomAttributeFromCartByVariantId([lineItem], variantId, 'lineItemId');
             const pricePerItem = getCustomAttributeFromCartByVariantId([lineItem], variantId, 'pricePerUnit');
             const productTitle = getCustomAttributeFromCartByVariantId([lineItem], variantId, 'productTitle');
@@ -85,9 +87,7 @@ const CartPage = () => {
               <li key={uniqueId('')} className="flex flex-col">
                 <FontAwesomeIcon icon='times' size="lg" className="self-end cursor-pointer" onClick={() => removeVariant(lineItemId, 0, variantId)} />
                 <Link to={handle}>
-                  <Img
-                    fixed={image}
-                    style={{ width: "300px" }} />
+                  <Img fixed={responsiveImgs} />
                 </Link>
                 <div className="flex justify-center w-full mb-5">
                   <AddOrRemoveInventoryIcon isLoading={isDecrementLoading} icon='minus-circle' handler={(e) => removeVariant(lineItemId, quantity, variantId)} />
