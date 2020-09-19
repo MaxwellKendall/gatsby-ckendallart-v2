@@ -34,3 +34,17 @@ export const getResponsiveImages = ({ img }, breakPointsByTshirtSize = imgBreakP
     };
     return rtrn;
 };
+
+export const getFileAsBase64String = (file) => {
+    if (!file) return Promise.resolve();
+    return new Promise((resolve, reject) => {
+        var reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+            resolve(reader.result);
+        };
+        reader.onerror = () => {
+            reject("REJECTEDD!!!!");
+        };
+    });
+};

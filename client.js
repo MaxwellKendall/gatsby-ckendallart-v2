@@ -111,3 +111,19 @@ export const updateLineItemsInCart = (checkoutId, updatedLineItems) => {
    return checkout;
   });
 };
+
+export const requestCommission = (data) => {
+  return fetch(`${customMiddleWareUrl}/send-email`, {
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  })
+  .then((res) => {
+    return res;
+  })
+  .catch((e) => {
+    return e;
+  })
+};
