@@ -13,6 +13,7 @@ export default ({
     const handleResize = () => {
         if (imgRef.current.imageRef) {
             const { width } = imgRef.current.imageRef.current.getBoundingClientRect();
+            console.log('dimensions', imgRef.current.imageRef.current.getBoundingClientRect());
             setTitleDimensions({ width });
         }
     }
@@ -34,22 +35,24 @@ export default ({
                 .map(({ slug, img, title, variants, priceRange: { low: lowestPrice } }) => {
                     const hasVariantForSale = variants.some((({ availableForSale }) => availableForSale));
                     return (
-                        <Link to={slug} className="p-5 flex flex-col items-center w-full lg:w-1/2 relative">
-                            <Img ref={imgRef} fixed={img} />
-                            {!hasVariantForSale && (
-                                <span
-                                    className="absolute top-0 mt-8 md:mt-12 text-white font-semibold text-center w-24 md:w-48 text-2xl md:text-3xl py-2 left-0 ml-4 md:ml-8 tracking-widest"
-                                    style={{ backgroundColor: "#C097D0", border: "3px solid #8D647A" }}>
-                                    SOLD
+                        <Link to={slug} className="p-5 flex flex-col items-center w-full lg:w-1/2">
+                            <div className="relative">
+                                <Img ref={imgRef} fixed={img} />
+                                {!hasVariantForSale && (
+                                    <span
+                                        className="absolute top-0 mt-4 md:mt-12 text-white font-semibold text-center w-24 md:w-48 text-2xl md:text-3xl py-2 left-0 tracking-widest"
+                                        style={{ backgroundColor: "#C097D0", border: "3px solid #8D647A", left: '-.5rem' }}>
+                                        SOLD
+                                    </span>
+                                )}
+                                <span 
+                                    className="opacity-75 font-semibold text-base md:text-xl py-5 mb-5 bottom-0 absolute flex flex-wrap items-center justify-center bg-gray-300 tracking-widest text-center"
+                                    style={{ ...titleDimensions, marginBottom: '7px' }}>
+                                    {title.toUpperCase()}
+                                    {variants.length > 1 && <span className="w-full text-center">from ${parseInt(lowestPrice, 10).toFixed(2)}</span>}
+                                    {variants.length === 1 && <span className="w-full text-center">${parseInt(lowestPrice, 10).toFixed(2)}</span>}
                                 </span>
-                            )}
-                            <span 
-                                className="opacity-75 font-semibold text-base md:text-xl py-5 mb-5 bottom-0 absolute flex flex-wrap items-center justify-center bg-gray-300 tracking-widest text-center"
-                                style={titleDimensions}>
-                                {title.toUpperCase()}
-                                {variants.length > 1 && <span className="w-full text-center">from ${parseInt(lowestPrice, 10).toFixed(2)}</span>}
-                                {variants.length === 1 && <span className="w-full text-center">${parseInt(lowestPrice, 10).toFixed(2)}</span>}
-                            </span>
+                            </div>
                         </Link>
                     );
                 })}
