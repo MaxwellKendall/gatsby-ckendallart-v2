@@ -50,7 +50,7 @@ const newStatusByCurrentStatus = {
     closing: 'closed'
 };
 
-const ExpandableMenuIcon = ({
+export const ExpandableMenuIcon = ({
     name,
     link,
     childPages
@@ -71,7 +71,7 @@ const ExpandableMenuIcon = ({
                 <ul>
                     {childPages.map((childPage) => (
                         <li className="p-2 mt-2 text-sm">
-                            <Link to={`${name}/${childPage.name}`}>
+                            <Link to={`/${childPage.name.toLowerCase()}`}>
                                 {childPage.name.toUpperCase()}
                             </Link>
                         </li>
@@ -82,9 +82,7 @@ const ExpandableMenuIcon = ({
     }
     return (
         <li className="p-2 mt-10 text-xl">
-            <Link to={link}>
-                {name.toUpperCase()}
-            </Link>
+            {name.toUpperCase()}
             <button onClick={toggleExpand} className="focus:outline-none ml-5">
                 <PlusIcon />
             </button>
@@ -117,7 +115,7 @@ export default () => {
     }, []);
 
     const isNotClosed = (menuExpandedStatus === 'closing' || menuExpandedStatus === 'open');
-    console.log('status', menuExpandedStatus);
+
     return (
         <header className="flex py-5 md:hidden">
             <NavIcon isNotClosed={isNotClosed} onClick={toggleMenuWithDelayedClose} classNames={`pl-5`} />      

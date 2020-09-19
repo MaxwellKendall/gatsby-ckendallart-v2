@@ -17,7 +17,7 @@ import {
     updateLineItemsInCart
 } from '../helpers';
 import { initCheckout, addLineItemsToCart } from '../../client';
-import { useProducts } from '../graphql';
+import { useAllProducts } from '../helpers/products';
 
 const imgBreakPointsByTShirtSize = {
     small: `(min-width: 0px) and (max-width: 767px)`,
@@ -86,7 +86,7 @@ export default ({
     }
 }) => {
     const { cart, dispatch } = useContext(CartContext);
-    const products = useProducts();
+    const products = useAllProducts();
     const { variants, productType, handle, collection } = product;
     const parsedVariants = getParsedVariants(variants, title);
     const [selectedVariant, setSelectedVariant] = useState(parsedVariants[0]);

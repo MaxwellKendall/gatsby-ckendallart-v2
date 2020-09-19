@@ -20,7 +20,6 @@ module.exports = {
       },
       {
         name: 'Shop',
-        link: '/shop',
         isExpandable: true,
         childPages: [
           {

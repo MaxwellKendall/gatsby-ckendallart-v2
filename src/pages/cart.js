@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react"
-import { graphql, Link } from "gatsby"
+import { Link } from "gatsby"
 import Img from "gatsby-image"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
@@ -8,11 +8,10 @@ import Layout from "../components/Layout"
 import { getCustomAttributeFromCartByVariantId, getInventoryDetails } from "../helpers"
 import {
   removeLineItemsFromCart,
-  fetchProductInventory,
   updateLineItemsInCart,
 } from "../../client"
-import { debounce, uniqueId, kebabCase, delay } from "lodash"
-import { useProducts } from "../graphql"
+import { uniqueId, kebabCase, delay } from "lodash"
+import { useAllProducts } from "../helpers/products";
 
 const AddOrRemoveInventoryIcon = ({ isLoading, icon, handler }) => {
   if (isLoading) {
@@ -22,7 +21,7 @@ const AddOrRemoveInventoryIcon = ({ isLoading, icon, handler }) => {
 }
 
 const CartPage = () => {
-  const products = useProducts();
+  const products = useAllProducts();
   const { cart, dispatch } = useContext(CartContext);
   const [isIncrementLoading, setIncrementIsLoading] = useState(false)
   const [isDecrementLoading, setDecrementIsLoading] = useState(false)

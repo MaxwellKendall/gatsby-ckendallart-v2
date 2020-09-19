@@ -3,6 +3,7 @@ import { Link  } from 'gatsby';
 import Img from "gatsby-image";
 
 import { usePages } from "../helpers/navigation";
+import { ExpandableMenuIcon } from './MobileNav';
 
 export const CartIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fillRule="evenodd" clipRule="evenodd">
@@ -32,13 +33,20 @@ export default () => {
                         <SearchIcon />
                     </li>,
                     ...pages.slice(0, 2)
-                        .map((page) => (
-                            <li className="p-2 mt-10">
-                                <Link to={page.link}>
-                                    {page.name.toUpperCase()}
-                                </Link>
-                            </li>
-                        )),
+                        .map((page) => {
+                            if (page.isExpandable) {
+                                return (
+                                    <ExpandableMenuIcon {...page} />
+                                );
+                            }
+                            return  (
+                                <li className="p-2 mt-10">
+                                    <Link to={page.link}>
+                                        {page.name.toUpperCase()}
+                                    </Link>
+                                </li>
+                            )
+                        }),
                         <li className="hidden md:flex p-2 mt-10 ml-5">
                             <Link to="/">
                                 <Img fluid={logo} className="w-24 mx-auto h-12" />

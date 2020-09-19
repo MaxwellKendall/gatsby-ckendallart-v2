@@ -19,7 +19,7 @@ import { delay } from 'lodash';
 import CartContext from "../../globalState";
 import { localStorageKey } from '../helpers';
 import { fetchCart, subscribeToEmail, verifyCaptcha } from '../../client';
-import { useProducts } from '../graphql';
+import { useAllProducts } from '../helpers/products';
 import Nav from "./Nav";
 import MobileNav from "./MobileNav";
 
@@ -55,7 +55,7 @@ export const Layout = ({
     flexDirection = 'column',
     maxWidth = '100rem'
 }) => {
-    const products = useProducts();
+    const products = useAllProducts();
     const [userEmail, setUserEmail] = useState('');
     const [subscribeStatus, setSubscribeStatus] = useState(defaultSubscribeStatus);
     const { cart, dispatch } = useContext(CartContext);

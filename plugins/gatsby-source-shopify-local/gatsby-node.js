@@ -91,7 +91,9 @@ exports.sourceNodes = async ({ actions, createNodeId, createContentDigest }, opt
                     collection: collectionByHandle.title,
                     handle,
                     productType,
-                    slug: `${kebabCase(collectionByHandle.handle).toLowerCase()}/${handle}`,
+                    slug: productType.toLowerCase() === 'print'
+                        ? `prints/${handle}`
+                        : `originals/${handle}`,
                     totalInventory,
                     priceRange: {
                         high: priceRange.maxVariantPrice.amount,
