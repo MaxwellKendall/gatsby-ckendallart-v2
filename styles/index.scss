@@ -97,7 +97,6 @@ body,
 
     .default-page {
         background: $sqrl-background-color;
-        @apply default-pd-y;
         &.home {
             background: white;
         }

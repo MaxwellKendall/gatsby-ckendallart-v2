@@ -26,11 +26,13 @@ const referrals = [
 
 const getFeaturedImgUrl = (imgName) => {
   const splitFileName = imgName.split('--');
-  const productType = splitFileName[2];
+  const productType = splitFileName[2].toLowerCase() === 'print'
+    ? 'prints'
+    : 'originals';
   const url = splitFileName[3];
   const productSize = splitFileName[4];
 
-  if  (productSize) {
+  if (productSize) {
     return `${productType}/${kebabCase(url)}-${productSize}`;
   }
   return `${productType}/${kebabCase(url)}`;

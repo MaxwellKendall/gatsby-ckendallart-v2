@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'gatsby';
 import Img from "gatsby-image";
 
-import { usePages } from "../helpers/navigation";
-import { SearchIcon, CartIcon } from './Nav';
+import { CartIcon, ExpandableMenuIcon } from './Nav';
+
+import { usePages } from "../../helpers/navigation";
 
 const MenuIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fillRule="evenodd" clipRule="evenodd">
@@ -27,18 +28,6 @@ const NavIcon = ({ classNames = '', isNotClosed, onClick }) => (
     </button>
 );
 
-const PlusIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 25 25" fillRule="evenodd" clipRule="evenodd">
-        <path d="M11 11v-11h1v11h11v1h-11v11h-1v-11h-11v-1h11z"/>
-    </svg>
-);
-
-const MinusIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fillRule="evenodd" clipRule="evenodd">
-        <path d="M0 12v1h23v-1h-23z"/>
-    </svg>
-);
-
 const expandedClassByToggleState = {
     closing: 'mobile-nav-closing',
     open: 'mobile-nav-opened'
@@ -48,46 +37,6 @@ const newStatusByCurrentStatus = {
     open: 'closing',
     closed: 'open',
     closing: 'closed'
-};
-
-export const ExpandableMenuIcon = ({
-    name,
-    link,
-    childPages
-}) => {
-    const [expanded, setExpanded] = useState(false);
-    const toggleExpand = () => {
-        setExpanded(!expanded);
-    };
-    if (expanded) {
-        return (
-            <li className="p-2 mt-10 text-xl md:text-lg relative">
-                <Link to={link}>
-                    {name.toUpperCase()}
-                </Link>
-                <button onClick={toggleExpand} className="focus:outline-none ml-5">
-                    <MinusIcon />
-                </button>
-                <ul className="absolute">
-                    {childPages.map((childPage) => (
-                        <li className="p-2 mt-2 text-sm">
-                            <Link to={`/${childPage.name.toLowerCase()}`}>
-                                {childPage.name.toUpperCase()}
-                            </Link>
-                        </li>
-                    ))}
-                </ul>
-            </li>
-        );
-    }
-    return (
-        <li className="p-2 mt-10 text-xl md:text-lg">
-            {name.toUpperCase()}
-            <button onClick={toggleExpand} className="focus:outline-none ml-5">
-                <PlusIcon />
-            </button>
-        </li>
-    );
 };
 
 let timeout = null;

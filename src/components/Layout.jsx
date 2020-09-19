@@ -20,8 +20,8 @@ import CartContext from "../../globalState";
 import { localStorageKey } from '../helpers';
 import { fetchCart, subscribeToEmail, verifyCaptcha } from '../../client';
 import { useAllProducts } from '../helpers/products';
-import Nav from "./Nav";
-import MobileNav from "./MobileNav";
+import Nav from "./navigation/Nav";
+import MobileNav from "./navigation/MobileNav";
 
 library.add(
     faCopyright,
@@ -162,7 +162,7 @@ export const Layout = ({
             <Nav />
             <main
                 style={{ maxWidth }}
-                className={`default-page ${pageName} flex flex-wrap flex-${flexDirection} w-full h-full self-center justify-center flex-grow ${classNames}`}>
+                className={`default-page md:py-12 ${pageName} flex flex-wrap flex-${flexDirection} w-full h-full self-center justify-center flex-grow ${classNames}`}>
                 {children}
             </main>
             <footer className='flex-shrink-0 p-5 text-center'>
