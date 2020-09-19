@@ -19,6 +19,7 @@ export const useProducts = () => {
                                     }
                                 }
                             }
+                            price
                             availableForSale
                             title
                         }
@@ -52,10 +53,14 @@ export const useAllProducts = () => {
 };
 
 export const getDefaultProductImage = ({ variants }) => {
-    // imgs for a product are coupled to the variant. The "Default Title" variant has the main image for the product.
+    // Considering the most expensive variant to be the default. 
     const defaultVariant = variants
         .filter(({ localFile }) => localFile)
-        .find(({ title }) => title === 'Default Title');
+        .reduce((acc, variant) => {
+            if (!acc) return variant;
+            if (parseInt(acc.price, 10) < parseInt(variant.price, 10)) return variant;
+            return acc;
+        }, null);
     if (defaultVariant && defaultVariant.localFile) {
         return defaultVariant.localFile.childImageSharp.fluid;
     }
