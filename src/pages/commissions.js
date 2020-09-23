@@ -84,8 +84,6 @@ export default ({
         requestStatus === 'loading'
     );
 
-    console.log('isDisabled', isDisabled);
-
     return (
         <Layout>
             <form ref={form} className="flex-col-center w-full justify-center">
