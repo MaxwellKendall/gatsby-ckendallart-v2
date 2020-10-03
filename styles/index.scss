@@ -145,6 +145,12 @@ body,
                 // }
             }
         }
+        .commission-form {
+            background-color: $sqrl-arrow-elipse;
+            input::placeholder {
+                color: black;
+            }
+        }
     }
     footer {
         background: $sqrl-footer-background;

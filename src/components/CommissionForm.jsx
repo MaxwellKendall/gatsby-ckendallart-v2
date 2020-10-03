@@ -5,13 +5,23 @@ import Layout from "../components/Layout"
 import { requestCommission } from "../../client"
 import { getFileAsBase64String } from "../helpers/img"
 
-const emptyContactDetails = {
+const placeHolderByFieldName = {
+  name: "YOUR NAME",
+  phone: "PHONE # (optional)",
+  email: "EMAIL ADDRESS",
+  preferredContact: "email",
+  details: "",
+  canvas: "12x12 canvas",
+}
+
+const emptyFormState = {
   name: "",
   phone: "",
   email: "",
   preferredContact: "email",
   details: "",
   canvas: "12x12 canvas",
+  budget: ""
 }
 
 const estimatedPriceBasedOnSize = {
@@ -32,16 +42,26 @@ const estimatedPriceBasedOnSize = {
 }
 
 export default ({}) => {
-  const [values, setValues] = useState(emptyContactDetails)
+  const [values, setValues] = useState(emptyFormState)
   const [requestStatus, setRequestStatus] = useState("pristine")
   const form = useRef(null)
   const file = useRef(null)
   const handleUpdate = (e, field) => {
-    e.persist()
-    setValues({
-      ...values,
-      [field]: field === "file" ? e.target.file : e.target.value,
-    })
+    e.persist();
+    if (field === 'file') {
+      setValues({
+        ...values,
+        [field]: e.target.file
+      })  
+    }
+    else {
+      setValues({
+        ...values,
+        [field]: e.target.value === ''
+          ? emptyFormState[field]
+          : e.target.value,
+      })
+    }
   }
 
   const submit = async () => {
@@ -52,6 +72,9 @@ export default ({}) => {
 
     requestCommission({
       ...values,
+      details: values.budget
+        ? `Budget: ${values.budget}; ${values.details}`
+        : values.details,
       attachment: uploadedFileAsString
         ? {
             content: uploadedFileAsString,
@@ -80,56 +103,66 @@ export default ({}) => {
     requestStatus === "loading"
 
   return (
-    <>
-      <form ref={form} className="flex-col-center w-full justify-center">
-        <div className="flex flex-wrap w-full text-center justify-center">
-          <legend className="w-full my-5">Contact Details:</legend>
-          <label className="mr-5">Name:</label>
+    <div className="commission-form flex flex-col justify-center items-center w-full">
+      <form ref={form} className="flex-col-center justify-center md:w-3/4 xl:w-1/3">
+        <div className="flex flex-wrap w-full py-12 text-center justify-center md:justify-start">
           <input
+            className="px-2 mr-2 mr-100 border-b-2 bg-transparent text-black border-solid border-black"
             name="name"
             type="text"
             value={values.name}
+            placeholder={placeHolderByFieldName.name}
             onChange={e => handleUpdate(e, "name")}
           />
-          <label className="mr-5">Phone Number:</label>
+          <div className="w-full py-8 flex justify-center md:justify-start">
+            <input
+                className="px-2 mr-2 border-b-2 bg-transparent text-black border-solid border-black md:self-start"
+                name="email"
+                type="email"
+                value={values.email}
+                placeholder={placeHolderByFieldName.email}
+                onChange={e => handleUpdate(e, "email")} />
+            <input
+              className="px-2 mr-2  border-b-2 bg-transparent text-black border-solid border-black md:self-end"
+              name="phone"
+              type="tel"
+              value={values.phone}
+              placeholder={placeHolderByFieldName.phone}
+              onChange={e => handleUpdate(e, "phone")}
+            />
+          </div>
+          <legend className="px-2 mr-2  border-b-2 bg-transparent text-black border-solid border-black" htmlFor="canvas">PREFERRED MODE OF CONTACT:</legend>
+          <label className="my-auto mr-2" htmlFor="preferredContact1">EMAIL</label>
           <input
-            name="phone"
-            type="tel"
-            value={values.phone}
-            onChange={e => handleUpdate(e, "phone")}
-          />
-          <label className="mr-5">Email:</label>
-          <input
-            name="email"
-            type="email"
-            value={values.email}
-            onChange={e => handleUpdate(e, "email")}
-          />
-          <label className="mr-5">Contact Preference:</label>
-          <select
-            id="canvas"
+            className="my-auto"
+            id="preferredContact1"
+            type="radio"
             name="preferredContact"
-            value={values.preferredContact}
-            onChange={e => handleUpdate(e, "preferredContact")}
-          >
-            <option value="email">Email</option>
-            <option value="phone">Phone</option>
-          </select>
+            checked={values.preferredContact === 'email'}
+            value="email"
+            onChange={e => handleUpdate(e, "preferredContact")} />
+          <label className="my-auto mr-2 ml-4" htmlFor="preferredContact2">PHONE</label>
+          <input
+            className="my-auto"
+            id="preferredContact2"
+            type="radio"
+            name="preferredContact"
+            checked={values.preferredContact === 'phone'}
+            value="phone"
+            onChange={e => handleUpdate(e, "preferredContact")} />
         </div>
         <div className="flex flex-wrap w-full justify-center">
-          <legend className="w-full my-5 text-center">
-            Details on your Piece:
-          </legend>
-          <label className="w-full text-center">Example Image:</label>
-          <input ref={file} name="attachment" type="file" />
-          <label className="w-full mt-5 text-center">
-            Canvas Size and Type
-          </label>
+          <input
+            className="mr-2 flex md:self-start bg-transparent text-black"
+            ref={file}
+            name="attachment"
+            type="file" />
+          <label className="py-4 flex flex md:self-start" htmlFor="">Canvas Size and Type</label>
           <select
-            name=""
             id="canvas"
             name="canvas"
             value={values.canvas}
+            placeholder={placeHolderByFieldName.canvas}
             onChange={e => handleUpdate(e, "canvas")}
           >
             <option value="12x12 canvas">12x12 canvas</option>
@@ -148,7 +181,6 @@ export default ({}) => {
             <option value="Other">Other Size</option>
           </select>
         </div>
-        <label className="mt-5">Anything Else?</label>
         <textarea
           name="details"
           id=""
@@ -156,6 +188,7 @@ export default ({}) => {
           rows="10"
           maxLength="500"
           value={values.details}
+          placeholder={placeHolderByFieldName.details}
           onChange={e => handleUpdate(e, "details")}
         />
       </form>
@@ -168,6 +201,6 @@ export default ({}) => {
       >
         Request my Commission!
       </button>
-    </>
+    </div>
   )
 }

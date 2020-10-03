@@ -29,20 +29,24 @@ export default ({
     }
     return (
         <Layout>
-            <h2 className="w-full text-center tracking-widest font-semibold text-3xl pb-12">YOUR DREAM CONCEPT MADE REALITY.</h2>
-            <div className="w-full" style={{ maxHeight: '800px'}}>
+            <h2 className="w-full text-center tracking-widest text-3xl pb-12">YOUR DREAM CONCEPT MADE REALITY.</h2>
+            <div className="w-full" style={{ maxHeight: '800px' }}>
                 <CarouselProvider
                     className="w-full flex"
                     naturalSlideWidth={700}
                     naturalSlideHeight={700}
                     totalSlides={commissions.length}>
-                    <Slider className="order-2 w-full" style={{ maxHeight: '700px' }}>
+                    <Slider
+                        className="order-2 w-full"
+                        style={{ maxHeight: '700px' }}>
                         {commissions
                             .map(({ variants }, i) => {
                                 const imgs = getResponsiveImages(variants[0]).responsiveImgs;
                                 return (
                                     <Slide index={i}>
-                                        <Img fixed={imgs} style={{ margin: 'auto', display: 'flex' }} />
+                                        <Img
+                                            fixed={imgs}
+                                            style={{ margin: 'auto', display: 'flex' }} />
                                     </Slide>
                                 );
                             })
@@ -56,7 +60,7 @@ export default ({
                     </ButtonNext>
                 </CarouselProvider>
             </div>
-            <h2 className="w-full text-center tracking-widest font-semibold text-3xl py-12">LET'S GET STARTED:</h2>
+            <h2 className="w-full text-center tracking-widest text-3xl py-12">LET'S GET STARTED:</h2>
             <CommissionForm />
         </Layout>
     );
