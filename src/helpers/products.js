@@ -55,7 +55,10 @@ export const useAllPrints = () => {
 
 export const useAllOriginals = () => {
     return useProducts()
-        .filter(({ productType }) => productType.toLowerCase() !== 'print');
+        .filter(({ productType, collection }) => (
+            productType.toLowerCase() !== 'print' &&
+            !collection.includes('Commissions')
+        ));
 };
 
 export const useAllProducts = () => {
