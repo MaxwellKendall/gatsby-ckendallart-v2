@@ -27,17 +27,16 @@ export default ({
             setActiveSlideIndex(activeSlideIndex - 1);
         }
     }
-    console.log('commissions', commissions);
     return (
         <Layout>
-            <h2 className="w-full text-center">YOUR DREAM CONCEPT MADE REALITY.</h2>
+            <h2 className="w-full text-center tracking-widest font-semibold text-3xl pb-12">YOUR DREAM CONCEPT MADE REALITY.</h2>
             <div className="w-full" style={{ maxHeight: '800px'}}>
                 <CarouselProvider
-                    className="w-full"
+                    className="w-full flex"
                     naturalSlideWidth={700}
                     naturalSlideHeight={700}
                     totalSlides={commissions.length}>
-                    <Slider className="w-full" style={{ maxHeight: '700px' }}>
+                    <Slider className="order-2 w-full" style={{ maxHeight: '700px' }}>
                         {commissions
                             .map(({ variants }, i) => {
                                 const imgs = getResponsiveImages(variants[0]).responsiveImgs;
@@ -49,17 +48,15 @@ export default ({
                             })
                         }
                     </Slider>
-                    <div className="flex w-full justify-center">
-                        <ButtonBack className="p-2" onClick={handleOnClick} value='back'>
-                            <span> {`<`} </span>
-                        </ButtonBack>
-                        <ButtonNext className="p-2" onClick={handleOnClick} value='next'>
-                            <span> {`>`} </span>
-                        </ButtonNext>
-                    </div>
+                    <ButtonBack className="order-1 p-2 text-2xl ml-4" onClick={handleOnClick} value='back'>
+                        <span> {`<`} </span>
+                    </ButtonBack>
+                    <ButtonNext className="order-3 p-2 text-2xl mr-4" onClick={handleOnClick} value='next'>
+                        <span> {`>`} </span>
+                    </ButtonNext>
                 </CarouselProvider>
             </div>
-            <h2 className="w-full text-center">LETS GET STARTED:</h2>
+            <h2 className="w-full text-center tracking-widest font-semibold text-3xl py-12">LET'S GET STARTED:</h2>
             <CommissionForm />
         </Layout>
     );
