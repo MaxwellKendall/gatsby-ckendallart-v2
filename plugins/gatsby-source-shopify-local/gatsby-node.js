@@ -113,7 +113,8 @@ exports.sourceNodes = async ({ actions, createNodeId, createContentDigest }, opt
 };
 
 const processFileNode = (fileNode, previousImage, node) => {
-    if (fileNode && previousImage.isVariantImage) {
+    const isFileNodeDefined = (fileNode)
+    if (isFileNodeDefined && previousImage.isVariantImage) {
         node.variants = node.variants.map((variant) => {
             if (variant.id === previousImage.id) {
                 return {
@@ -124,7 +125,7 @@ const processFileNode = (fileNode, previousImage, node) => {
             return variant;
         });
     }
-    if (fileNode) {
+    if (isFileNodeDefined) {
         node.optimizedImages = node.optimizedImages
             ? node.optimizedImages.concat([fileNode.base])
             : [fileNode.base]
@@ -139,6 +140,7 @@ exports.onCreateNode = async ({
     createNodeId,
 }) => {
     const type = node.internal.type;
+    
     // For all product nodes, call createRemoteFileNode
     if (type === "ShopifyProduct") {
         return node.variants
@@ -155,19 +157,10 @@ exports.onCreateNode = async ({
             .reduce((prevPromise, image, i, arr) => {
                 return prevPromise
                     .then ((fileNode) => {
-                        if (fileNode === 'first') {
-                            return createRemoteFileNode({
-                                url: image.url, // string that points to the URL of the image
-                                // parentNodeId: image.id, // id of the parent node of the fileNode you are going to create
-                                parentNodeId: node.id,
-                                createNode, // helper function in gatsby-node to generate the node
-                                createNodeId, // helper function in gatsby-node to generate the node id
-                                cache, // Gatsby's cache
-                                store, // Gatsby's redux store
-                            })
-                        }
                         // the previous image is the one associated with the current fileNode.
-                        const previousImage = arr[i - 1];
+                        const previousImage = i === 0
+                            ? null
+                            : arr[i - 1];
                         processFileNode(fileNode, previousImage, node);
                         return createRemoteFileNode({
                             url: image.url, // string that points to the URL of the image
@@ -188,6 +181,6 @@ exports.onCreateNode = async ({
                     .catch((e) => {
                         console.log("error onCreateNode: ", e);
                     })
-            }, Promise.resolve('first'))
+            }, Promise.resolve(null))
     }
 };

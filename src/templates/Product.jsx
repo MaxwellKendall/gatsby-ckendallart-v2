@@ -224,7 +224,6 @@ export default ({
             {high !== low && <p className="text-sm italic lg:hidden">{`from $${low} to $${high}`}</p>}
             {selectedVariant.img && (
                 <div className="md:mx-5">
-                    {remoteInventory === 0 && <span className="product-sold-out">Sold Out!</span>}
                     <div className="flex justify-center mb-4">
                         <Img
                             ref={imgRef}
