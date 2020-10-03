@@ -7,17 +7,17 @@ import { kebabCase, uniqueId, startCase, groupBy, flatten } from "lodash";
 import Layout from "../components/Layout";
 import 'pure-react-carousel/dist/react-carousel.es.css';
 
-const imgBreakPointsByViewPort = {
-  mobile: `(min-width: 0px) and (max-width: 767px)`,
-  tablet: `(min-width: 768px) and (max-width: 1199px)`,
-  desktop: `(min-width: 1200px)`
-};
-
 const tagLine = [
   'Obsession with Quality',
   'Reverence for Beauty',
   'Fine art made for you, with love.'
 ];
+
+const imgBreakPointsByViewPort = {
+  mobile: `(min-width: 0px) and (max-width: 767px)`,
+  tablet: `(min-width: 768px) and (max-width: 1199px)`,
+  desktop: `(min-width: 1200px)`
+};
 
 const referrals = [
   `“Claire listens - she was able to take my vision and duplicate it on canvas. She is a true talent - easy to work with and my finished masterpiece is a joy to sit and admire.” Debbie C. Charleston, S.C.`,
@@ -60,6 +60,7 @@ const Arrow = ({
   );
 }
 
+// TODO: should be using getresponsiveImages via fluid
 const parseImages = (images, section) => Object
   .keys(images)
   .filter((key) => key.includes(section))

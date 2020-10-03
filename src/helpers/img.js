@@ -10,7 +10,12 @@ const imgBreakPointsByTShirtSize = {
         // xl: `(min-width: 1800px)`
     }
 };
-export const getResponsiveImages = ({ img }, breakPointsByTshirtSize = imgBreakPointsByTShirtSize) => {
+
+// TODO: should except fluid/fixed as param
+export const getResponsiveImages = (
+    { img },
+    breakPointsByTshirtSize = imgBreakPointsByTShirtSize
+) => {
     if (!img) return null;
     const rtrn = {
         responsiveImgs: Object
