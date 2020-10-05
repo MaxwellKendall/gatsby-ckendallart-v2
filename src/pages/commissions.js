@@ -15,7 +15,7 @@ const getActiveImgDimensions = (commissions, activeIndex) => {
         console.log('dimensions', width, height);
         return {
             width: `${width}px`,
-            height: `${height}px`
+            // height: `${height}px`
         };
     }
     return {};
@@ -54,36 +54,38 @@ export default ({
     return (
         <Layout>
             <h2 className="w-full text-center tracking-widest text-3xl pb-12">YOUR DREAM CONCEPT MADE REALITY.</h2>
-            <div className="w-full" style={{ maxHeight: '800px' }}>
+            <div className="w-full">
                 <CarouselProvider
-                    className="w-full flex justify-center"
+                    className="w-full flex justify-center items-center"
                     naturalSlideWidth={700}
                     naturalSlideHeight={700}
                     totalSlides={commissions.length}>
                     <>
                         <CarouselHOC onSlideChange={setActiveSlideIndex} />
                         <Slider
-                            className="order-2 w-full"
+                            className="order-2 w-full my-auto"
                             style={imgDimensions}>
                             {commissionsWithRef
                                 .map(({ variants, ref }, i) => {
                                     const imgs = getResponsiveImages(variants[0]).responsiveImgs;
                                     return (
                                         <Slide index={i}>
-                                            <Img
-                                                ref={ref}
-                                                fixed={imgs}
-                                                style={{ margin: 'auto', display: 'flex' }} />
+                                            <div className="flex h-full">
+                                                <Img
+                                                    ref={ref}
+                                                    fixed={imgs}
+                                                    style={{ margin: 'auto', display: 'flex', alignSelf: 'center' }} />
+                                            </div>
                                         </Slide>
                                     );
                                 })
                             }
                         </Slider>
                     </>
-                    <ButtonBack className="hidden md:flex order-1 p-2 text-2xl mx-4">
+                    <ButtonBack className="hidden md:flex items-center order-1 p-2 text-2xl mx-4">
                         <span value='back'>{`<`}</span>
                     </ButtonBack>
-                    <ButtonNext className="hidden md:flex order-3 p-2 text-2xl mx-4">
+                    <ButtonNext className="hidden md:flex items-center order-3 p-2 text-2xl mx-4">
                         <span value='next'>{`>`}</span>
                     </ButtonNext>
                 </CarouselProvider>
@@ -110,12 +112,12 @@ export const query = graphql`
                             }
                         }
                         medium: childImageSharp {
-                            fixed(width: 500) {
+                            fixed(width: 700) {
                                 ...GatsbyImageSharpFixed
                             }
                         }
                         large: childImageSharp {
-                            fixed(width: 700) {
+                            fixed(width: 1000) {
                                 ...GatsbyImageSharpFixed
                             }
                         }
