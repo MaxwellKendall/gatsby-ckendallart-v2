@@ -268,8 +268,7 @@ export default ({
                 {high !== low && <p className="hidden lg:flex text-sm italic">{`from $${low} to $${high}`}</p>}
                 <div className="actions w-full flex flex-col my-5 justify-start items-center">
                     <button
-                        className="border text-white border-black w-64 py-5 px-2 text-xl uppercase mb-2 self-center"
-                        style={{ background: "#C097D0" }}
+                        className="border text-white border-black w-64 py-5 px-2 text-xl uppercase mb-2 self-center sqrl-purple"
                         disabled={(isSoldOut || isLoading)}
                         onClick={handleAddToCart}>
                         {isLoading && <FontAwesomeIcon icon="spinner" spin />}

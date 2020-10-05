@@ -21,6 +21,7 @@ $sqrl-arrow-elipse: #dcd0d0;
 $sqrl-featured-work: #eeedf0;
 $sqrl-background-color: #F5F5F7;
 $sqrl-footer-background: #EEEEF0;
+$sqrl-purple: #C097D0;
 
 @font-face {
     font-family: 'Nunito Sans';
@@ -97,6 +98,9 @@ body,
 
     .default-page {
         background: $sqrl-background-color;
+        .sqrl-purple {
+            background: $sqrl-purple;
+        }
         &.home {
             background: white;
         }
