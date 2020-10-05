@@ -105,34 +105,32 @@ export default ({}) => {
 
   return (
     <div className="commission-form flex flex-col justify-center items-center w-full">
-      <form ref={form} className="flex-col-center justify-center md:w-3/4 xl:w-1/3">
+      <form ref={form} className="flex-col-center justify-center w-full md:w-3/4 xl:w-1/3">
         <div className="flex flex-wrap w-full pt-12 pb-4 text-center justify-center md:justify-start">
           <input
-            className="mr-2 mr-100 border-b-2 bg-transparent text-black border-solid border-black"
+            className="ml-2 border-b-2 bg-transparent text-black border-solid border-black mr-auto md:mr-0"
             name="name"
             type="text"
             value={values.name}
             placeholder={placeHolderByFieldName.name}
-            onChange={e => handleUpdate(e, "name")}
-          />
-          <div className="w-full py-8 flex justify-center md:justify-start">
+            onChange={e => handleUpdate(e, "name")} />
+          <div className="w-full pb-8 md:py-8 flex flex-wrap md:justify-center md:justify-start">
             <input
-                className="mr-2 border-b-2 bg-transparent text-black border-solid border-black md:self-start"
+                className="ml-2 pt-8 md:pt-0 mr-2 border-b-2 bg-transparent text-black border-solid border-black md:self-start"
                 name="email"
                 type="email"
                 value={values.email}
                 placeholder={placeHolderByFieldName.email}
                 onChange={e => handleUpdate(e, "email")} />
             <input
-              className="mr-2 border-b-2 bg-transparent text-black border-solid border-black md:self-end md:ml-auto"
+              className="ml-2 pt-8 md:pt-0 md:ml-0 border-b-2 bg-transparent text-black border-solid border-black md:self-end md:ml-auto"
               name="phone"
               type="tel"
               value={values.phone}
               placeholder={placeHolderByFieldName.phone}
-              onChange={e => handleUpdate(e, "phone")}
-            />
+              onChange={e => handleUpdate(e, "phone")} />
           </div>
-          <legend className="mr-2  border-b-2 bg-transparent text-black border-solid border-black" htmlFor="canvas">PREFERRED MODE OF CONTACT:</legend>
+          <legend className="ml-2 mr-2 border-b-2 bg-transparent text-black border-solid border-black" htmlFor="canvas">CONTACT METHOD:</legend>
           <label className="my-auto mr-2" htmlFor="preferredContact1">EMAIL</label>
           <input
             className="my-auto"
@@ -144,7 +142,7 @@ export default ({}) => {
             onChange={e => handleUpdate(e, "preferredContact")} />
           <label className="my-auto mr-2 ml-4" htmlFor="preferredContact2">PHONE</label>
           <input
-            className="my-auto"
+            className="my-auto mr-auto"
             id="preferredContact2"
             type="radio"
             name="preferredContact"
@@ -153,22 +151,19 @@ export default ({}) => {
             onChange={e => handleUpdate(e, "preferredContact")} />
             <div className="pt-8 pb-2 w-full flex">
               <input
-                className="mr-2 border-b-2 bg-transparent text-black border-solid border-black md:justify-self-start"
+                className="ml-2 border-b-2 bg-transparent text-black border-solid border-black md:justify-self-start"
                 name="name"
                 type="text"
                 value={values.name}
                 placeholder={placeHolderByFieldName.budget}
-                onChange={e => handleUpdate(e, "name")}
-              />
-              {/* <label className="py-4 flex md:self-start" htmlFor="">Canvas Size and Type</label> */}
-            <select
-              className="ml-auto bg-transparent"
-              id="canvas"
-              name="canvas"
-              value={values.canvas}
-              placeholder={placeHolderByFieldName.canvas}
-              onChange={e => handleUpdate(e, "canvas")}
-            >
+                onChange={e => handleUpdate(e, "name")} />
+              <select
+                className="ml-2 mr-auto bg-transparent"
+                id="canvas"
+                name="canvas"
+                value={values.canvas}
+                placeholder={placeHolderByFieldName.canvas}
+                onChange={e => handleUpdate(e, "canvas")}>
               <option value="12x12 canvas">12x12 canvas</option>
               <option value="11x14 canvas">11x14 canvas</option>
               <option value="12x16 canvas">12x16 canvas</option>
@@ -188,30 +183,28 @@ export default ({}) => {
         </div>
         <div className="flex flex-wrap w-full justify-center">
           <input
-            className="mr-2 flex md:self-start bg-transparent text-black w-full border-0"
+            className="ml-2 flex md:self-start bg-transparent text-black w-full border-0"
             ref={file}
             name="attachment"
             type="file" />
         </div>
-        <h3 className="py-4 tracking-widest w-full">TELL ME MORE:</h3>
+        <h3 className="ml-2 py-4 tracking-widest w-full">TELL ME MORE:</h3>
         <textarea
-          className="w-full border-solid border-black border-2"
+          className="mx-2 border-solid border-black border-2 w-full"
           name="details"
           id=""
-          cols="50"
           rows="10"
           maxLength="500"
           value={values.details}
           placeholder={placeHolderByFieldName.details}
-          onChange={e => handleUpdate(e, "details")}
-        />
+          onChange={e => handleUpdate(e, "details")} />
       </form>
       <button
         disabled={isDisabled}
         onClick={submit}
         className={`${
           isDisabled ? "cursor-not-allowed" : "cursor-pointer"
-        } py-4 px-6 m-5 tracking-widest text-xl text-white sqrl-purple`}
+        } py-4 px-6 m-5 tracking-widest text-xl text-white sqrl-purple w-3/4 md:w-auto`}
       >
         SUBMIT
       </button>

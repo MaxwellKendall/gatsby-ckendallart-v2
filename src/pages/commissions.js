@@ -53,7 +53,7 @@ export default ({
 
     return (
         <Layout>
-            <h2 className="w-full text-center tracking-widest text-3xl pb-12">YOUR DREAM CONCEPT MADE REALITY.</h2>
+            <h2 className="w-full text-center tracking-widest text-3xl pt-12 md:pt-0 pb-12">YOUR DREAM CONCEPT MADE REALITY.</h2>
             <div className="w-full">
                 <CarouselProvider
                     className="w-full flex justify-center items-center"
