@@ -1,14 +1,36 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Img from "gatsby-image";
-import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
-
-import Layout from '../components/Layout';
-
-import ShopGrid from '../components/ShopGrid';
-import CommissionForm from '../components/CommissionForm';
-import { useAllProducts } from '../helpers/products';
 import { graphql } from 'gatsby';
+import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext, WithStore } from 'pure-react-carousel';
+
 import { getResponsiveImages } from '../helpers/img';
+import Layout from '../components/Layout';
+import CommissionForm from '../components/CommissionForm';
+
+const getActiveImgDimensions = (commissions, activeIndex) => {
+    const { ref } = commissions[activeIndex];
+    console.log('ref', ref,  activeIndex);
+    if (ref.current && ref.current.imageRef.current) {
+        const { width, height } = ref.current.imageRef.current.getBoundingClientRect();
+        console.log('dimensions', width, height);
+        return {
+            width: `${width}px`,
+            height: `${height}px`
+        };
+    }
+    return {};
+};
+
+const CarouselContainer = ({ slide, onSlideChange }) => {
+    useEffect(() => {
+        console.log('slide', slide);
+        onSlideChange(slide);
+    }, [slide]);
+
+    return null;
+}
+
+const CarouselHOC = WithStore(CarouselContainer, (state) => ({ slide: state.currentSlide }));
 
 export default ({
     data: {
@@ -18,45 +40,51 @@ export default ({
     }
 }) => {
     const [activeSlideIndex, setActiveSlideIndex] = useState(0);
-    const handleOnClick = (e) => {
-        e.persist();
-        if (e.target.value === 'next' && commissions.length - 1 !== activeSlideIndex) {
-            setActiveSlideIndex(activeSlideIndex + 1);
-        }
-        else {
-            setActiveSlideIndex(activeSlideIndex - 1);
-        }
-    }
+    const [imgDimensions, setImgDimensions] = useState({});
+    const commissionsWithRef = commissions.map((obj) => ({ ...obj, ref: useRef() }));
+
+    useEffect(() => {
+        setImgDimensions(getActiveImgDimensions(commissionsWithRef, activeSlideIndex));
+    }, [commissionsWithRef[0].ref.current]);
+
+    useEffect(() => {
+        setImgDimensions(getActiveImgDimensions(commissionsWithRef, activeSlideIndex));
+    }, [activeSlideIndex])
+
     return (
         <Layout>
             <h2 className="w-full text-center tracking-widest text-3xl pb-12">YOUR DREAM CONCEPT MADE REALITY.</h2>
             <div className="w-full" style={{ maxHeight: '800px' }}>
                 <CarouselProvider
-                    className="w-full flex"
+                    className="w-full flex justify-center"
                     naturalSlideWidth={700}
                     naturalSlideHeight={700}
                     totalSlides={commissions.length}>
-                    <Slider
-                        className="order-2 w-full"
-                        style={{ maxHeight: '700px' }}>
-                        {commissions
-                            .map(({ variants }, i) => {
-                                const imgs = getResponsiveImages(variants[0]).responsiveImgs;
-                                return (
-                                    <Slide index={i}>
-                                        <Img
-                                            fixed={imgs}
-                                            style={{ margin: 'auto', display: 'flex' }} />
-                                    </Slide>
-                                );
-                            })
-                        }
-                    </Slider>
-                    <ButtonBack className="order-1 p-2 text-2xl ml-4" onClick={handleOnClick} value='back'>
-                        <span> {`<`} </span>
+                    <>
+                        <CarouselHOC onSlideChange={setActiveSlideIndex} />
+                        <Slider
+                            className="order-2 w-full"
+                            style={imgDimensions}>
+                            {commissionsWithRef
+                                .map(({ variants, ref }, i) => {
+                                    const imgs = getResponsiveImages(variants[0]).responsiveImgs;
+                                    return (
+                                        <Slide index={i}>
+                                            <Img
+                                                ref={ref}
+                                                fixed={imgs}
+                                                style={{ margin: 'auto', display: 'flex' }} />
+                                        </Slide>
+                                    );
+                                })
+                            }
+                        </Slider>
+                    </>
+                    <ButtonBack className="hidden md:flex order-1 p-2 text-2xl mx-4">
+                        <span value='back'>{`<`}</span>
                     </ButtonBack>
-                    <ButtonNext className="order-3 p-2 text-2xl mr-4" onClick={handleOnClick} value='next'>
-                        <span> {`>`} </span>
+                    <ButtonNext className="hidden md:flex order-3 p-2 text-2xl mx-4">
+                        <span value='next'>{`>`}</span>
                     </ButtonNext>
                 </CarouselProvider>
             </div>
@@ -77,17 +105,17 @@ export const query = graphql`
                     id
                     img: localFile {
                         small: childImageSharp {
-                            fixed(height: 300) {
+                            fixed(width: 320) {
                                 ...GatsbyImageSharpFixed
                             }
                         }
                         medium: childImageSharp {
-                            fixed(height: 500) {
+                            fixed(width: 500) {
                                 ...GatsbyImageSharpFixed
                             }
                         }
                         large: childImageSharp {
-                            fixed(height: 700) {
+                            fixed(width: 700) {
                                 ...GatsbyImageSharpFixed
                             }
                         }

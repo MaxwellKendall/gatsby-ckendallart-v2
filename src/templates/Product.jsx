@@ -214,8 +214,6 @@ export default ({
             product.handle !== handle
         ))
         .slice(0, 3)
-    
-    console.log('product', product);
 
     return (
         <Layout pageName="product-page" flexDirection="row" classNames="flex-wrap" maxWidth="100rem">
