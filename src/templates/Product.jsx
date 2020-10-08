@@ -20,7 +20,7 @@ import { initCheckout, addLineItemsToCart } from '../../client';
 import { useAllProducts } from '../helpers/products';
 import { getResponsiveImages, getServerSideMediaQueries } from '../helpers/img';
 
-const isSSR = (typeof window === undefined);
+const isSSR = (typeof window === 'undefined');
 
 const getLowestPrice = (otherProducts) => {
     return otherProducts
