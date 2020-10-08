@@ -230,7 +230,7 @@ export default ({
             {selectedVariant.img && (
                 <div className="md:mx-5">
                     <div className="flex justify-center mb-4">
-                        <style>{getServerSideMediaQueries(selectedImg, "product-img")}</style>
+                        <style>{getServerSideMediaQueries(selectedImg.responsiveImgs, "product-img")}</style>
                         <Img
                             ref={imgRef}
                             className="product-img w-full"
@@ -249,9 +249,10 @@ export default ({
                             left: `${hoverImageDimensions.left}px`,
                             transition: 'opacity .25s ease-in .05s'
                         }}>
+                        <style>{getServerSideMediaQueries(selectedImg.responsiveHoverImgs, "hover-img")}</style>
                         <Img
                             ref={magnifyImg}
-                            className="w-full"
+                            className="w-full hover-img"
                             fixed={selectedImg.responsiveHoverImgs}
                             imgStyle={{
                                 top: `${magnifyDimensions.top > 0 ? -magnifyDimensions.top : 0}%`,

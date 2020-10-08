@@ -54,7 +54,7 @@ export const getFileAsBase64String = (file) => {
     });
 };
 
-export const getServerSideMediaQueries = ({ responsiveImgs }, className) => {
+export const getServerSideMediaQueries = (responsiveImgs, className) => {
     return responsiveImgs
         .filter(({ media }) => media)
         .reduce((acc, { media, width, height }) => (
