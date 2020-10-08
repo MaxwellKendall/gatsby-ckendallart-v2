@@ -22,6 +22,7 @@ export const query = graphql`
                 optimizedImages
                 title
                 collection
+                slug
                 productType
                 priceRange {
                     high
