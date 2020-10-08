@@ -27,6 +27,7 @@ export const getResponsiveImages = (
             }))
     };
     if (img.hoverImgs) {
+        console.log("responsive images array, w/hover: ", rtrn);
         return {
             responsiveHoverImgs: Object.keys(img.hoverImgs)
                 .map((key) => ({
