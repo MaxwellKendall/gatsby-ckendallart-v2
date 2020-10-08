@@ -27,7 +27,6 @@ export const getResponsiveImages = (
             }))
     };
     if (img.hoverImgs) {
-        console.log("responsive images array, w/hover: ", rtrn);
         return {
             responsiveHoverImgs: Object.keys(img.hoverImgs)
                 .map((key) => ({
@@ -38,7 +37,6 @@ export const getResponsiveImages = (
             ...rtrn
         };
     };
-    console.log("responsive images array: ", rtrn);
     return rtrn;
 };
 
@@ -55,3 +53,16 @@ export const getFileAsBase64String = (file) => {
         };
     });
 };
+
+export const getServerSideMediaQueries = ({ responsiveImgs }, className) => {
+    return responsiveImgs
+        .filter(({ media }) => media)
+        .reduce((acc, { media, width, height }) => (
+            `${acc}\n
+            @media${media} {\n
+                .${className}, .${className} > :first-child {\n
+                    width: ${width}px !important; height: ${height}px !important;\n
+                }\n
+            }`
+        ), '')
+}

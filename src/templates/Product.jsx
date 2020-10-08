@@ -18,7 +18,9 @@ import {
 } from '../helpers';
 import { initCheckout, addLineItemsToCart } from '../../client';
 import { useAllProducts } from '../helpers/products';
-import { getResponsiveImages } from '../helpers/img';
+import { getResponsiveImages, getServerSideMediaQueries } from '../helpers/img';
+
+const isSSR = (window === undefined);
 
 const getLowestPrice = (otherProducts) => {
     return otherProducts
@@ -222,9 +224,12 @@ export default ({
             {selectedVariant.img && (
                 <div className="md:mx-5">
                     <div className="flex justify-center mb-4">
+                        {isSSR && <style>
+                            {getServerSideMediaQueries(selectedImg, "product-img")}
+                        </style>}
                         <Img
                             ref={imgRef}
-                            className="w-full"
+                            className="product-img w-full"
                             fixed={selectedImg.responsiveImgs} />
                     </div>
                     <div
@@ -242,7 +247,7 @@ export default ({
                         }}>
                         <Img
                             ref={magnifyImg}
-                            className="w-full"
+                            className="product-img w-full"
                             fixed={selectedImg.responsiveHoverImgs}
                             imgStyle={{
                                 top: `${magnifyDimensions.top > 0 ? -magnifyDimensions.top : 0}%`,
