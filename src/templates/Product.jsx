@@ -251,7 +251,7 @@ export default ({
                         }}>
                         <Img
                             ref={magnifyImg}
-                            className="product-img w-full"
+                            className="w-full"
                             fixed={selectedImg.responsiveHoverImgs}
                             imgStyle={{
                                 top: `${magnifyDimensions.top > 0 ? -magnifyDimensions.top : 0}%`,
