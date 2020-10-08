@@ -1,18 +1,54 @@
 import React from 'react';
-import { Link } from 'gatsby';
-import Img from 'gatsby-image';
 
 import Layout from '../components/Layout';
 import ShopGrid from '../components/ShopGrid';
-import { useAllPrints } from "../helpers/products"
 
 export default ({
-
+    data: {
+        allShopifyProduct: { nodes: prints }
+    }
 }) => {
-    const products = useAllPrints();
     return (
         <Layout>
-             <ShopGrid products={products} />
+             <ShopGrid products={prints} />
         </Layout>
     );
 }
+
+export const query = graphql`
+    query GetOnlyPrints {
+        allShopifyProduct(filter: {collection: {eq: "Print Shop"}}) {
+            nodes {
+                optimizedImages
+                title
+                collection
+                productType
+                priceRange {
+                    high
+                    low
+                }
+                variants {
+                    image
+                    availableForSale
+                    localFile {
+                        small: childImageSharp {
+                            fixed(width: 300) {
+                                ...GatsbyImageSharpFixed
+                            }
+                        }
+                        medium: childImageSharp {
+                            fixed(width: 500) {
+                                ...GatsbyImageSharpFixed
+                            }
+                        }
+                        large: childImageSharp {
+                            fixed(width: 700) {
+                                ...GatsbyImageSharpFixed
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }    
+`
