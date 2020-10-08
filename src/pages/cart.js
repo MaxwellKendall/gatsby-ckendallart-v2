@@ -10,7 +10,7 @@ import {
   removeLineItemsFromCart,
   updateLineItemsInCart,
 } from "../../client"
-import { uniqueId, kebabCase, delay } from "lodash"
+import { uniqueId, delay } from "lodash"
 import { useAllProducts } from "../helpers/products";
 
 const AddOrRemoveInventoryIcon = ({ isLoading, icon, handler }) => {

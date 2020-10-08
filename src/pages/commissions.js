@@ -137,35 +137,3 @@ export const query = graphql`
         }
     }
 `
-
-// export const query = graphql`
-//     query GetPreviousCommissions {
-//         commissions: allShopifyProduct(filter: {collection: {eq: "Commissions v2"}}) {
-//             nodes {
-//                 productType
-//                 handle
-//                 totalInventory
-//                 variants {
-//                     id
-//                     localFile {
-//                         childImageSharp {
-//                             fluid(maxHeight: 500) {
-//                                 ...GatsbyImageSharpFluid
-//                             }
-//                         }
-//                     }
-//                     price
-//                     availableForSale
-//                     title
-//                 }
-//                 priceRange {
-//                     high
-//                     low
-//                 }
-//                 collection
-//                 title
-//                 slug
-//             }
-//         }
-//     }
-// `

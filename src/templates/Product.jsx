@@ -187,7 +187,6 @@ export default ({
         const verticalMax = (verticalDiff / magnifyImgHeight) * 100;
         const horizontalPosition = ((clientX - hoverImgLeft) / hoverImgWidth);
         const verticalPosition = (((clientY + pageY) - hoverImgTop) / magnifyImgHeight) - (verticalDiff / magnifyImgHeight);
-        debugger;
         const horizontalPositionAsPercentage = horizontalPosition * 100;
         const verticalPositionAsPercentage = verticalPosition * 100;
         setMagnifyDimensions({
