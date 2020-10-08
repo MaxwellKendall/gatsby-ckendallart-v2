@@ -22,7 +22,6 @@ import { getResponsiveImages, getServerSideMediaQueries } from '../helpers/img';
 
 const isSSR = (typeof window === 'undefined');
 
-
 console.log(`***************************************\n
 ${typeof window}\n
 ***************************************\n
@@ -231,9 +230,7 @@ export default ({
             {selectedVariant.img && (
                 <div className="md:mx-5">
                     <div className="flex justify-center mb-4">
-                        {isSSR && <style>
-                            {getServerSideMediaQueries(selectedImg, "product-img")}
-                        </style>}
+                        <style>{getServerSideMediaQueries(selectedImg, "product-img")}</style>
                         <Img
                             ref={imgRef}
                             className="product-img w-full"
