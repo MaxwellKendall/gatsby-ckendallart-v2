@@ -22,6 +22,13 @@ import { getResponsiveImages, getServerSideMediaQueries } from '../helpers/img';
 
 const isSSR = (typeof window === 'undefined');
 
+
+console.log(`***************************************\n
+${typeof window}\n
+***************************************\n
+isSSR: ${isSSR}
+`);
+
 const getLowestPrice = (otherProducts) => {
     return otherProducts
         .reduce((lowestPrice, { priceRange: { low: currentPrice }}) => {

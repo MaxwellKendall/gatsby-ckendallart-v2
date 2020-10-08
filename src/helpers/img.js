@@ -60,7 +60,7 @@ export const getServerSideMediaQueries = ({ responsiveImgs }, className) => {
         .reduce((acc, { media, width, height }) => (
             `${acc}\n
             @media${media} {\n
-                .${className}, .${className} > :first-child {\n
+                .${className}, .${className} {\n
                     width: ${width}px !important; height: ${height}px !important;\n
                 }\n
             }`
