@@ -37,6 +37,7 @@ export const getResponsiveImages = (
             ...rtrn
         };
     };
+    console.log("responsive images array: ", rtrn);
     return rtrn;
 };
 
