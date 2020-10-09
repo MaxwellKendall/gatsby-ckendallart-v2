@@ -69,10 +69,11 @@ export default ({
                             {commissionsWithRef
                                 .map(({ title, variants, ref }, i) => {
                                     const imgs = getResponsiveImages(variants[0]).responsiveImgs;
+                                    const cssSelector = `.${kebabCase(title)}, .${kebabCase(title)} img`;
                                     return (
                                         <Slide index={i}>
                                             <div className="flex h-full">
-                                                <style>{getServerSideMediaQueries(imgs, kebabCase(title))}</style>
+                                                <style>{getServerSideMediaQueries(imgs, cssSelector)}</style>
                                                 <Img
                                                     className={kebabCase(title)}
                                                     ref={ref}
