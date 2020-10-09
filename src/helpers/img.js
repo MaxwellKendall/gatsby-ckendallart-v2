@@ -60,7 +60,7 @@ export const getServerSideMediaQueries = (responsiveImgs, className) => {
         .reduce((acc, { media, width, height }) => (
             `${acc}\n
             @media${media} {\n
-                .${className}, .${className} {\n
+                .${className} img {\n
                     width: ${width + 1}px !important; height: ${height}px !important;\n
                 }\n
             }`
