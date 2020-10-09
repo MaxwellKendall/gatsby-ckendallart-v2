@@ -225,7 +225,7 @@ export default ({
             {selectedVariant.img && (
                 <div className="md:mx-5">
                     <div className="flex justify-center mb-4">
-                        <style>{getServerSideMediaQueries(selectedImg.responsiveImgs, ".product-img, .product-img img")}</style>
+                        <style>{getServerSideMediaQueries(selectedImg.responsiveImgs, ".product-img img")}</style>
                         <Img
                             ref={imgRef}
                             className="product-img w-full"
