@@ -1,8 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Link } from 'gatsby';
-import Img from 'gatsby-image';
+import { kebabCase } from 'lodash';
 
 import { getDefaultProductImage } from "../helpers/products"
+import Img from './Img';
 
 export default ({
     products
@@ -36,7 +37,7 @@ export default ({
                     return (
                         <Link to={slug} className="p-5 flex flex-col items-center w-full lg:w-1/2">
                             <div className="relative">
-                                <Img ref={imgRef} fixed={img} />
+                                <Img imgRef={imgRef} responsiveImgs={img} imgName={kebabCase(title)} />
                                 {!hasVariantForSale && (
                                     <span
                                         className="absolute top-0 mt-4 md:mt-12 text-white font-semibold text-center w-24 md:w-48 text-2xl md:text-3xl py-2 left-0 tracking-widest"
