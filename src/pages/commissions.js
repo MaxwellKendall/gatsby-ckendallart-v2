@@ -3,9 +3,10 @@ import Img from "gatsby-image";
 import { graphql } from 'gatsby';
 import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext, WithStore } from 'pure-react-carousel';
 
-import { getResponsiveImages } from '../helpers/img';
+import { getResponsiveImages, getServerSideMediaQueries } from '../helpers/img';
 import Layout from '../components/Layout';
 import CommissionForm from '../components/CommissionForm';
+import { kebabCase } from 'lodash';
 
 const getActiveImgDimensions = (commissions, activeIndex) => {
     const { ref } = commissions[activeIndex];
@@ -66,12 +67,14 @@ export default ({
                             className="order-2 w-full my-auto"
                             style={imgDimensions}>
                             {commissionsWithRef
-                                .map(({ variants, ref }, i) => {
+                                .map(({ title, variants, ref }, i) => {
                                     const imgs = getResponsiveImages(variants[0]).responsiveImgs;
                                     return (
                                         <Slide index={i}>
                                             <div className="flex h-full">
+                                                <style>{getServerSideMediaQueries(imgs, kebabCase(title))}</style>
                                                 <Img
+                                                    className={kebabCase(title)}
                                                     ref={ref}
                                                     fixed={imgs}
                                                     style={{ margin: 'auto', display: 'flex', alignSelf: 'center' }} />
