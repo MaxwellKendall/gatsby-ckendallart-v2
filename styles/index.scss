@@ -101,6 +101,9 @@ body,
         .sqrl-purple {
             background: $sqrl-purple;
         }
+        .sqrl-pink {
+            background-color: $sqrl-arrow-elipse;
+        }
         &.home {
             background: white;
         }
@@ -116,9 +119,6 @@ body,
             span,
             a {
                 color: $sqrl-font-color;
-            }
-            .arrow-elipse {
-                background-color: $sqrl-arrow-elipse;
             }
             .featured-work {
                 background-color: $sqrl-featured-work;

@@ -5,6 +5,9 @@ import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-re
 import { kebabCase, uniqueId, startCase, groupBy, flatten } from "lodash";
 
 import Layout from "../components/Layout";
+import Arrow from "../components/Arrow";
+import ReferralCarousel from "../components/ReferralCarousel";
+
 import 'pure-react-carousel/dist/react-carousel.es.css';
 
 const tagLine = [
@@ -19,11 +22,6 @@ const imgBreakPointsByViewPort = {
   desktop: `(min-width: 1200px)`
 };
 
-const referrals = [
-  `“Claire listens - she was able to take my vision and duplicate it on canvas. She is a true talent - easy to work with and my finished masterpiece is a joy to sit and admire.” Debbie C. Charleston, S.C.`,
-  `"SQRLE is a real good painter. She paints real good." TKL BOI TKLVILLE, USA`
-];
-
 const getFeaturedImgUrl = (imgName) => {
   const splitFileName = imgName.split('--');
   const productType = splitFileName[2].toLowerCase() === 'print'
@@ -36,28 +34,6 @@ const getFeaturedImgUrl = (imgName) => {
     return `${productType}/${kebabCase(url)}-${productSize}`;
   }
   return `${productType}/${kebabCase(url)}`;
-}
-
-const Arrow = ({
-  direction,
-  onClick = () => {}
-}) => {
-  if (direction === 'right') {
-    return (
-      <span
-      className="mx-auto cursor-pointer rounded-full w-10 arrow-elipse flex h-10 items-center justify-center self-center lg:w-20 lg:h-20 md:ml-auto"
-      onClick={onClick}>
-        {`>`}
-    </span>
-    );
-  }
-  return (
-    <span
-      className="mx-auto cursor-pointer rounded-full w-10 arrow-elipse flex h-10 items-center justify-center self-center lg:w-20 lg:h-20 md:mr-auto"
-      onClick={onClick}>
-        {`<`}
-    </span>
-  );
 }
 
 // TODO: should be using getresponsiveImages via fluid
@@ -80,7 +56,6 @@ const parseImages = (images, section) => Object
   });
 
 export default (props) => {
-  const [activeReferral, setActiveReferral] = useState(0);
   const homePageImages = useStaticQuery(graphql`
     query HomePage {
       heroMobile: allFile(filter: {name: {regex: "/hero/"}}) {
@@ -189,24 +164,6 @@ export default (props) => {
   const featuredImages = groupBy(flatten(parseImages(homePageImages, 'featured')), 'fileName');
   const otherImages = groupBy(flatten(parseImages(homePageImages, 'other')), 'fileName');
 
-  console.log('featuredImgs', featuredImages)
-
-  const nextReferral = (e) => {
-    e.preventDefault();
-    if (activeReferral === referrals.length - 1) {
-      return;
-    }
-    setActiveReferral(activeReferral + 1);
-  }
-
-  const previousReferral = (e) => {
-    e.preventDefault();
-    if (activeReferral === 0) {
-      return;
-    }
-    setActiveReferral(activeReferral - 1);
-  }
-
   return (
     <Layout pageName="home">
       {/* I. HERO IMG */}
@@ -271,13 +228,7 @@ export default (props) => {
         </ul>
       </div>
       {/* III. REFERRALS */}
-      <div className="py-12 md:py-24 flex align-center">
-        <Arrow onClick={previousReferral} direction="left"/>
-        <p className="self-center text-center w-4/6 script-font tracking-wide text-4xl opacity-75 md:text-left">
-          {referrals[activeReferral]}
-        </p>
-        <Arrow onClick={previousReferral} direction="right" onClick={nextReferral} />
-      </div>
+      <ReferralCarousel />
       {/* IV. REQUEST COMMISSION | MEET THE ARTIST */}
       <ul className="pt-10 flex flex-col md:flex-row w-full">
         {Object.keys(otherImages)

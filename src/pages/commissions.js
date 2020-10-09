@@ -7,6 +7,7 @@ import { getResponsiveImages, getServerSideMediaQueries } from '../helpers/img';
 import Layout from '../components/Layout';
 import CommissionForm from '../components/CommissionForm';
 import { kebabCase } from 'lodash';
+import ReferralCarousel from '../components/ReferralCarousel';
 
 const getActiveImgDimensions = (commissions, activeIndex) => {
     const { ref } = commissions[activeIndex];
@@ -96,6 +97,7 @@ export default ({
             </div>
             <h2 className="w-full text-center tracking-widest text-3xl py-12">LET'S GET STARTED:</h2>
             <CommissionForm />
+            <ReferralCarousel />
         </Layout>
     );
 }

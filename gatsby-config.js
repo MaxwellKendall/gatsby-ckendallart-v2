@@ -45,7 +45,11 @@ module.exports = {
       'Obsession with Quality',
       'Reverence for Beauty',
       'Fine art made for you, with love.'
-    ]
+    ],
+    referrals: [
+      `“Claire listens - she was able to take my vision and duplicate it on canvas. She is a true talent - easy to work with and my finished masterpiece is a joy to sit and admire.” Debbie C. Charleston, S.C.`,
+      `"SQRLE is a real good painter. She paints real good." TKL BOI TKLVILLE, USA`
+    ]    
   },
   plugins: [
     // re-captcha
