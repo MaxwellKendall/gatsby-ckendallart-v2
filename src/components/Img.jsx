@@ -11,7 +11,7 @@ export default ({
 }) => {
     return (
         <>
-            <style>{getServerSideMediaQueries(responsiveImgs, imgName)}</style>
+            <style>{getServerSideMediaQueries(responsiveImgs, `.${imgName}`)}</style>
             <Img
                 ref={imgRef}
                 className={`${classNames} ${imgName}`}

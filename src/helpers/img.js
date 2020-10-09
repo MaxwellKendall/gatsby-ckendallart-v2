@@ -54,13 +54,13 @@ export const getFileAsBase64String = (file) => {
     });
 };
 
-export const getServerSideMediaQueries = (responsiveImgs, className) => {
+export const getServerSideMediaQueries = (responsiveImgs, selector) => {
     return responsiveImgs
         .filter(({ media }) => media)
         .reduce((acc, { media, width, height }) => (
             `${acc}\n
             @media${media} {\n
-                .${className} img {\n
+                ${selector} {\n
                     width: ${width + 1}px !important; height: ${height}px !important;\n
                 }\n
             }`
