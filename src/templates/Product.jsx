@@ -21,12 +21,7 @@ import { useAllProducts } from '../helpers/products';
 import { getResponsiveImages, getServerSideMediaQueries } from '../helpers/img';
 
 const isSSR = (typeof window === 'undefined');
-
-console.log(`***************************************\n
-${typeof window}\n
-***************************************\n
-isSSR: ${isSSR}
-`);
+const hoverPositionOffset = 0.25;
 
 const getLowestPrice = (otherProducts) => {
     return otherProducts
@@ -195,8 +190,8 @@ export default ({
         const verticalMax = (verticalDiff / magnifyImgHeight) * 100;
         const horizontalPosition = ((clientX - hoverImgLeft) / hoverImgWidth);
         const verticalPosition = (((clientY + pageY) - hoverImgTop) / magnifyImgHeight) - (verticalDiff / magnifyImgHeight);
-        const horizontalPositionAsPercentage = horizontalPosition * 100;
-        const verticalPositionAsPercentage = verticalPosition * 100;
+        const horizontalPositionAsPercentage = (horizontalPosition - hoverPositionOffset) * 100;
+        const verticalPositionAsPercentage = (verticalPosition - hoverPositionOffset) * 100;
         setMagnifyDimensions({
             left: horizontalPositionAsPercentage > horizontalMax ? horizontalMax : horizontalPositionAsPercentage,
             top: verticalPositionAsPercentage > verticalMax ? verticalMax : verticalPositionAsPercentage
