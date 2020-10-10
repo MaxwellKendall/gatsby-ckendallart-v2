@@ -21,7 +21,10 @@ export const errorFetchingCart = {
 export const reducer = (state, action) => {
     switch (action.type) {
         case 'INIT_CART': {
-            return action.payload;
+            return {
+                ...state,
+                ...action.payload
+            };
         };
         case 'INIT_REMOTE_CART': {
             return {

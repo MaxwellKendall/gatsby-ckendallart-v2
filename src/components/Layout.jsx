@@ -81,8 +81,9 @@ export const Layout = ({
                     })
             }
         }
-        else if (!cartFromStorage && cart.id) {
+        else {
             dispatch({ 'type': 'RESET_CART' });
+            
         }
 
         return () => window.clearTimeout(confirmationToast)

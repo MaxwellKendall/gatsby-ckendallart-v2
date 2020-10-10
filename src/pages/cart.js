@@ -76,6 +76,9 @@ const CartPage = ({
       : parseInt(price, 10);
     return getPrettyPrice(cleanPrice * quantity);
   };
+
+  console.log('cart', cart);
+
   return (
     <Layout pageName="order-summary" location={location} isCheckoutLoading={loadingState === 'checkout'}>
       {isUnavailable && <span>Out of stock! You got the last one! :)</span>}
