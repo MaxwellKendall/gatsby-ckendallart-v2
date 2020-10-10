@@ -69,7 +69,6 @@ const CartPage = ({
   const goToCheckout = () => {
     setLoadingState('checkout')
   }
-
   return (
     <Layout pageName="order-summary" location={location} isCheckoutLoading={loadingState === 'checkout'}>
       {isUnavailable && <span>Out of stock! You got the last one! :)</span>}
@@ -77,7 +76,7 @@ const CartPage = ({
       {!cart.loading && (
         <ul>
           {cart.lineItems
-            .filter((item) => item.variantId)
+            .filter((item) => item.variantId && item.quantity > 0)
             .map(lineItem => {
               const { variantId, quantity } = lineItem;
               const { responsiveImgs } = cart.imagesByVariantId[variantId];

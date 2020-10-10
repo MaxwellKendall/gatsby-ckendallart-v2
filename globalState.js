@@ -46,12 +46,7 @@ export const reducer = (state, action) => {
             const dataForNewLineItem = parseDataFromRemoteCart(action.payload, action.products);
             return {
                 ...state,
-                ...dataForNewLineItem,
-                imagesByVariantId: {
-                    ...Object.keys(state.imagesByVariantId)
-                        .filter((key) => key !== action.payload.variantId)
-                        .reduce((acc, key) => ({ [key]: state.imagesByVariantId[key] }))
-                }
+                ...dataForNewLineItem
             };
         };
         case 'RESET_CART': {

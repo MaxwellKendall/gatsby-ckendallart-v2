@@ -13,10 +13,9 @@ import {
     getLineItemForAddToCart,
     isVariantInCart,
     getLineItemForUpdateToCart,
-    getInventoryDetails,
-    updateLineItemsInCart
+    getInventoryDetails
 } from '../helpers';
-import { initCheckout, addLineItemsToCart } from '../../client';
+import { initCheckout, addLineItemsToCart, updateLineItemsInCart } from '../../client';
 import { getPrettyPrice, useAllProducts } from '../helpers/products';
 import { getResponsiveImages, getServerSideMediaQueries } from '../helpers/img';
 
@@ -122,6 +121,9 @@ export default ({
                 })
                 .then(() => {
                     setIsLoading(false);
+                })
+                .catch((e) => {
+                    console.error('error updating existing line item in cart', e);
                 });
         }
         return addLineItemsToCart(cartId, getLineItemForAddToCart({ ...product, selectedVariant }, 1))
@@ -138,7 +140,7 @@ export default ({
             });
     }
 
-    const handleAddToCart = async (e) => {
+    const handleAddToCart = (e) => {
         e.preventDefault();
         setIsLoading(true);
         if (cart.id) {
