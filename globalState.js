@@ -7,7 +7,15 @@ const initialState = {
     totalTax: null,
     webUrl: null,
     lineItems: [],
-    imagesByVariantId: {}
+    imagesByVariantId: {},
+    loading: 'cart',
+    error: null
+};
+
+
+export const errorFetchingCart = {
+    ...initialState,
+    loading: ''
 };
 
 export const reducer = (state, action) => {
@@ -16,13 +24,20 @@ export const reducer = (state, action) => {
             return action.payload;
         };
         case 'INIT_REMOTE_CART': {
-            return parseDataFromRemoteCart(action.payload, action.products)
+            return {
+                ...parseDataFromRemoteCart(action.payload, action.products),
+                loading: ''
+            };
         };
         case 'ADD_TO_CART': {
-            return parseDataFromRemoteCart(action.payload, action.products);
+            return {
+                ...state,
+                ...parseDataFromRemoteCart(action.payload, action.products)
+            };
         };
         case 'UPDATE_CART': {
             return {
+                ...state,
                 ...parseDataFromRemoteCart(action.payload, action.products),
                 imagesByVariantId: state.imagesByVariantId
             };
@@ -30,6 +45,7 @@ export const reducer = (state, action) => {
         case 'REMOVE_FROM_CART': {
             const dataForNewLineItem = parseDataFromRemoteCart(action.payload, action.products);
             return {
+                ...state,
                 ...dataForNewLineItem,
                 imagesByVariantId: {
                     ...Object.keys(state.imagesByVariantId)
@@ -39,8 +55,18 @@ export const reducer = (state, action) => {
             };
         };
         case 'RESET_CART': {
-            return initialState;
+            return {
+                ...initialState,
+                loading: ''
+            };
         };
+        case 'ERROR_FROM_CART': {
+            return {
+                ...state,
+                loading: '',
+                error: action.error
+            };
+        }
         default: {
             return state;
         }

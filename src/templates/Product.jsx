@@ -24,7 +24,6 @@ const isSSR = (typeof window === 'undefined');
 const hoverPositionOffset = 0.25;
 
 const getLowestPrice = (otherProducts) => {
-    debugger;
     return otherProducts
         .reduce((lowestPrice, { priceRange: { low: currentPrice }}) => {
             if (lowestPrice === null) return Number(currentPrice).toFixed(2);

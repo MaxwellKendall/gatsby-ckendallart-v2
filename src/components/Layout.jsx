@@ -54,7 +54,8 @@ export const Layout = ({
     classNames = '',
     flexDirection = 'column',
     maxWidth = '100rem',
-    location
+    location,
+    isCheckoutLoading = false
 }) => {
     const products = useAllProducts();
     const [userEmail, setUserEmail] = useState('');
@@ -73,6 +74,10 @@ export const Layout = ({
                 fetchCart(cartFromStorage.id)
                     .then((payload) => {
                         dispatch({ type: 'INIT_REMOTE_CART', payload, products })
+                    })
+                    .catch((e) => {
+                        console.error('Error Fetching Remote Cart: ', e)
+                        dispatch({ type: 'ERROR_FROM_CART', error: e })
                     })
             }
         }
@@ -164,7 +169,8 @@ export const Layout = ({
             <main
                 style={{ maxWidth }}
                 className={`default-page md:py-8 ${pageName} flex flex-wrap flex-${flexDirection} w-full h-full self-center justify-center flex-grow ${classNames}`}>
-                {children}
+                    {isCheckoutLoading && <p>Loading...</p>}
+                    {!isCheckoutLoading && children}
             </main>
             <footer className='flex-shrink-0 p-5 text-center'>
                 {subscribeStatus.showError && (
