@@ -6,16 +6,25 @@ import { getServerSideMediaQueries } from '../helpers/img';
 export default ({
     classNames = '',
     responsiveImgs,
-    imgRef,
-    imgName
+    imgRef = null,
+    imgName,
+    imgType = "fixed"
 }) => {
     return (
         <>
             <style>{getServerSideMediaQueries(responsiveImgs, `.${imgName}`)}</style>
-            <Img
-                ref={imgRef}
-                className={`${classNames} ${imgName}`}
-                fixed={responsiveImgs} />
+            {imgType === "fixed" && (
+                <Img
+                    ref={imgRef}
+                    className={`${classNames} ${imgName}`}
+                    fixed={responsiveImgs} />
+            )}
+            {imgType === "fluid" && (
+                <Img
+                    ref={imgRef}
+                    className={`${classNames} ${imgName}`}
+                    fluid={responsiveImgs} />
+            )}
         </>
     );
 };

@@ -14,15 +14,17 @@ const imgBreakPointsByTShirtSize = {
 // TODO: should except fluid/fixed as param
 export const getResponsiveImages = (
     { img },
-    breakPointsByTshirtSize = imgBreakPointsByTShirtSize
+    imgType = 'fixed',
+    breakPointsByTshirtSize = imgBreakPointsByTShirtSize,
 ) => {
     if (!img) return null;
     const rtrn = {
         responsiveImgs: Object
             .keys(img)
+            .filter((key) => breakPointsByTshirtSize[key])
             .map((key) => ({
                 imgSize: key,
-                ...img[key].fixed,
+                ...img[key][imgType],
                 media: breakPointsByTshirtSize[key]
             }))
     };

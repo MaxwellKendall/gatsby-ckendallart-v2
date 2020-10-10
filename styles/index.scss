@@ -1,33 +1,20 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 
-@import "./custom-utilities";
 
 @import "tailwindcss/utilities";
 
 @import url('https://fonts.googleapis.com/css2?family=Italianno&family=Nunito+Sans:ital,wght@0,200;0,300;0,400;0,600;0,700;1,200;1,300;1,400;1,600;1,700&display=swap');
 @import url("https://fonts.googleapis.com/css2?family=Italianno&display=swap");
 
-$tablet: 768px;
-$desktop: 1024px;
-$medium: 1200px;
-$large: 1400px;
-$monitor: 1740px;
-$huge-monitor: 2000px;
-$four-k-monitor: 2400px;
-
-$sqrl-font-color: #231e0e;
-$sqrl-arrow-elipse: #dcd0d0;
-$sqrl-featured-work: #eeedf0;
-$sqrl-background-color: #F5F5F7;
-$sqrl-footer-background: #EEEEF0;
-$sqrl-purple: #C097D0;
 
 @font-face {
     font-family: 'Nunito Sans';
     src: local("/fonts/Nunito_Sans/NunitoSans-Regular.ttf") format("ttf"),
     url("https://fonts.googleapis.com/css2?family=Nunito+Sans&display=swap");
 }
+@import "./vars";
+@import "./custom-utilities";
 
 // @font-face {
 //     font-family: 'Nunito Sans Bold';
@@ -97,13 +84,6 @@ body,
     }
 
     .default-page {
-        background: $sqrl-background-color;
-        .sqrl-purple {
-            background: $sqrl-purple;
-        }
-        .sqrl-pink {
-            background-color: $sqrl-arrow-elipse;
-        }
         &.home {
             background: white;
         }

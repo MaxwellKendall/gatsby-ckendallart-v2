@@ -10,7 +10,7 @@ export default ({
     }
 }) => {
     return (
-        <Layout>
+        <Layout classNames="sqrl-grey">
             <ShopGrid products={originals} />
         </Layout>
     );
