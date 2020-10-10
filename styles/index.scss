@@ -152,10 +152,14 @@ body,
             }
         }
         .commission-form {
-            background-color: $sqrl-arrow-elipse;
+            background-color: $sqrl-pink;
             input::placeholder {
                 color: black;
             }
+        }
+        .checkout-button {
+            border: 2px solid $sqrl-purple;
+            color: black;
         }
     }
     footer {

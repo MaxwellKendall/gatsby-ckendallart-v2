@@ -165,7 +165,7 @@ export default (props) => {
   const otherImages = groupBy(flatten(parseImages(homePageImages, 'other')), 'fileName');
 
   return (
-    <Layout pageName="home">
+    <Layout pageName="home" location={props.location}>
       {/* I. HERO IMG */}
       <Img
         className="w-full hero-img"
@@ -237,12 +237,12 @@ export default (props) => {
             const arrayOfImages = otherImages[key];
             const splitFileName = key.split('--');
             const section = startCase(splitFileName[1]).toLowerCase() === 'request commission'
-              ? { title: 'REQUEST COMMISSION', url: '/commission/request'}
+              ? { title: 'REQUEST COMMISSION', url: '/commissions'}
               : { title: 'MEET THE ARTIST', url: '/about' };
             return (
               <li className={`w-full pb-4 md:pb-0 md:w-1/2 flex flex-col align-center mx-2`}>
-                <Img fluid={arrayOfImages} style={{ height: '80%' }}/>
                 <Link to={section.url} className="w-full cursor-pointer text-center mt-5 text-xl tracking-widest">
+                  <Img fluid={arrayOfImages} style={{ height: section.url === '/commissions' ? '84%' : '80%' }}/>
                     {`${startCase(section.title).toUpperCase()} >`}
                 </Link>
               </li>
