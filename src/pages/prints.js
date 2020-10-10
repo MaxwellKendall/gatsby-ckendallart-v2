@@ -7,10 +7,11 @@ import ShopGrid from '../components/ShopGrid';
 export default ({
     data: {
         allShopifyProduct: { nodes: prints }
-    }
+    },
+    location
 }) => {
     return (
-        <Layout classNames="sqrl-grey">
+        <Layout classNames="sqrl-grey" location={location}>
              <ShopGrid products={prints} />
         </Layout>
     );

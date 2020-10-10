@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link  } from 'gatsby';
 import Img from "gatsby-image";
 
@@ -36,16 +36,24 @@ const MinusIcon = () => (
 export const ExpandableMenuIcon = ({
     name,
     link,
-    childPages
+    childPages,
+    activePath
 }) => {
     const [expanded, setExpanded] = useState(false);
+
     const toggleExpand = () => {
         setExpanded(!expanded);
     };
+
+    const isActive = (
+        activePath.includes('originals') ||
+        activePath.includes('prints')
+    );
+
     if (expanded) {
         return (
-            <li className="p-2 md:relative text-xl mt-10 md:mt-2 md:text-lg md:mx-4">
-                <button onClick={toggleExpand} className="focus:outline-none flex items-start w-full justify-center md:justify-evenly">
+            <li className={`p-2 mt-10 md:mt-2 md:mx-4 md:relative text-xl md:text-lg ${isActive ? 'sqrl-active-link' : '' }`}>
+                <button onClick={toggleExpand} className={`focus:outline-none flex items-start w-full justify-center md:justify-evenly`}>
                     <span className="mr-2">{name.toUpperCase()}</span>
                     <MinusIcon />
                 </button>
@@ -62,8 +70,8 @@ export const ExpandableMenuIcon = ({
         );
     }
     return (
-        <li className="p-2 mt-10 text-xl md:mt-2 md:text-lg md:mx-4">
-            <button onClick={toggleExpand} className="focus:outline-none flex items-center w-full justify-center md:items-center md:justify-evenly">
+        <li className={`p-2 mt-10 md:mt-2 md:mx-4 text-xl md:text-lg ${isActive ? 'sqrl-active-link-shop' : '' }`}>
+            <button onClick={toggleExpand} className={`focus:outline-none flex items-center w-full justify-center md:items-center md:justify-evenly`}>
                 <span className="mr-2">{name.toUpperCase()}</span>
                 <PlusIcon />
             </button>
@@ -72,9 +80,11 @@ export const ExpandableMenuIcon = ({
 };
 
 export default ({
-    itemsInCart
+    itemsInCart,
+    activePath
 }) => {
     const { pages, logo } = usePages();
+
     return (
         <header className="hidden p-5 w-full mb-4 md:pt-4 md:align-center md:flex md:flex-col md:justify-center">
             <Link to='/cart' className="ml-auto self-center order-2 pr-5 md:order-none md:self-start">
@@ -92,12 +102,12 @@ export default ({
                         .map((page) => {
                             if (page.isExpandable) {
                                 return (
-                                    <ExpandableMenuIcon {...page} />
+                                    <ExpandableMenuIcon {...page} activePath={activePath} />
                                 );
                             }
                             return  (
                                 <li className="p-2 mt-2 text-xl md:text-lg mx-4">
-                                    <Link to={page.link}>
+                                    <Link activeClassName="sqrl-active-link" to={page.link}>
                                         {page.name.toUpperCase()}
                                     </Link>
                                 </li>
@@ -111,7 +121,7 @@ export default ({
                     ...pages.slice(2, 4)
                         .map((page) => (
                             <li className="p-5 mt-2 text-xl md:text-lg mx-4">
-                                <Link to={page.link}>
+                                <Link activeClassName="sqrl-active-link" to={page.link}>
                                     {page.name.toUpperCase()}
                                 </Link>
                             </li>

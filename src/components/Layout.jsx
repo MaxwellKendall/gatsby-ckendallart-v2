@@ -53,7 +53,8 @@ export const Layout = ({
     pageName = 'default',
     classNames = '',
     flexDirection = 'column',
-    maxWidth = '100rem'
+    maxWidth = '100rem',
+    location
 }) => {
     const products = useAllProducts();
     const [userEmail, setUserEmail] = useState('');
@@ -158,11 +159,11 @@ export const Layout = ({
 
     return (
         <div className="global-container m-auto flex justify-center flex-col min-h-full">
-            <MobileNav itemsInCart={cart.lineItems} />
-            <Nav itemsInCart={cart.lineItems} />
+            <MobileNav itemsInCart={cart.lineItems} activePath={location.pathname} />
+            <Nav itemsInCart={cart.lineItems} activePath={location.pathname} />
             <main
                 style={{ maxWidth }}
-                className={`default-page md:py-12 ${pageName} flex flex-wrap flex-${flexDirection} w-full h-full self-center justify-center flex-grow ${classNames}`}>
+                className={`default-page md:py-8 ${pageName} flex flex-wrap flex-${flexDirection} w-full h-full self-center justify-center flex-grow ${classNames}`}>
                 {children}
             </main>
             <footer className='flex-shrink-0 p-5 text-center'>

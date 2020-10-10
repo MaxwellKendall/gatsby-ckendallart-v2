@@ -42,7 +42,8 @@ const newStatusByCurrentStatus = {
 let timeout = null;
 
 export default ({
-    itemsInCart
+    itemsInCart,
+    activePath
 }) => {
     const { pages, logo } = usePages();
     const [menuExpandedStatus, setMenuExpandedStatus] = useState('closed');
@@ -79,7 +80,7 @@ export default ({
             {isNotClosed && (
                 <div className={`${expandedClassByToggleState[menuExpandedStatus]} w-full bg-white p-5 fixed z-10`}>
                     <div className="flex">
-                        <Link to={"/"}>
+                        <Link activeClassName="mobile-sqrl-active-link" to={"/"}>
                             <Img fluid={logo} className="w-20 h-8 mr-auto self-start" />
                         </Link>
                         <NavIcon isNotClosed={isNotClosed} onClick={toggleMenuWithDelayedClose} classNames="ml-auto" />
@@ -87,11 +88,11 @@ export default ({
                     <ul className={`w-full flex-col items-center text-center justify-center`}>
                         {pages.map((page) => {
                             if (page.isExpandable) {
-                                return <ExpandableMenuIcon {...page} />
+                                return <ExpandableMenuIcon {...page} activePath={activePath} />
                             } 
                             return (
                                 <li className="p-2 mt-10 text-xl md:text-lg">
-                                    <Link to={page.link}>
+                                    <Link activeClassName="mobile-sqrl-active-link" to={page.link}>
                                         {page.name.toUpperCase()}
                                     </Link>
                                 </li>

@@ -39,7 +39,8 @@ export default ({
         commissions: {
             nodes: commissions
         }
-    }
+    },
+    location
 }) => {
     const [activeSlideIndex, setActiveSlideIndex] = useState(0);
     const [imgDimensions, setImgDimensions] = useState({});
@@ -54,7 +55,7 @@ export default ({
     }, [activeSlideIndex])
 
     return (
-        <Layout>
+        <Layout location={location}>
             <h2 className="w-full text-center tracking-widest text-3xl pt-12 md:pt-0 pb-12">YOUR DREAM CONCEPT MADE REALITY.</h2>
             <div className="w-full">
                 <CarouselProvider

@@ -81,6 +81,20 @@ body,
         .mobile-nav-closing {
             animation: slide-out .225s ease-in;
         }
+        .sqrl-active-link {
+            padding-bottom: .5rem;
+            border-bottom: 2px solid black;
+        }
+        .sqrl-active-link-shop {
+            border-bottom: 2px solid black;
+        }
+        .mobile-sqrl-active-link {
+            padding-bottom: .5rem;
+            border-bottom: 2px solid black;
+        }
+        .mobile-sqrl-active-link-shop {
+            border-bottom: 2px solid black;
+        }
     }
 
     .default-page {

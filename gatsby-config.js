@@ -16,7 +16,7 @@ module.exports = {
     pages: [
       {
         name: 'Portfolio',
-        link: '/portfolio'
+        link: '/portfolio/'
       },
       {
         name: 'Shop',
@@ -24,21 +24,21 @@ module.exports = {
         childPages: [
           {
             name: 'Prints',
-            link: '/prints'
+            link: '/prints/'
           },
           {
             name: 'Originals',
-            link: '/originals'
+            link: '/originals/'
           }
         ]
       },
       {
         name: 'Commissions',
-        link: '/commissions'
+        link: '/commissions/'
       },
       {
         name: 'About',
-        link: '/about' 
+        link: '/about/' 
       },
     ],
     tagLine: [
