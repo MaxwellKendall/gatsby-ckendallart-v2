@@ -143,6 +143,14 @@ body,
                 // }
             }
         }
+        .product-info {
+            transition: opacity .5s linear;
+        }
+        .grid-product-img:hover {
+            .product-info {
+                @apply opacity-75;
+            }
+        }
         .commission-form {
             background-color: $sqrl-arrow-elipse;
             input::placeholder {
