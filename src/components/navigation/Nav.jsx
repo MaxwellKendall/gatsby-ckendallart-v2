@@ -107,7 +107,7 @@ export default ({
                             }
                             return  (
                                 <li className="p-2 mt-2 text-xl md:text-lg mx-4">
-                                    <Link activeClassName="sqrl-active-link" to={page.link}>
+                                    <Link className="pb-2 border-white border-opacity-0 border-b-2 border-solid hover:border-opacity-100 hover:border-black" activeClassName="sqrl-active-link" to={page.link}>
                                         {page.name.toUpperCase()}
                                     </Link>
                                 </li>
@@ -121,7 +121,7 @@ export default ({
                     ...pages.slice(2, 4)
                         .map((page) => (
                             <li className="p-5 mt-2 text-xl md:text-lg mx-4">
-                                <Link activeClassName="sqrl-active-link" to={page.link}>
+                                <Link className="pb-2 border-white border-opacity-0 border-b-2 border-solid hover:border-opacity-100 hover:border-black" activeClassName="sqrl-active-link" to={page.link}>
                                     {page.name.toUpperCase()}
                                 </Link>
                             </li>

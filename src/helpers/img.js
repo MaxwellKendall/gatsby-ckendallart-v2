@@ -63,7 +63,7 @@ export const getServerSideMediaQueries = (responsiveImgs, selector) => {
             `${acc}\n
             @media${media} {\n
                 ${selector} {\n
-                    width: ${width + 1}px !important; height: ${height}px !important;\n
+                    width: ${width}px !important; height: ${height}px !important;\n
                 }\n
             }`
         ), '')
