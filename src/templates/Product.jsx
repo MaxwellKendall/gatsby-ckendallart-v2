@@ -17,18 +17,19 @@ import {
     updateLineItemsInCart
 } from '../helpers';
 import { initCheckout, addLineItemsToCart } from '../../client';
-import { useAllProducts } from '../helpers/products';
+import { getPrettyPrice, useAllProducts } from '../helpers/products';
 import { getResponsiveImages, getServerSideMediaQueries } from '../helpers/img';
 
 const isSSR = (typeof window === 'undefined');
 const hoverPositionOffset = 0.25;
 
 const getLowestPrice = (otherProducts) => {
+    debugger;
     return otherProducts
         .reduce((lowestPrice, { priceRange: { low: currentPrice }}) => {
-            if (lowestPrice === null) return `$${Number(currentPrice).toFixed(2)}`;
-            if (currentPrice > lowestPrice) return `$${Number(currentPrice).toFixed(2)}`;
-            return lowestPrice;
+            if (lowestPrice === null) return Number(currentPrice).toFixed(2);
+            if (currentPrice > lowestPrice) return Number(lowestPrice).toFixed(2);
+            return currentPrice;
         }, null);
 }
 
@@ -221,8 +222,8 @@ export default ({
     return (
         <Layout pageName="product-page" flexDirection="row" classNames="flex-wrap sqrl-grey" maxWidth="100rem" location={location}>
             <h2 className="text-xl md:text-2xl lg:text-4xl tracking-wide text-center w-full lg:hidden">{title}</h2>
-            <p className="text-lg py-2 md:text-xl lg:text-2xl lg:py-10 tracking-widest w-full text-center lg:hidden">{`$${selectedVariant.price}`}</p>
-            {high !== low && <p className="text-sm italic lg:hidden">{`from $${low} to $${high}`}</p>}
+            <p className="text-lg py-2 md:text-xl lg:text-2xl lg:py-10 tracking-widest w-full text-center lg:hidden">{getPrettyPrice(selectedVariant.price)}</p>
+            {high !== low && <p className="text-sm italic lg:hidden">{`from ${getPrettyPrice(low)} to ${getPrettyPrice(high)}`}</p>}
             {selectedVariant.img && (
                 <div className="md:mx-5">
                     <div className="flex justify-center mb-4">
@@ -269,8 +270,8 @@ export default ({
             )}
             <div className="product-desc flex flex-col items-center w-full my-5 lg:w-1/4 xl:w-1/3 lg:mr-5 lg:my-0">
                 <h2 className="hidden lg:inline text-4xl tracking-wide text-center">{title}</h2>
-                <p className="hidden lg:inline text-2xl py-10 tracking-widest">{`$${selectedVariant.price}`}</p>
-                {high !== low && <p className="hidden lg:flex text-sm italic">{`from $${low} to $${high}`}</p>}
+                <p className="hidden lg:inline text-2xl py-10 tracking-widest">{getPrettyPrice(selectedVariant.price)}</p>
+                {high !== low && <p className="hidden lg:flex text-sm italic">{`from ${getPrettyPrice(low)} to ${getPrettyPrice(high)}`}</p>}
                 <div className="actions w-full flex flex-col my-5 justify-start items-center">
                     <button
                         className="border text-white border-black w-64 py-5 px-2 text-xl uppercase mb-2 self-center sqrl-purple"
@@ -294,7 +295,7 @@ export default ({
                     <p className="text-lg py-10 tracking-wide px-5 lg:px-0">{description}</p>
                 </div>
             </div>
-            <h3 className="pt-10 pb-5 pl-5 w-full text-xl">More {collection} from {getLowestPrice(otherProducts)}</h3>
+            <h3 className="pt-10 pb-5 pl-5 w-full text-xl">More {collection} from {getPrettyPrice(getLowestPrice(otherProducts))}</h3>
             <ul className="pl-5 flex flex-wrap justify-center items-center">
                 {otherProducts
                     .map((product, i) => {

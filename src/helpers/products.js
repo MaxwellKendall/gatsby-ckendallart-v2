@@ -74,3 +74,15 @@ export const getDefaultProductImage = (product) => {
     }
     return null;
 }
+
+export const getPrettyPrice = (num) => {
+    console.log('num', num);
+    const cleanNumber = typeof num === 'number'
+        ? `${num.toFixed(2)}`
+        : `${parseInt(num, 10).toFixed(2)}`;
+    if (cleanNumber.split('.')[0].length <= 3) return `$${cleanNumber}`;
+    if (cleanNumber.split('.')[0].length <= 4) return `$${cleanNumber.substring(0,1)},${cleanNumber.substr(1)}`;
+    if (cleanNumber.split('.')[0].length <= 5) return `$${cleanNumber.substring(0,2)},${cleanNumber.substr(2)}`;
+    // selling paintings for 100K? Noice.
+    return cleanNumber;
+}
