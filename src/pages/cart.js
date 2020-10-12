@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react"
 import { Link } from "gatsby"
 import Img from "gatsby-image"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import Modal from 'react-modal';
 
 import CartContext from "../../globalState"
 import Layout from "../components/Layout"
@@ -11,7 +12,7 @@ import {
   updateLineItemsInCart,
 } from "../../client"
 import { uniqueId, delay } from "lodash"
-import { getPrettyPrice, useAllProducts } from "../helpers/products";
+import { getPrettyPrice, useAllProducts, getAfterPaySingleInstallment } from "../helpers/products";
 
 const AddOrRemoveInventoryIcon = ({ isLoading, icon, handler, classNames = '' }) => {
   if (isLoading) {
@@ -20,13 +21,36 @@ const AddOrRemoveInventoryIcon = ({ isLoading, icon, handler, classNames = '' })
   return <FontAwesomeIcon className={classNames} icon={icon} onClick={handler} style={{ color: "#cdbdbd" }} />;
 }
 
+const modalStyles = {
+  content: {
+      display: 'flex',
+      'justifyContent': 'center',
+      'alignItems': 'center',
+      background: 'rgba(0,0,0, 0.05)',
+      height: '100%',
+      width: '100%',
+      border: 'none',
+      top: '0',
+      bottom: '0',
+      right: '0',
+      left: '0',
+  }
+};
+
+Modal.setAppElement('#___gatsby');
+
 const CartPage = ({
-  location
+  location,
+  data: {
+    afterPayImg: { img: afterPayLogo },
+    afterPayPopup: { img: afterPayPopup }
+  }
 }) => {
   const products = useAllProducts();
   const { cart, dispatch } = useContext(CartContext);
   const [loadingState, setLoadingState] = useState('');
   const [isUnavailable, setIsUnavailable] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const removeVariant = (lineItemId, quantity, variantId) => {
     setLoadingState('decrement');
@@ -77,8 +101,6 @@ const CartPage = ({
     return getPrettyPrice(cleanPrice * quantity);
   };
 
-  console.log('cart', cart);
-
   return (
     <Layout pageName="order-summary" location={location} isCheckoutLoading={loadingState === 'checkout'} maxWidth="72rem">
       {isUnavailable && <span>Out of stock! You got the last one! :)</span>}
@@ -121,7 +143,7 @@ const CartPage = ({
                             <Img fixed={responsiveImgs.find(({ imgSize }) => imgSize === 'small' )} />
                           </Link>
                           <div className="flex-col-center mt-2 lg:m-0">
-                            <strong className="text-center self-center w-full">{`${productTitle} (${variantTitle})`}</strong>
+                            <strong className="text-center self-center w-full lg:mx-2">{variantTitle}</strong>
                             <button className="self-center cursor-pointer p-2 lg:p-5 tracking-wider sqrl-pink m-10 text-white rounded-full" onClick={() => removeVariant(lineItemId, 0, variantId)}>REMOVE</button>
                           </div>
                           <div className="flex-col-center lg:hidden">
@@ -161,9 +183,28 @@ const CartPage = ({
       {!cart.loading && (
         <>
           {cart.lineItems.length > 0 && (
-            <span className="text-center text-2xl w-full py-10 mr-5 lg:text-right tracking-wider">
-              SUB TOTAL: {cart.totalPrice && <strong>{getPrettyPrice(cart.totalPrice)}</strong>}
-            </span>
+            <>
+              <span className="text-center text-2xl w-full pt-10 mr-5 lg:text-right tracking-wider">
+                SUB TOTAL: {cart.totalPrice && <strong>{getPrettyPrice(cart.totalPrice)}</strong>}
+              </span>
+              {cart.totalPrice < 1000 && cart.totalPrice >= 35 && (
+                <p className="w-full items-center justify-end pb-10 tracking-wider flex">
+                    or 4 interest-free installments of <strong className="mx-1">{` ${getAfterPaySingleInstallment(cart.totalPrice)} `}</strong> by 
+                    <button className="mx-1 flex-col-center" onClick={() => setIsModalOpen(true)}>
+                        <Img fixed={afterPayLogo.fixed} />
+                    </button>
+                </p>
+              )}
+              {(cart.totalPrice >= 1000 || cart.totalPrice < 35) && (
+                <p className="w-full items-center justify-end pb-10 tracking-wider flex">
+                Interest free installments by 
+                <button className="mx-1 flex-col-center" onClick={() => setIsModalOpen(true)}>
+                    <Img fixed={afterPayLogo.fixed} />
+                </button>
+                available between <strong className="mx-1">{getPrettyPrice(35)}</strong> and <strong className="mx-1">{getPrettyPrice(1000)}</strong>.
+            </p>
+              )}
+            </>
           )}
           {/* <span className="text-center w-full">{`Tax Applied: ${cart.totalTax ? getPrettyPrice(cart.totalTax) : "$0.00"}`}</span> */}
           <div className="w-full m-5 lg:w-3/4 xl:w-1/2 flex-col-center">
@@ -174,8 +215,32 @@ const CartPage = ({
           </div>
         </>
       )}
+      <Modal onRequestClose={() => setIsModalOpen(false)} isOpen={isModalOpen} style={modalStyles}>
+        <div className="w-full flex-col-center h-full" onClick={() => setIsModalOpen(false)}>
+          <Img fixed={afterPayPopup.fixed} />
+        </div>
+      </Modal>
     </Layout>
   )
 }
 
 export default CartPage
+
+export const query = graphql`
+    query GetCart {
+        afterPayImg: file(name: {eq: "afterpay"}) {
+            img: childImageSharp {
+                fixed(width:75) {
+                    ...GatsbyImageSharpFixed
+                }
+            }
+        }
+        afterPayPopup: file(name: {eq: "afterpay-popup"}) {
+            img: childImageSharp {
+                fixed(width:500) {
+                    ...GatsbyImageSharpFixed
+                }
+            }
+        }
+    }
+`;
