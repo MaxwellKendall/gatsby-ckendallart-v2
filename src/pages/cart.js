@@ -13,11 +13,11 @@ import {
 import { uniqueId, delay } from "lodash"
 import { getPrettyPrice, useAllProducts } from "../helpers/products";
 
-const AddOrRemoveInventoryIcon = ({ isLoading, icon, handler }) => {
+const AddOrRemoveInventoryIcon = ({ isLoading, icon, handler, classNames = '' }) => {
   if (isLoading) {
-    return <FontAwesomeIcon icon="spinner" spin className="mx-5" />;
+    return <FontAwesomeIcon className={classNames} icon="spinner" spin style={{ color: "#cdbdbd" }} />;
   }
-  return <FontAwesomeIcon icon={icon} onClick={handler} className="mx-5" />;
+  return <FontAwesomeIcon className={classNames} icon={icon} onClick={handler} style={{ color: "#cdbdbd" }} />;
 }
 
 const CartPage = ({
@@ -80,27 +80,27 @@ const CartPage = ({
   console.log('cart', cart);
 
   return (
-    <Layout pageName="order-summary" location={location} isCheckoutLoading={loadingState === 'checkout'}>
+    <Layout pageName="order-summary" location={location} isCheckoutLoading={loadingState === 'checkout'} maxWidth="72rem">
       {isUnavailable && <span>Out of stock! You got the last one! :)</span>}
       {cart.loading && <h2>Loading ... </h2>}
       {!cart.loading && cart.lineItems.length > 0 && (
-        <table className="w-full sqrl-font-1">
+        <table className="w-full sqrl-font-1 mx-5">
           <thead className="flex w-full">
-            <tr className="w-2/5"></tr>
-            <tr className="w-1/5">
-              <th className="w-full text-center">Price</th>
+            <tr className="w-full lg:w-1/2"></tr>
+            <tr className="w-1/6 hidden lg:flex justify-center">
+              <th className="w-full text-center tracking-wider sqrl-font-1">PRICE</th>
             </tr>
-            <tr className="w-1/5">
-              <th className="w-full text-center">Quantity</th>
+            <tr className="w-1/6 hidden lg:flex justify-center">
+              <th className="w-full text-center tracking-wider sqrl-font-1">QUANTITY</th>
             </tr>
-            <tr className="w-1/5">
-              <th className="w-full text-right">Total</th>
+            <tr className="w-1/6 hidden lg:flex">
+              <th className="w-full text-right tracking-wider sqrl-font-1">TOTAL</th>
             </tr>
           </thead>
           <tbody>
             {cart.lineItems
                 .filter((item) => item.variantId && item.quantity > 0)
-                .map(lineItem => {
+                .map((lineItem, i, src) => {
                   const { variantId, quantity } = lineItem;
                   const { responsiveImgs } = cart.imagesByVariantId[variantId];
                   const lineItemId = getCustomAttributeFromCartByVariantId([lineItem], variantId, 'lineItemId');
@@ -113,32 +113,44 @@ const CartPage = ({
                   const slug = collection.toLowerCase() === 'print'
                     ? `/prints/${handle}`
                     : `/originals/${handle}`;
+                  const isLastRow = (i === src.length - 1);
                   return (
-                    <tr key={uniqueId('')} className="flex w-full py-5">
-                      <td className="w-2/5 flex">
+                    <tr key={uniqueId('')} className={`flex w-full py-5 border-b-2`} style={{ borderColor: "#cdbdbd" }}>
+                      <td className="w-full flex flex-col items-center lg:w-1/2 lg:flex-row">
                         <>
-                          <FontAwesomeIcon icon='times' size="lg" className="self-center cursor-pointer" onClick={() => removeVariant(lineItemId, 0, variantId)} />
                           <Link to={slug} className="flex">
                             <Img fixed={responsiveImgs.find(({ imgSize }) => imgSize === 'small' )} />
-                            <strong className="text-center self-center">{`${productTitle} (${variantTitle})`}</strong>
                           </Link>
-                        </>
-                      </td>
-                      <td className="w-1/5 flex justify-start items-center">
-                        <span className="w-full">
-                            {`${getPrettyPrice(pricePerItem)} each.`}
-                          </span>
-                      </td>
-                      <td className="w-1/5 flex justify-start items-center">
-                        <>
-                          <span className="text-lg text-center">{quantity}</span>
-                          <div className="flex justify-center">
-                            <AddOrRemoveInventoryIcon isLoading={loadingState === 'decrement'} icon='minus-circle' handler={(e) => removeVariant(lineItemId, quantity, variantId)} />
-                            <AddOrRemoveInventoryIcon isLoading={loadingState === 'increment'} icon='plus-circle' handler={(e) => addVariant(lineItemId, quantity, variantId)} />
+                          <div className="flex-col-center mt-2 lg:m-0">
+                            <strong className="text-center self-center w-full">{`${productTitle} (${variantTitle})`}</strong>
+                            <button className="self-center cursor-pointer p-2 lg:p-5 tracking-wider sqrl-pink m-10 text-white rounded-full" onClick={() => removeVariant(lineItemId, 0, variantId)}>REMOVE</button>
+                          </div>
+                          <div className="flex-col-center lg:hidden">
+                            <span>{`${getPrettyPrice(pricePerItem)} each.`}</span>
+                            <div className="flex justify-center items-center pt-2">
+                              <span>{quantity}</span>
+                              <AddOrRemoveInventoryIcon classNames="ml-2" isLoading={loadingState === 'decrement'} icon='minus-circle' handler={(e) => removeVariant(lineItemId, quantity, variantId)} />
+                              <AddOrRemoveInventoryIcon classNames="ml-1"  isLoading={loadingState === 'increment'} icon='plus-circle' handler={(e) => addVariant(lineItemId, quantity, variantId)} />
+                            </div>
+                            <span className="pt-2 font-semibold">{`TOTAL: ${getPriceForCartItem(pricePerItem, quantity)}`}</span>
                           </div>
                         </>
                       </td>
-                      <td className="w-1/5 flex justify-end items-center">
+                      <td className="w-1/6 hidden lg:flex justify-center items-center">
+                        <span className="w-full text-center">
+                            {`${getPrettyPrice(pricePerItem)} each.`}
+                          </span>
+                      </td>
+                      <td className="w-1/6 hidden lg:flex justify-center items-center">
+                        <>
+                          <span className="text-lg text-center">{quantity}</span>
+                          <div className="flex justify-center">
+                            <AddOrRemoveInventoryIcon classNames="ml-2" isLoading={loadingState === 'decrement'} icon='minus-circle' handler={(e) => removeVariant(lineItemId, quantity, variantId)} />
+                            <AddOrRemoveInventoryIcon classNames="ml-1"  isLoading={loadingState === 'increment'} icon='plus-circle' handler={(e) => addVariant(lineItemId, quantity, variantId)} />
+                          </div>
+                        </>
+                      </td>
+                      <td className="w-1/6 hidden lg:flex justify-end items-center">
                         <span className="text-lg text-right">{getPriceForCartItem(pricePerItem, quantity)}</span>
                       </td>
                     </tr>
@@ -149,11 +161,11 @@ const CartPage = ({
       )}
       {!cart.loading && (
         <>
-          {cart.lineItems.length > 0 && <span className="text-right text-2xl font-semibold w-full">{`SUB TOTAL: ${cart.totalPrice ? getPrettyPrice(cart.totalPrice) : "$0.00"}`}</span>}
+          {cart.lineItems.length > 0 && <span className="text-center text-2xl font-semibold w-full py-10 mr-5 lg:text-right">{`SUB TOTAL: ${cart.totalPrice ? getPrettyPrice(cart.totalPrice) : "$0.00"}`}</span>}
           {/* <span className="text-center w-full">{`Tax Applied: ${cart.totalTax ? getPrettyPrice(cart.totalTax) : "$0.00"}`}</span> */}
-          <div className="w-1/2 flex-col-center">
-            {cart.lineItems.length > 0 &&<a className="w-full md:w-1/2 text-center checkout-button font-bold tracking-widest p-10" href={cart.webUrl}>CHECKOUT</a>}
-            <Link to="/originals/" className="w-full md:w-1/2 text-center sqrl-purple mt-5 text-white p-10 tracking-widest">
+          <div className="w-full m-5 lg:w-3/4 xl:w-1/2 flex-col-center">
+            {cart.lineItems.length > 0 &&<a className="w-full md:w-3/4 lg:w-1/2 text-center checkout-button font-bold tracking-widest p-10" href={cart.webUrl}>CHECKOUT</a>}
+            <Link to="/originals/" className="w-full md:w-3/4 lg:w-1/2 text-center sqrl-purple mt-5 text-white p-10 tracking-widest">
               CONTINUE SHOPPING
             </Link>
           </div>
