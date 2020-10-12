@@ -64,14 +64,18 @@ export const Layout = ({
     const { cart, dispatch } = useContext(CartContext);
 
     useEffect(() => {
+        debugger;
         const cartFromStorage = JSON.parse(window.localStorage.getItem(localStorageKey));
         if (cartFromStorage && !cart.id) {
+            // no local cart but we have a reference to the remote cart!
             const ageOfCart = moment.duration(moment().diff(moment(cartFromStorage.timeStamp))).asHours();
             const isCartExpired = ageOfCart > 23.9;
             if (isCartExpired) {
                 window.localStorage.removeItem(localStorageKey);
+                dispatch({ 'type': 'RESET_CART' });
             }
             else {
+                // if the cart isn't expired, fetch it and populate the local state!
                 fetchCart(cartFromStorage.id)
                     .then((payload) => {
                         dispatch({ type: 'INIT_REMOTE_CART', payload, products })
@@ -83,7 +87,12 @@ export const Layout = ({
             }
         }
         else if (cart.id && !cartFromStorage) {
+            // this is an error state, we probably should never get here!
             dispatch({ 'type': 'RESET_CART' });
+        }
+        else {
+            // we already have everything the cart in local state!
+            dispatch({ 'type': 'CLEAR_LOADING' });
         }
 
         return () => window.clearTimeout(confirmationToast)

@@ -64,6 +64,12 @@ export const reducer = (state, action) => {
                 loading: '',
                 error: action.error
             };
+        };
+        case 'CLEAR_LOADING': {
+            return {
+                ...state,
+                loading: '',
+            };
         }
         default: {
             return state;

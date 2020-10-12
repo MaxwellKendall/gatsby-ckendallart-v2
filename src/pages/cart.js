@@ -104,7 +104,7 @@ const CartPage = ({
   return (
     <Layout pageName="order-summary" location={location} isCheckoutLoading={loadingState === 'checkout'} maxWidth="72rem">
       {isUnavailable && <span>Out of stock! You got the last one! :)</span>}
-      {cart.loading && <h2>Loading ... </h2>}
+      {cart.loading && <FontAwesomeIcon icon="spinner" spin />}
       {!cart.loading && cart.lineItems.length > 0 && (
         <table className="w-full sqrl-font-1 mx-5">
           <thead className="flex w-full">
