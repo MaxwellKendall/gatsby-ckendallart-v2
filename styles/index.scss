@@ -168,4 +168,16 @@ body,
             background: #cdbdbd;
         }
     }
+    .cart-has-items {
+        & > span {
+            position: relative;
+            bottom: 35px;
+            padding: 3px 7px;
+            border-radius: 40px;
+            font-size: 12px;
+            background: #cdbdbd;
+            font-weight: bold;
+            right: 10px;
+        }
+    }
 }

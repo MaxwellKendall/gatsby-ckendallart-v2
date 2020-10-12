@@ -22,6 +22,7 @@ import { fetchCart, subscribeToEmail, verifyCaptcha } from '../../client';
 import { useAllProducts } from '../helpers/products';
 import Nav from "./navigation/Nav";
 import MobileNav from "./navigation/MobileNav";
+import { totalItemsInCart } from '../helpers/cart';
 
 library.add(
     faCopyright,
@@ -164,8 +165,8 @@ export const Layout = ({
 
     return (
         <div className="global-container m-auto flex justify-center flex-col min-h-full">
-            <MobileNav itemsInCart={cart.lineItems} activePath={location.pathname} />
-            <Nav itemsInCart={cart.lineItems} activePath={location.pathname} />
+            <MobileNav itemsInCart={totalItemsInCart(cart)} activePath={location.pathname} />
+            <Nav itemsInCart={totalItemsInCart(cart)} activePath={location.pathname} />
             <main
                 style={{ maxWidth }}
                 className={`default-page md:py-8 ${pageName} flex flex-wrap flex-${flexDirection} w-full h-full self-center justify-center flex-grow ${classNames}`}>
@@ -174,15 +175,15 @@ export const Layout = ({
             </main>
             <footer className='flex-shrink-0 p-5 text-center'>
                 {subscribeStatus.showError && (
-                    <p>Hey, {subscribeStatus.emailAddress} is already subscribed!</p>
+                    <p>Hey, {subscribeStatus.emailAddress} is already subscribed! 🙌</p>
                 )}
                 {subscribeStatus.showConfirmation && subscribeStatus.status === 'subscribed' && (
-                    <p>Hey, {subscribeStatus.emailAddress} welcome to the family!</p>
+                    <p>Hey, {subscribeStatus.emailAddress} welcome to the family! 🙌</p>
                 )}
                 {subscribeStatus.showConfirmation && subscribeStatus.status === 'pending' && (
                     <>
-                        <p>Hey, {subscribeStatus.emailAddress} welcome to the family!</p>
-                        <strong>Please respond to our confirmation email and we'll keep you updated!</strong>
+                        <p>Hey, {subscribeStatus.emailAddress} welcome to the family! 🙌</p>
+                        <strong>Please respond to our confirmation email and we'll keep you in the loop!</strong>
                     </>
                 )}
                 <>

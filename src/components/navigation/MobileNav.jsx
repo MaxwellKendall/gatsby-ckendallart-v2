@@ -75,7 +75,7 @@ export default ({
                 <h1 className="text-2xl">CLAIRE KENDALL</h1>
             </Link>
             <Link to='/cart' className={`self-center pr-5`}>
-                <CartIcon numberOfItemsInCart={itemsInCart.length} />
+                <CartIcon numberOfItemsInCart={itemsInCart} />
             </Link>
             {isNotClosed && (
                 <div className={`${expandedClassByToggleState[menuExpandedStatus]} w-full bg-white p-5 fixed z-10`}>
