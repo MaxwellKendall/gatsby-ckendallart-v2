@@ -166,7 +166,7 @@ export const Layout = ({
     return (
         <div className="global-container m-auto flex justify-center flex-col min-h-full">
             <MobileNav itemsInCart={totalItemsInCart(cart)} activePath={location.pathname} />
-            <Nav itemsInCart={totalItemsInCart(cart)} activePath={location.pathname} />
+            <Nav itemsInCart={totalItemsInCart(cart)} activePath={location.pathname} maxWidth={maxWidth} />
             <main
                 style={{ maxWidth }}
                 className={`default-page md:py-8 ${pageName} flex flex-wrap flex-${flexDirection} w-full h-full self-center justify-center flex-grow ${classNames}`}>

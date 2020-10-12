@@ -37,7 +37,7 @@ export default ({
                     const hasVariantForSale = variants.some((({ availableForSale }) => availableForSale));
                     return (
                         <>
-                            <Link to={slug} className="p-5 grid-product-img flex flex-col items-center w-full lg:w-1/2">
+                            <Link to={slug} className="grid-product-img flex flex-col items-center w-full lg:w-1/2">
                                 <div className="relative">
                                     <Img imgRef={imgRef} responsiveImgs={img} imgName={kebabCase(title)} />
                                     {!hasVariantForSale && (
