@@ -4,6 +4,7 @@ import Img from "gatsby-image";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import moment from 'moment';
 import { uniqueId, kebabCase, debounce } from 'lodash';
+import Modal from 'react-modal';
 
 import CartContext from "../../globalState";
 import Layout from "../components/Layout";
@@ -16,7 +17,7 @@ import {
     getInventoryDetails
 } from '../helpers';
 import { initCheckout, addLineItemsToCart, updateLineItemsInCart } from '../../client';
-import { getPrettyPrice, useAllProducts } from '../helpers/products';
+import { getAfterPaySingleInstallment, getPrettyPrice, useAllProducts } from '../helpers/products';
 import { getResponsiveImages, getServerSideMediaQueries } from '../helpers/img';
 
 const isSSR = (typeof window === 'undefined');
@@ -30,6 +31,24 @@ const getLowestPrice = (otherProducts) => {
             return currentPrice;
         }, null);
 }
+
+const modalStyles = {
+    content: {
+        display: 'flex',
+        'justifyContent': 'center',
+        'alignItems': 'center',
+        background: 'rgba(0,0,0, 0.05)',
+        height: '100%',
+        width: '100%',
+        border: 'none',
+        top: '0',
+        bottom: '0',
+        right: '0',
+        left: '0',
+    }
+};
+
+Modal.setAppElement('#___gatsby');
 
 const initialDimensionsState = {
     top: 0,
@@ -48,7 +67,9 @@ export default ({
     data: { 
         shopifyProduct: product,
         productImages,
-        otherImagesInCollection
+        otherImagesInCollection,
+        afterPayImg: { img: afterPayLogo },
+        afterPayPopup: { img: afterPayPopup }
     },
     location
 }) => {
@@ -62,6 +83,7 @@ export default ({
     const [remainingInventory, setRemainingInventory] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [isZoomed, setIsZoomed] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [hoverImageDimensions, setHoverImageDimensions] = useState(initialDimensionsState);
     const [magnifyDimensions, setMagnifyDimensions] = useState(initialDimensionsState);
     const imgRef = useRef(null);
@@ -219,7 +241,7 @@ export default ({
             product.handle !== handle
         ))
         .slice(0, 3)
-
+console.log('isModalOpen', isModalOpen)
     return (
         <Layout pageName="product-page" flexDirection="row" classNames="flex-wrap sqrl-grey" maxWidth="100rem" location={location}>
             <h2 className="text-xl tracking-wide text-center w-full my-4 md:text-2xl lg:text-4xl lg:hidden">{title}</h2>
@@ -269,8 +291,16 @@ export default ({
             )}
             <div className="product-desc flex flex-col items-center self-center w-full mt-5 lg:w-1/4 xl:w-1/3 lg:mr-5 lg:my-0">
                 <h2 className="hidden lg:inline text-4xl tracking-wide text-center">{title}</h2>
-                {!isSoldOut && <p className="lg:inline text-2xl py-4 lg:py-10 tracking-widest">{getPrettyPrice(selectedVariant.price)}</p>}
-                {high !== low && <p className="lg:flex text-sm italic">{`from ${getPrettyPrice(low)} to ${getPrettyPrice(high)}`}</p>}
+                {!isSoldOut && <p className="lg:inline text-2xl py-4 tracking-widest">{getPrettyPrice(selectedVariant.price)}</p>}
+                {high !== low && !isSoldOut && <p className="lg:flex text-sm italic">{`from ${getPrettyPrice(low)} to ${getPrettyPrice(high)}`}</p>}
+                {!isSoldOut && selectedVariant.price >= 35  && (
+                    <p className="items-center tracking-wider flex">
+                        or 4 interest-free installments of <strong className="mx-1">{` ${getAfterPaySingleInstallment(selectedVariant.price)} `}</strong> by 
+                        <button className="mx-1 flex-col-center" onClick={() => setIsModalOpen(true)}>
+                            <Img  fixed={afterPayLogo.fixed} />
+                        </button>
+                    </p>
+                )}
                 <div className="actions w-full flex flex-col my-5 justify-start items-center">
                     <button
                         className="border text-white border-black w-64 py-5 px-2 text-xl uppercase mb-2 self-center sqrl-purple"
@@ -309,6 +339,11 @@ export default ({
                     })
                 }
             </ul>
+            <Modal onRequestClose={() => setIsModalOpen(false)} isOpen={isModalOpen} style={modalStyles}>
+                <div className="w-full flex-col-center h-full" onClick={() => setIsModalOpen(false)}>
+                    <Img fixed={afterPayPopup.fixed} />
+                </div>
+            </Modal>
         </Layout>
     );
 };
@@ -415,6 +450,20 @@ export const query = graphql`
                             }
                         }
                     }
+                }
+            }
+        }
+        afterPayImg: file(name: {eq: "afterpay"}) {
+            img: childImageSharp {
+                fixed(width:75) {
+                    ...GatsbyImageSharpFixed
+                }
+            }
+        }
+        afterPayPopup: file(name: {eq: "afterpay-popup"}) {
+            img: childImageSharp {
+                fixed(width:500) {
+                    ...GatsbyImageSharpFixed
                 }
             }
         }

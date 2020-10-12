@@ -86,3 +86,7 @@ export const getPrettyPrice = (num) => {
     // selling paintings for 100K? Noice.
     return cleanNumber;
 }
+
+export const getAfterPaySingleInstallment = (price) => {
+    return getPrettyPrice(price / 4);
+};
