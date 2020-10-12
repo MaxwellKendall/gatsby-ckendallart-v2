@@ -294,7 +294,7 @@ console.log('isModalOpen', isModalOpen)
                 {!isSoldOut && <p className="lg:inline text-2xl py-4 tracking-widest">{getPrettyPrice(selectedVariant.price)}</p>}
                 {high !== low && !isSoldOut && <p className="lg:flex text-sm italic">{`from ${getPrettyPrice(low)} to ${getPrettyPrice(high)}`}</p>}
                 {!isSoldOut && selectedVariant.price >= 35 && selectedVariant.price < 1000 && (
-                    <p className="items-center tracking-wider flex">
+                    <p className="items-center tracking-wider flex flex-wrap justify-center flex-wrap">
                         or 4 interest-free installments of <strong className="mx-1">{` ${getAfterPaySingleInstallment(selectedVariant.price)} `}</strong> by 
                         <button className="mx-1 flex-col-center" onClick={() => setIsModalOpen(true)}>
                             <Img  fixed={afterPayLogo.fixed} />
@@ -350,7 +350,7 @@ console.log('isModalOpen', isModalOpen)
             </ul>
             <Modal onRequestClose={() => setIsModalOpen(false)} isOpen={isModalOpen} style={modalStyles}>
                 <div className="w-full flex-col-center h-full" onClick={() => setIsModalOpen(false)}>
-                    <Img fixed={afterPayPopup.fixed} />
+                    <Img className="w-full" fluid={afterPayPopup.fluid} />
                 </div>
             </Modal>
         </Layout>
@@ -471,8 +471,8 @@ export const query = graphql`
         }
         afterPayPopup: file(name: {eq: "afterpay-popup"}) {
             img: childImageSharp {
-                fixed(width:500) {
-                    ...GatsbyImageSharpFixed
+                fluid(maxWidth:500) {
+                    ...GatsbyImageSharpFluid
                 }
             }
         }
