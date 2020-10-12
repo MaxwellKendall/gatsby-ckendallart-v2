@@ -33,7 +33,7 @@ export default () => {
         `
     )
     return (
-        <div className="py-12 md:py-24 flex align-center w-full">
+        <div className="py-12 lg:py-24 flex align-center w-full">
             <Arrow onClick={previousReferral} direction="left"/>
             <p className="self-center text-center w-4/6 script-font tracking-wide text-4xl opacity-75 md:text-left">
                 {referrals[activeReferral]}
