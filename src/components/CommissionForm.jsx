@@ -130,8 +130,8 @@ export default ({}) => {
               placeholder={placeHolderByFieldName.phone}
               onChange={e => handleUpdate(e, "phone")} />
           </div>
-          <legend className="ml-2 mr-2 border-b-2 bg-transparent text-black border-solid border-black" htmlFor="canvas">CONTACT METHOD:</legend>
-          <label className="my-auto mr-2" htmlFor="preferredContact1">EMAIL</label>
+          <legend className="mx-auto ml-2 md:mr-2 border-b-2 bg-transparent text-black border-solid border-black" htmlFor="canvas">CONTACT METHOD:</legend>
+          <label className="my-auto ml-1 mr-1" htmlFor="preferredContact1">EMAIL</label>
           <input
             className="my-auto"
             id="preferredContact1"
@@ -190,7 +190,7 @@ export default ({}) => {
         </div>
         <h3 className="ml-2 py-4 tracking-widest w-full">TELL ME MORE:</h3>
         <textarea
-          className="mx-2 border-solid border-black border-2 w-full"
+          className="mx-2 border-solid border-black border-2 w-11/12 md:w-full"
           name="details"
           id=""
           rows="10"

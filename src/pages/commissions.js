@@ -25,7 +25,6 @@ const getActiveImgDimensions = (commissions, activeIndex) => {
 
 const CarouselContainer = ({ slide, onSlideChange }) => {
     useEffect(() => {
-        console.log('slide', slide);
         onSlideChange(slide);
     }, [slide]);
 
