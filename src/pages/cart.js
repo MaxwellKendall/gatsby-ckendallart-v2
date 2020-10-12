@@ -197,12 +197,12 @@ const CartPage = ({
               )}
               {(cart.totalPrice >= 1000 || cart.totalPrice < 35) && (
                 <p className="w-full items-center justify-end pb-10 tracking-wider flex">
-                Interest free installments by 
-                <button className="mx-1 flex-col-center" onClick={() => setIsModalOpen(true)}>
-                    <Img fixed={afterPayLogo.fixed} />
-                </button>
-                available between <strong className="mx-1">{getPrettyPrice(35)}</strong> and <strong className="mx-1">{getPrettyPrice(1000)}</strong>.
-            </p>
+                  Interest free installments by 
+                  <button className="mx-1 flex-col-center" onClick={() => setIsModalOpen(true)}>
+                      <Img fixed={afterPayLogo.fixed} />
+                  </button>
+                  available between <strong className="mx-1">{getPrettyPrice(35)}</strong> and <strong className="mx-1">{getPrettyPrice(1000)}</strong>.
+              </p>
               )}
             </>
           )}

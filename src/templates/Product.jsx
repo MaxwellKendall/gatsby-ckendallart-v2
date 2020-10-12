@@ -293,12 +293,21 @@ console.log('isModalOpen', isModalOpen)
                 <h2 className="hidden lg:inline text-4xl tracking-wide text-center">{title}</h2>
                 {!isSoldOut && <p className="lg:inline text-2xl py-4 tracking-widest">{getPrettyPrice(selectedVariant.price)}</p>}
                 {high !== low && !isSoldOut && <p className="lg:flex text-sm italic">{`from ${getPrettyPrice(low)} to ${getPrettyPrice(high)}`}</p>}
-                {!isSoldOut && selectedVariant.price >= 35  && (
+                {!isSoldOut && selectedVariant.price >= 35 && selectedVariant.price < 1000 && (
                     <p className="items-center tracking-wider flex">
                         or 4 interest-free installments of <strong className="mx-1">{` ${getAfterPaySingleInstallment(selectedVariant.price)} `}</strong> by 
                         <button className="mx-1 flex-col-center" onClick={() => setIsModalOpen(true)}>
                             <Img  fixed={afterPayLogo.fixed} />
                         </button>
+                    </p>
+                )}
+                {!isSoldOut && (selectedVariant.price < 35 || selectedVariant.price >= 1000) && (
+                    <p className="flex justify-center w-full flex-wrap align-center tracking-wider">
+                        Interest free installments by 
+                        <button className="mx-1 flex items-center" onClick={() => setIsModalOpen(true)}>
+                            <Img fixed={afterPayLogo.fixed} />
+                        </button>
+                        available between <strong className="mx-1">{getPrettyPrice(35)}</strong> and <strong className="mx-1">{getPrettyPrice(1000)}</strong>.
                     </p>
                 )}
                 <div className="actions w-full flex flex-col my-5 justify-start items-center">
