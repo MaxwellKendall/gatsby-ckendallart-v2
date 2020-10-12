@@ -188,7 +188,7 @@ const CartPage = ({
                 SUB TOTAL: {cart.totalPrice && <strong>{getPrettyPrice(cart.totalPrice)}</strong>}
               </span>
               {cart.totalPrice < 1000 && cart.totalPrice >= 35 && (
-                <p className="w-full items-center justify-end pb-10 tracking-wider flex">
+                <p className="w-full items-center justify-center lg:justify-end pb-10 tracking-wider flex flex-wrap">
                     or 4 interest-free installments of <strong className="mx-1">{` ${getAfterPaySingleInstallment(cart.totalPrice)} `}</strong> by 
                     <button className="mx-1 flex-col-center" onClick={() => setIsModalOpen(true)}>
                         <Img fixed={afterPayLogo.fixed} />
@@ -196,7 +196,7 @@ const CartPage = ({
                 </p>
               )}
               {(cart.totalPrice >= 1000 || cart.totalPrice < 35) && (
-                <p className="w-full items-center justify-end pb-10 tracking-wider flex">
+                <p className="w-full items-center justify-center lg:justify-end pb-10 tracking-wider flex flex-wrap">
                   Interest free installments by 
                   <button className="mx-1 flex-col-center" onClick={() => setIsModalOpen(true)}>
                       <Img fixed={afterPayLogo.fixed} />
@@ -217,7 +217,7 @@ const CartPage = ({
       )}
       <Modal onRequestClose={() => setIsModalOpen(false)} isOpen={isModalOpen} style={modalStyles}>
         <div className="w-full flex-col-center h-full" onClick={() => setIsModalOpen(false)}>
-          <Img fixed={afterPayPopup.fixed} />
+          <Img className="w-full" fluid={afterPayPopup.fluid} />
         </div>
       </Modal>
     </Layout>
@@ -237,8 +237,8 @@ export const query = graphql`
         }
         afterPayPopup: file(name: {eq: "afterpay-popup"}) {
             img: childImageSharp {
-                fixed(width:500) {
-                    ...GatsbyImageSharpFixed
+                fluid(maxWidth:500) {
+                    ...GatsbyImageSharpFluid
                 }
             }
         }
