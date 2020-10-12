@@ -222,11 +222,11 @@ export default ({
 
     return (
         <Layout pageName="product-page" flexDirection="row" classNames="flex-wrap sqrl-grey" maxWidth="100rem" location={location}>
-            <h2 className="text-xl md:text-2xl lg:text-4xl tracking-wide text-center w-full lg:hidden">{title}</h2>
+            <h2 className="text-xl tracking-wide text-center w-full my-4 md:my-0 md:text-2xl lg:text-4xl lg:hidden">{title}</h2>
             <p className="text-lg py-2 md:text-xl lg:text-2xl lg:py-10 tracking-widest w-full text-center lg:hidden">{getPrettyPrice(selectedVariant.price)}</p>
-            {high !== low && <p className="text-sm italic lg:hidden">{`from ${getPrettyPrice(low)} to ${getPrettyPrice(high)}`}</p>}
+            {high !== low && <p className="my-4 text-sm italic lg:hidden">{`from ${getPrettyPrice(low)} to ${getPrettyPrice(high)}`}</p>}
             {selectedVariant.img && (
-                <div className="md:mx-5">
+                <div className="md:mx-5 lg:w-3/5">
                     <div className="flex justify-center mb-4">
                         <style>{getServerSideMediaQueries(selectedImg.responsiveImgs, ".product-img img")}</style>
                         <Img
@@ -260,7 +260,7 @@ export default ({
                                 transform: 'transition all ease-in'
                             }} />
                     </div>
-                    <ul className="flex justify-start flex-wrap w-full">
+                    <ul className="flex justify-center flex-wrap w-full">
                         {productImages.nodes.map(({ thumbnail }, i) => (
                             <li className="mr-2" onClick={(e) => handleProductImgClick(e, i)}>
                                 <Img fixed={thumbnail.fixed} />
@@ -269,7 +269,7 @@ export default ({
                     </ul>
                 </div>
             )}
-            <div className="product-desc flex flex-col items-center w-full my-5 lg:w-1/4 xl:w-1/3 lg:mr-5 lg:my-0">
+            <div className="product-desc flex flex-col items-center w-full mt-5 lg:w-1/4 xl:w-1/3 lg:mr-5 lg:my-0">
                 <h2 className="hidden lg:inline text-4xl tracking-wide text-center">{title}</h2>
                 <p className="hidden lg:inline text-2xl py-10 tracking-widest">{getPrettyPrice(selectedVariant.price)}</p>
                 {high !== low && <p className="hidden lg:flex text-sm italic">{`from ${getPrettyPrice(low)} to ${getPrettyPrice(high)}`}</p>}
