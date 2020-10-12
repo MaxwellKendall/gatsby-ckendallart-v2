@@ -74,7 +74,7 @@ export default ({
             <Link to='/' className={`mx-auto`}>
                 <h1 className="text-2xl">CLAIRE KENDALL</h1>
             </Link>
-            <Link to='/cart' className={`self-center`}>
+            <Link to='/cart' className={`self-center mr-2`}>
                 <CartIcon numberOfItemsInCart={itemsInCart} />
             </Link>
             {isNotClosed && (

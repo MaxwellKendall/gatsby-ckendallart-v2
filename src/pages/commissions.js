@@ -43,6 +43,8 @@ export default ({
 }) => {
     const [activeSlideIndex, setActiveSlideIndex] = useState(0);
     const [imgDimensions, setImgDimensions] = useState({});
+    const [requestStatus, setRequestStatus] = useState("pristine")
+
     const commissionsWithRef = commissions.map((obj) => ({ ...obj, ref: useRef() }));
 
     useEffect(() => {
@@ -87,16 +89,18 @@ export default ({
                             }
                         </Slider>
                     </>
-                    <ButtonBack className="hidden md:flex items-center order-1 p-2 text-2xl mx-4">
+                    <ButtonBack className="md:flex items-center order-1 p-2 text-2xl mx-4">
                         <span value='back'>{`<`}</span>
                     </ButtonBack>
-                    <ButtonNext className="hidden md:flex items-center order-3 p-2 text-2xl mx-4">
+                    <ButtonNext className="md:flex items-center order-3 p-2 text-2xl mx-4">
                         <span value='next'>{`>`}</span>
                     </ButtonNext>
                 </CarouselProvider>
             </div>
-            <h2 className="w-full text-center tracking-widest text-3xl py-12">LET'S GET STARTED:</h2>
-            <CommissionForm />
+            <h2 className="w-full text-center tracking-widest text-3xl py-12">
+                LET'S GET STARTED:
+            </h2>
+            <CommissionForm requestStatus={requestStatus} setRequestStatus={setRequestStatus} />
             <ReferralCarousel />
         </Layout>
     );

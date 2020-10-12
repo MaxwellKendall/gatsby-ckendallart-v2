@@ -1,7 +1,6 @@
 import React, { useState, useRef } from "react"
-import Img from "gatsby-image"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import Layout from "../components/Layout"
 import { requestCommission } from "../../client"
 import { getFileAsBase64String } from "../helpers/img"
 
@@ -42,13 +41,16 @@ const estimatedPriceBasedOnSize = {
   Other: 0,
 }
 
-export default ({}) => {
+export default ({
+  requestStatus,
+  setRequestStatus
+}) => {
   const [values, setValues] = useState(emptyFormState)
-  const [requestStatus, setRequestStatus] = useState("pristine")
   const form = useRef(null)
   const file = useRef(null)
   const handleUpdate = (e, field) => {
     e.persist();
+    if (requestStatus !== 'pristine') setRequestStatus('pristine')
     if (field === 'file') {
       setValues({
         ...values,
@@ -97,18 +99,20 @@ export default ({}) => {
       })
   }
 
-  const isDisabled =
+  const isDisabled = (
     !values.name ||
     (values.preferredContact === "email" && !values.email) ||
     (values.preferredContact === "phone" && !values.phone) ||
+    requestStatus === "success" ||
     requestStatus === "loading"
+  )
 
   return (
     <div className="commission-form flex flex-col justify-center items-center w-full">
       <form ref={form} className="flex-col-center justify-center w-full md:w-3/4 xl:w-1/3">
         <div className="flex flex-wrap w-full pt-12 pb-4 text-center justify-center md:justify-start">
           <input
-            className="ml-2 border-b-2 bg-transparent text-black border-solid border-black mr-auto md:mr-0"
+            className="ml-4 focus:bg-gray-300 border-b-2 bg-transparent text-black border-solid border-black mr-auto md:mr-0"
             name="name"
             type="text"
             value={values.name}
@@ -116,21 +120,21 @@ export default ({}) => {
             onChange={e => handleUpdate(e, "name")} />
           <div className="w-full pb-8 md:py-8 flex flex-wrap md:justify-center md:justify-start">
             <input
-                className="ml-2 pt-8 md:pt-0 mr-2 border-b-2 bg-transparent text-black border-solid border-black md:self-start"
+                className="ml-4 mt-8 focus:bg-gray-300 md:pt-0 mr-2 border-b-2 bg-transparent text-black border-solid border-black md:self-start"
                 name="email"
                 type="email"
                 value={values.email}
                 placeholder={placeHolderByFieldName.email}
                 onChange={e => handleUpdate(e, "email")} />
             <input
-              className="ml-2 pt-8 md:pt-0 md:ml-0 border-b-2 bg-transparent text-black border-solid border-black md:self-end md:ml-auto"
+              className="ml-4 mt-8 focus:bg-gray-300 md:pt-0 md:ml-0 border-b-2 bg-transparent text-black border-solid border-black md:self-end md:ml-auto"
               name="phone"
               type="tel"
               value={values.phone}
               placeholder={placeHolderByFieldName.phone}
               onChange={e => handleUpdate(e, "phone")} />
           </div>
-          <legend className="mx-auto ml-2 md:mr-2 border-b-2 bg-transparent text-black border-solid border-black" htmlFor="canvas">CONTACT METHOD:</legend>
+          <legend className="mx-auto ml-4 md:mr-2 border-b-2 bg-transparent text-black border-solid border-black" htmlFor="canvas">CONTACT METHOD:</legend>
           <label className="my-auto ml-1 mr-1" htmlFor="preferredContact1">EMAIL</label>
           <input
             className="my-auto"
@@ -151,14 +155,14 @@ export default ({}) => {
             onChange={e => handleUpdate(e, "preferredContact")} />
             <div className="pt-8 pb-2 w-full flex">
               <input
-                className="ml-2 border-b-2 bg-transparent text-black border-solid border-black md:justify-self-start"
-                name="name"
+                className="ml-4 focus:bg-gray-300 border-b-2 bg-transparent text-black border-solid border-black md:justify-self-start"
+                name="budget"
                 type="text"
-                value={values.name}
+                value={values.budget}
                 placeholder={placeHolderByFieldName.budget}
-                onChange={e => handleUpdate(e, "name")} />
+                onChange={e => handleUpdate(e, "budget")} />
               <select
-                className="ml-2 mr-auto bg-transparent"
+                className="ml-4 mr-auto bg-transparent"
                 id="canvas"
                 name="canvas"
                 value={values.canvas}
@@ -183,12 +187,12 @@ export default ({}) => {
         </div>
         <div className="flex flex-wrap w-full justify-center">
           <input
-            className="ml-2 flex md:self-start bg-transparent text-black w-full border-0"
+            className="ml-4 flex md:self-start bg-transparent text-black w-full border-0"
             ref={file}
             name="attachment"
             type="file" />
         </div>
-        <h3 className="ml-2 py-4 tracking-widest w-full">TELL ME MORE:</h3>
+        <h3 className="ml-4 py-4 tracking-widest w-full">TELL ME MORE:</h3>
         <textarea
           className="mx-2 border-solid border-black border-2 w-11/12 md:w-full"
           name="details"
@@ -206,8 +210,17 @@ export default ({}) => {
           isDisabled ? "cursor-not-allowed" : "cursor-pointer"
         } py-4 px-6 m-5 tracking-widest text-xl text-white sqrl-purple w-3/4 md:w-auto`}
       >
-        SUBMIT
+        {requestStatus === 'loading' && <><FontAwesomeIcon icon="spinner" spin /> LOADING...</>}
+        {requestStatus === 'success' && 'SUBMITTED!'}
+        {requestStatus === 'pristine' && 'SUBMIT'}
+        {requestStatus === 'error' && 'PLEASE TRY AGAIN!'}
       </button>
+      {requestStatus === 'success' && (
+          <span className="my-2">Your request has been received! We will reach out within 2-3 business days!</span>
+      )}
+      {requestStatus === 'error' && (
+          <span className="my-2">Oops! Something went wrong with your request! Please try again or reach me directly via email at <a href="mailto:info@ckendallart.com">info@ckendallart.com</a>.</span>
+      )}
     </div>
   )
 }

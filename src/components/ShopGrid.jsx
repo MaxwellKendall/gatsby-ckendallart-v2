@@ -37,7 +37,7 @@ export default ({
                     const hasVariantForSale = variants.some((({ availableForSale }) => availableForSale));
                     return (
                         <>
-                            <Link to={slug} className="grid-product-img flex flex-col items-center w-full lg:w-1/2">
+                            <Link to={slug} className="grid-product-img flex flex-col items-center w-full lg:w-1/2 my-4">
                                 <div className="relative">
                                     <Img imgRef={imgRef} responsiveImgs={img} imgName={kebabCase(title)} />
                                     {!hasVariantForSale && (
@@ -48,7 +48,7 @@ export default ({
                                         </span>
                                     )}
                                     <span
-                                        className="opacity-0 product-info font-semibold text-base md:text-xl py-5 mb-5 bottom-0 absolute flex flex-wrap items-center justify-center bg-gray-300 tracking-widest text-center w-full"
+                                        className="hidden md:flex  opacity-0 product-info font-semibold text-base md:text-xl py-5 mb-5 bottom-0 absolute flex-wrap items-center justify-center bg-gray-300 tracking-widest text-center w-full"
                                         style={{ ...titleDimensions, marginBottom: '7px' }}>
                                             {title.toUpperCase()}
                                             {hasVariantForSale && variants.length > 1 && <span className="w-full text-center">from {getPrettyPrice(lowestPrice)}</span>}

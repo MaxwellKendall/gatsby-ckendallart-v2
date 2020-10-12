@@ -222,9 +222,7 @@ export default ({
 
     return (
         <Layout pageName="product-page" flexDirection="row" classNames="flex-wrap sqrl-grey" maxWidth="100rem" location={location}>
-            <h2 className="text-xl tracking-wide text-center w-full my-4 md:my-0 md:text-2xl lg:text-4xl lg:hidden">{title}</h2>
-            <p className="text-lg py-2 md:text-xl lg:text-2xl lg:py-10 tracking-widest w-full text-center lg:hidden">{getPrettyPrice(selectedVariant.price)}</p>
-            {high !== low && <p className="my-4 text-sm italic lg:hidden">{`from ${getPrettyPrice(low)} to ${getPrettyPrice(high)}`}</p>}
+            <h2 className="text-xl tracking-wide text-center w-full my-4 md:text-2xl lg:text-4xl lg:hidden">{title}</h2>
             {selectedVariant.img && (
                 <div className="md:mx-5 lg:w-3/5">
                     <div className="flex justify-center mb-4">
@@ -269,10 +267,10 @@ export default ({
                     </ul>
                 </div>
             )}
-            <div className="product-desc flex flex-col items-center w-full mt-5 lg:w-1/4 xl:w-1/3 lg:mr-5 lg:my-0">
+            <div className="product-desc flex flex-col items-center self-center w-full mt-5 lg:w-1/4 xl:w-1/3 lg:mr-5 lg:my-0">
                 <h2 className="hidden lg:inline text-4xl tracking-wide text-center">{title}</h2>
-                <p className="hidden lg:inline text-2xl py-10 tracking-widest">{getPrettyPrice(selectedVariant.price)}</p>
-                {high !== low && <p className="hidden lg:flex text-sm italic">{`from ${getPrettyPrice(low)} to ${getPrettyPrice(high)}`}</p>}
+                {!isSoldOut && <p className="lg:inline text-2xl py-4 lg:py-10 tracking-widest">{getPrettyPrice(selectedVariant.price)}</p>}
+                {high !== low && <p className="lg:flex text-sm italic">{`from ${getPrettyPrice(low)} to ${getPrettyPrice(high)}`}</p>}
                 <div className="actions w-full flex flex-col my-5 justify-start items-center">
                     <button
                         className="border text-white border-black w-64 py-5 px-2 text-xl uppercase mb-2 self-center sqrl-purple"
