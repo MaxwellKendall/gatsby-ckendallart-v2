@@ -7,7 +7,7 @@ import { usePages } from "../../helpers/navigation";
 export const CartIcon = ({
     numberOfItemsInCart
 }) => (
-    <div className={numberOfItemsInCart > 0 ? 'cart-has-items' : 'empty-cart'}>
+    <div className={numberOfItemsInCart > 0 ? 'cart-has-items flex md:block' : 'empty-cart pr-5'}>
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fillRule="evenodd" clipRule="evenodd">
             <path d="M13.5 21c-.276 0-.5-.224-.5-.5s.224-.5.5-.5.5.224.5.5-.224.5-.5.5m0-2c-.828 0-1.5.672-1.5 1.5s.672 1.5 1.5 1.5 1.5-.672 1.5-1.5-.672-1.5-1.5-1.5m-6 2c-.276 0-.5-.224-.5-.5s.224-.5.5-.5.5.224.5.5-.224.5-.5.5m0-2c-.828 0-1.5.672-1.5 1.5s.672 1.5 1.5 1.5 1.5-.672 1.5-1.5-.672-1.5-1.5-1.5m16.5-16h-2.964l-3.642 15h-13.321l-4.073-13.003h19.522l.728-2.997h3.75v1zm-22.581 2.997l3.393 11.003h11.794l2.674-11.003h-17.861z" />
         </svg>
@@ -52,8 +52,8 @@ export const ExpandableMenuIcon = ({
 
     if (expanded) {
         return (
-            <li className={`p-2 mt-10 md:mt-2 md:mx-4 md:relative text-xl md:text-lg ${isActive ? 'sqrl-active-link' : '' }`}>
-                <button onClick={toggleExpand} className={`focus:outline-none flex items-start w-full justify-center md:justify-evenly`}>
+            <li className={`p-2 mt-10 md:mt-2 md:mx-4 md:relative text-xl md:text-lg`}>
+                <button onClick={toggleExpand} className={`focus:outline-none flex items-start mx-auto justify-center md:justify-evenly ${isActive ? 'sqrl-active-link' : '' }`}>
                     <span className="mr-2">{name.toUpperCase()}</span>
                     <MinusIcon />
                 </button>
@@ -70,8 +70,8 @@ export const ExpandableMenuIcon = ({
         );
     }
     return (
-        <li className={`p-2 mt-10 md:mt-2 md:mx-4 text-xl md:text-lg ${isActive ? 'sqrl-active-link-shop' : '' }`}>
-            <button onClick={toggleExpand} className={`focus:outline-none flex items-center w-full justify-center md:items-center md:justify-evenly`}>
+        <li className={`p-2 mt-10 md:mt-2 md:mx-4 text-xl md:text-lg`}>
+            <button onClick={toggleExpand} className={`focus:outline-none flex items-center mx-auto justify-center md:items-center md:justify-evenly ${isActive ? 'sqrl-active-link-shop' : '' }`}>
                 <span className="mr-2">{name.toUpperCase()}</span>
                 <PlusIcon />
             </button>

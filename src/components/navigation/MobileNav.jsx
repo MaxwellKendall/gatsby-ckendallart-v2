@@ -69,12 +69,12 @@ export default ({
     const isNotClosed = (menuExpandedStatus === 'closing' || menuExpandedStatus === 'open');
 
     return (
-        <header className="flex py-5 md:hidden">
+        <header className="flex py-5 items-center md:hidden">
             <NavIcon isNotClosed={isNotClosed} onClick={toggleMenuWithDelayedClose} classNames={`pl-5`} />      
             <Link to='/' className={`mx-auto`}>
                 <h1 className="text-2xl">CLAIRE KENDALL</h1>
             </Link>
-            <Link to='/cart' className={`self-center pr-5`}>
+            <Link to='/cart' className={`self-center`}>
                 <CartIcon numberOfItemsInCart={itemsInCart} />
             </Link>
             {isNotClosed && (

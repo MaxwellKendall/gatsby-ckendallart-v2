@@ -171,13 +171,23 @@ body,
     .cart-has-items {
         & > span {
             position: relative;
-            bottom: 35px;
-            padding: 3px 7px;
+            padding: 3px 8px;
             border-radius: 40px;
             font-size: 12px;
             background: #cdbdbd;
             font-weight: bold;
-            right: 10px;
+            right: 35px;
+            bottom: 12px;
+            @media(min-width: $tablet) {
+                position: relative;
+                bottom: 35px;
+                padding: 3px 7px;
+                border-radius: 40px;
+                font-size: 12px;
+                background: #cdbdbd;
+                font-weight: bold;
+                right: 10px;
+            }
         }
     }
 }
