@@ -113,7 +113,6 @@ const CartPage = ({
                   const slug = collection.toLowerCase() === 'print'
                     ? `/prints/${handle}`
                     : `/originals/${handle}`;
-                  const isLastRow = (i === src.length - 1);
                   return (
                     <tr key={uniqueId('')} className={`flex w-full py-5 border-b-2`} style={{ borderColor: "#cdbdbd" }}>
                       <td className="w-full flex flex-col items-center lg:w-1/2 lg:flex-row">
@@ -132,13 +131,13 @@ const CartPage = ({
                               <AddOrRemoveInventoryIcon classNames="ml-2" isLoading={loadingState === 'decrement'} icon='minus-circle' handler={(e) => removeVariant(lineItemId, quantity, variantId)} />
                               <AddOrRemoveInventoryIcon classNames="ml-1"  isLoading={loadingState === 'increment'} icon='plus-circle' handler={(e) => addVariant(lineItemId, quantity, variantId)} />
                             </div>
-                            <span className="pt-2 font-semibold">{`TOTAL: ${getPriceForCartItem(pricePerItem, quantity)}`}</span>
+                            <span className="pt-2">{`TOTAL: ${getPriceForCartItem(pricePerItem, quantity)}`}</span>
                           </div>
                         </>
                       </td>
                       <td className="w-1/6 hidden lg:flex justify-center items-center">
-                        <span className="w-full text-center">
-                            {`${getPrettyPrice(pricePerItem)} each.`}
+                        <span className="w-full text-center tracking-wider">
+                            {`${getPrettyPrice(pricePerItem)} each`}
                           </span>
                       </td>
                       <td className="w-1/6 hidden lg:flex justify-center items-center">
@@ -150,7 +149,7 @@ const CartPage = ({
                           </div>
                         </>
                       </td>
-                      <td className="w-1/6 hidden lg:flex justify-end items-center">
+                      <td className="w-1/6 hidden lg:flex justify-end items-center tracking-wider">
                         <span className="text-lg text-right">{getPriceForCartItem(pricePerItem, quantity)}</span>
                       </td>
                     </tr>
@@ -161,7 +160,11 @@ const CartPage = ({
       )}
       {!cart.loading && (
         <>
-          {cart.lineItems.length > 0 && <span className="text-center text-2xl font-semibold w-full py-10 mr-5 lg:text-right">{`SUB TOTAL: ${cart.totalPrice ? getPrettyPrice(cart.totalPrice) : "$0.00"}`}</span>}
+          {cart.lineItems.length > 0 && (
+            <span className="text-center text-2xl w-full py-10 mr-5 lg:text-right tracking-wider">
+              SUB TOTAL: {cart.totalPrice && <strong>{getPrettyPrice(cart.totalPrice)}</strong>}
+            </span>
+          )}
           {/* <span className="text-center w-full">{`Tax Applied: ${cart.totalTax ? getPrettyPrice(cart.totalTax) : "$0.00"}`}</span> */}
           <div className="w-full m-5 lg:w-3/4 xl:w-1/2 flex-col-center">
             {cart.lineItems.length > 0 &&<a className="w-full md:w-3/4 lg:w-1/2 text-center checkout-button font-bold tracking-widest p-10" href={cart.webUrl}>CHECKOUT</a>}

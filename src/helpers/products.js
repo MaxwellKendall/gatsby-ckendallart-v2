@@ -76,7 +76,7 @@ export const getDefaultProductImage = (product) => {
 }
 
 export const getPrettyPrice = (num) => {
-    console.log('num', num);
+    if (!num) return `$0.00`;
     const cleanNumber = typeof num === 'number'
         ? `${num.toFixed(2)}`
         : `${parseInt(num, 10).toFixed(2)}`;
