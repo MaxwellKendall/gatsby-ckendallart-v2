@@ -209,12 +209,13 @@ export default ({
             height: hoverImgHeight,
             left: hoverImgLeft
         } = hoverImageDimensions;
+        const scrolledY = pageY - clientY;
         const horizontalDiff = magnifyImgWidth - hoverImgWidth;
         const verticalDiff = magnifyImgHeight - hoverImgHeight;
         const horizontalMax = (horizontalDiff / magnifyImgWidth) * 100;
         const verticalMax = (verticalDiff / magnifyImgHeight) * 100;
         const horizontalPosition = ((clientX - hoverImgLeft) / hoverImgWidth);
-        const verticalPosition = (((clientY + pageY) - hoverImgTop) / magnifyImgHeight) - (verticalDiff / magnifyImgHeight);
+        const verticalPosition = ((clientY + scrolledY) - hoverImgTop) / hoverImgHeight;
         const horizontalPositionAsPercentage = (horizontalPosition - hoverPositionOffset) * 100;
         const verticalPositionAsPercentage = (verticalPosition - hoverPositionOffset) * 100;
         setMagnifyDimensions({
@@ -248,7 +249,7 @@ export default ({
             {selectedVariant.img && (
                 <div className="md:mx-5 lg:w-3/5">
                     <div className="flex justify-center mb-4">
-                        <style>{getServerSideMediaQueries(selectedImg.responsiveImgs, ".product-img img")}</style>
+                        <style>{getServerSideMediaQueries(selectedImg.responsiveImgs, ".product-img, .product-img img")}</style>
                         <Img
                             ref={imgRef}
                             className="product-img w-full"
