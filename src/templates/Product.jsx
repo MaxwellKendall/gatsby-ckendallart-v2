@@ -241,7 +241,7 @@ export default ({
             product.handle !== handle
         ))
         .slice(0, 3)
-console.log('isModalOpen', isModalOpen)
+
     return (
         <Layout pageName="product-page" flexDirection="row" classNames="flex-wrap sqrl-grey" maxWidth="100rem" location={location}>
             <h2 className="text-xl tracking-wide text-center w-full my-4 md:text-2xl lg:text-4xl lg:hidden">{title}</h2>
@@ -350,7 +350,7 @@ console.log('isModalOpen', isModalOpen)
             </ul>
             <Modal onRequestClose={() => setIsModalOpen(false)} isOpen={isModalOpen} style={modalStyles}>
                 <div className="w-full flex-col-center h-full" onClick={() => setIsModalOpen(false)}>
-                    <Img className="w-full" fluid={afterPayPopup.fluid} />
+                    <Img className="w-5/6 md:w-1/2" style={{ maxWidth: '500px' }} fluid={afterPayPopup.fluid} />
                 </div>
             </Modal>
         </Layout>
