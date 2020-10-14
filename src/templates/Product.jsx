@@ -209,12 +209,13 @@ export default ({
             height: hoverImgHeight,
             left: hoverImgLeft
         } = hoverImageDimensions;
+        const scrolledY = pageY - clientY;
         const horizontalDiff = magnifyImgWidth - hoverImgWidth;
         const verticalDiff = magnifyImgHeight - hoverImgHeight;
         const horizontalMax = (horizontalDiff / magnifyImgWidth) * 100;
         const verticalMax = (verticalDiff / magnifyImgHeight) * 100;
         const horizontalPosition = ((clientX - hoverImgLeft) / hoverImgWidth);
-        const verticalPosition = (((clientY + pageY) - hoverImgTop) / magnifyImgHeight) - (verticalDiff / magnifyImgHeight);
+        const verticalPosition = ((clientY + scrolledY) - hoverImgTop) / hoverImgHeight;
         const horizontalPositionAsPercentage = (horizontalPosition - hoverPositionOffset) * 100;
         const verticalPositionAsPercentage = (verticalPosition - hoverPositionOffset) * 100;
         setMagnifyDimensions({
@@ -241,7 +242,7 @@ export default ({
             product.handle !== handle
         ))
         .slice(0, 3)
-console.log('isModalOpen', isModalOpen)
+
     return (
         <Layout pageName="product-page" flexDirection="row" classNames="flex-wrap sqrl-grey" maxWidth="100rem" location={location}>
             <h2 className="text-xl tracking-wide text-center w-full my-4 md:text-2xl lg:text-4xl lg:hidden">{title}</h2>
@@ -350,7 +351,7 @@ console.log('isModalOpen', isModalOpen)
             </ul>
             <Modal onRequestClose={() => setIsModalOpen(false)} isOpen={isModalOpen} style={modalStyles}>
                 <div className="w-full flex-col-center h-full" onClick={() => setIsModalOpen(false)}>
-                    <Img className="w-full" fluid={afterPayPopup.fluid} />
+                    <Img className="w-5/6 md:w-1/2" style={{ maxWidth: '500px' }} fluid={afterPayPopup.fluid} />
                 </div>
             </Modal>
         </Layout>

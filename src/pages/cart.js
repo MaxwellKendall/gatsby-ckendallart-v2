@@ -217,7 +217,7 @@ const CartPage = ({
       )}
       <Modal onRequestClose={() => setIsModalOpen(false)} isOpen={isModalOpen} style={modalStyles}>
         <div className="w-full flex-col-center h-full" onClick={() => setIsModalOpen(false)}>
-          <Img className="w-full" fluid={afterPayPopup.fluid} />
+          <Img className="w-5/6 md:w-1/2" style={{ maxWidth: '500px' }} fluid={afterPayPopup.fluid} />
         </div>
       </Modal>
     </Layout>
