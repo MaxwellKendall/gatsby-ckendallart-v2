@@ -249,14 +249,14 @@ export default ({
             {selectedVariant.img && (
                 <div className="md:mx-5 lg:w-3/5">
                     <div className="flex justify-center mb-4">
-                        <style>{getServerSideMediaQueries(selectedImg.responsiveImgs, ".product-img img")}</style>
+                        <style>{getServerSideMediaQueries(selectedImg.responsiveImgs, ".product-img, .product-img img")}</style>
                         <Img
                             ref={imgRef}
                             className="product-img w-full"
                             fixed={selectedImg.responsiveImgs} />
                     </div>
                     <div
-                        className={`${isZoomed ? 'opacity-100' : ' opacity-0'} hidden md:block hover-img absolute overflow-hidden`}
+                        className={`${isZoomed ? 'opacity-100' : ' opacity-0'} hidden md:block absolute overflow-hidden`}
                         onMouseEnter={() => setImgZoom(true)}
                         onMouseLeave={() => setImgZoom(false)}
                         onMouseMove={handleHoverZoom}
@@ -268,7 +268,7 @@ export default ({
                             left: `${hoverImageDimensions.left}px`,
                             transition: 'opacity .25s ease-in .05s'
                         }}>
-                        <style>{getServerSideMediaQueries(selectedImg.responsiveHoverImgs, ".hover-img img")}</style>
+                        <style>{getServerSideMediaQueries(selectedImg.responsiveHoverImgs, ".hover-img img, .hover-img")}</style>
                         <Img
                             ref={magnifyImg}
                             className="w-full hover-img"
