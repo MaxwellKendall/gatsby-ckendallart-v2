@@ -64,7 +64,6 @@ export const Layout = ({
     const { cart, dispatch } = useContext(CartContext);
 
     useEffect(() => {
-        debugger;
         const cartFromStorage = JSON.parse(window.localStorage.getItem(localStorageKey));
         if (cartFromStorage && !cart.id) {
             // no local cart but we have a reference to the remote cart!
