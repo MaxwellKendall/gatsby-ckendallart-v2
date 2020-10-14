@@ -3,7 +3,6 @@ import { graphql } from "gatsby"
 import Img from "gatsby-image"
 
 import Layout from "../components/Layout"
-// import Img from '../components/Img';
 
 import { getResponsiveImages } from "../helpers/img"
 
@@ -51,7 +50,7 @@ export default ({
         <p className="my-5 tracking-wider sqrl-font-1">
           Claire is most inspired by the beauty of the natural world, especially
           the intricate varieties of flowers and flowing fabrics that she used
-          to admire while working in the flora nad weeding design industry of
+          to admire while working in the floral and wedding design industry of
           Charleston. Ever a lover of the classical portrait, the old masters
           are a strong point of reference for Claire in every piece. Her
           particular for mof expression is always striving to achieve the
