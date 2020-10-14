@@ -53,7 +53,7 @@ export const ExpandableMenuIcon = ({
     if (expanded) {
         return (
             <li className={`p-2 mt-10 md:mt-2 md:mx-4 md:relative text-xl md:text-lg`}>
-                <button onClick={toggleExpand} className={`focus:outline-none flex items-start mx-auto justify-center md:justify-evenly ${isActive ? 'sqrl-active-link' : '' }`}>
+                <button onClick={toggleExpand} className={`focus:outline-none flex items-start mx-auto justify-center md:justify-evenly`}>
                     <span className="mr-2">{name.toUpperCase()}</span>
                     <MinusIcon />
                 </button>

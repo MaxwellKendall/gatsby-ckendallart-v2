@@ -27,7 +27,7 @@ const getLowestPrice = (otherProducts) => {
     return otherProducts
         .reduce((lowestPrice, { priceRange: { low: currentPrice }}) => {
             if (lowestPrice === null) return Number(currentPrice).toFixed(2);
-            if (currentPrice > lowestPrice) return Number(lowestPrice).toFixed(2);
+            if (parseInt(currentPrice, 10) > parseInt(lowestPrice, 10)) return Number(lowestPrice).toFixed(2);
             return currentPrice;
         }, null);
 }
@@ -81,6 +81,7 @@ export default ({
     const [selectedImg, setSelectedImg] = useState(getResponsiveImages(parsedVariants[0]));
     const [remoteInventory, setRemoteInventory] = useState(1);
     const [remainingInventory, setRemainingInventory] = useState(0);
+    const [modalImg, showModalImg] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [isZoomed, setIsZoomed] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -235,17 +236,36 @@ export default ({
         handleResize();
     }
 
+    const showAfterPayImg = () => {
+        showModalImg('afterpay');
+        setIsModalOpen(true);
+    }
+
+    const showProductOverlay = () => {
+        showModalImg('product');
+        setIsModalOpen(true);
+    }
+
     const otherProducts = otherImagesInCollection
         .nodes
-        .filter((product) => (
-            product.variants.some((variant) => variant.img) &&
-            product.handle !== handle
-        ))
+        .filter((product) => {
+            return (
+                product.variants.some((variant) => variant.img && variant.availableForSale) &&
+                product.handle !== handle
+            );
+        })
+        .map((node) => {
+            return {
+                ...node,
+                img: node.variants.find(({ img }) => img).img
+            }
+        })
         .slice(0, 3)
+        console.log('otherProducts', otherProducts);
 
     return (
         <Layout pageName="product-page" flexDirection="row" classNames="flex-wrap sqrl-grey" maxWidth="100rem" location={location}>
-            <h2 className="text-xl tracking-wide text-center w-full my-4 md:text-2xl lg:text-4xl lg:hidden">{title}</h2>
+            <h2 className="text-xl tracking-widest text-center w-full my-4 md:text-2xl lg:text-4xl lg:hidden">{title}</h2>
             {selectedVariant.img && (
                 <div className="md:mx-5 lg:w-3/5">
                     <div className="flex justify-center mb-4">
@@ -259,6 +279,7 @@ export default ({
                         className={`${isZoomed ? 'opacity-100' : ' opacity-0'} hidden md:block absolute overflow-hidden`}
                         onMouseEnter={() => setImgZoom(true)}
                         onMouseLeave={() => setImgZoom(false)}
+                        onClick={showProductOverlay}
                         onMouseMove={handleHoverZoom}
                         onTouchMove={handleHoverZoom}
                         style={{
@@ -272,6 +293,7 @@ export default ({
                         <Img
                             ref={magnifyImg}
                             className="w-full hover-img"
+                            onClick={showProductOverlay}
                             fixed={selectedImg.responsiveHoverImgs}
                             imgStyle={{
                                 top: `${magnifyDimensions.top > 0 ? -magnifyDimensions.top : 0}%`,
@@ -291,13 +313,13 @@ export default ({
                 </div>
             )}
             <div className="product-desc flex flex-col items-center self-center w-full mt-5 lg:w-1/4 xl:w-1/3 lg:mr-5 lg:my-0">
-                <h2 className="hidden lg:inline text-4xl tracking-wide text-center">{title}</h2>
+                <h2 className="hidden lg:inline text-4xl tracking-widest text-center">{title}</h2>
                 {!isSoldOut && <p className="lg:inline text-2xl py-4 tracking-widest">{getPrettyPrice(selectedVariant.price)}</p>}
                 {high !== low && !isSoldOut && <p className="lg:flex text-sm italic">{`from ${getPrettyPrice(low)} to ${getPrettyPrice(high)}`}</p>}
                 {!isSoldOut && selectedVariant.price >= 35 && selectedVariant.price < 1000 && (
                     <p className="items-center tracking-wider flex flex-wrap justify-center flex-wrap">
                         or 4 interest-free installments of <strong className="mx-1">{` ${getAfterPaySingleInstallment(selectedVariant.price)} `}</strong> by 
-                        <button className="mx-1 flex-col-center" onClick={() => setIsModalOpen(true)}>
+                        <button className="mx-1 flex-col-center" onClick={showAfterPayImg}>
                             <Img  fixed={afterPayLogo.fixed} />
                         </button>
                     </p>
@@ -305,7 +327,7 @@ export default ({
                 {!isSoldOut && (selectedVariant.price < 35 || selectedVariant.price >= 1000) && (
                     <p className="flex justify-center w-full flex-wrap align-center tracking-wider">
                         Interest free installments by 
-                        <button className="mx-1 flex items-center" onClick={() => setIsModalOpen(true)}>
+                        <button className="mx-1 flex items-center" onClick={showAfterPayImg}>
                             <Img fixed={afterPayLogo.fixed} />
                         </button>
                         available between <strong className="mx-1">{getPrettyPrice(35)}</strong> and <strong className="mx-1">{getPrettyPrice(1000)}</strong>.
@@ -335,23 +357,30 @@ export default ({
                 </div>
             </div>
             <h3 className="pt-10 pb-5 pl-5 w-full text-xl">More {collection} from {getPrettyPrice(getLowestPrice(otherProducts))}</h3>
-            <ul className="pl-5 flex flex-wrap justify-center items-center">
+            <ul className="pl-5 flex flex-wrap justify-center items-center w-full">
                 {otherProducts
                     .map((product, i) => {
-                        const { responsiveImgs } = getResponsiveImages(product.variants[0]);
+                        const { responsiveImgs } = getResponsiveImages(product, 'fluid');
                         return (
-                            <li className={i === 1 ? 'px-5' : ''}>
-                                <Link to={product.slug}>
-                                    <Img fixed={responsiveImgs} />
+                            <li className={i === 1 ? 'px-5 w-1/3' : 'w-1/3'}>
+                                <Link className="w-full" to={product.slug}>
+                                    <Img className="w-full" fluid={responsiveImgs} />
                                 </Link>
                             </li>
                         );
                     })
                 }
             </ul>
-            <Modal onRequestClose={() => setIsModalOpen(false)} isOpen={isModalOpen} style={modalStyles}>
+            <Modal
+                onRequestClose={() => {
+                    setIsModalOpen(false);
+                    showModalImg('');
+                }}
+                isOpen={isModalOpen}
+                style={modalStyles}>
                 <div className="w-full flex-col-center h-full" onClick={() => setIsModalOpen(false)}>
-                    <Img className="w-5/6 md:w-1/2" style={{ maxWidth: '500px' }} fluid={afterPayPopup.fluid} />
+                    {modalImg === 'afterpay' && <Img className="w-5/6 md:w-1/2" style={{ maxWidth: '500px' }} fluid={afterPayPopup.fluid} />}
+                    {modalImg === 'product' && <Img fixed={selectedImg.responsiveHoverImgs} />}                    
                 </div>
             </Modal>
         </Layout>
@@ -443,20 +472,21 @@ export const query = graphql`
                     low
                 }
                 variants {
+                    availableForSale 
                     img: localFile {
                         small: childImageSharp {
-                            fixed(width:150) {
-                                ...GatsbyImageSharpFixed
+                            fluid(maxWidth:150) {
+                                ...GatsbyImageSharpFluid
                             }
                         }
                         medium: childImageSharp {
-                            fixed(width:300) {
-                                ...GatsbyImageSharpFixed
+                            fluid(maxWidth:300) {
+                                ...GatsbyImageSharpFluid
                             }
                         }
                         large: childImageSharp {
-                            fixed(width:425) {
-                                ...GatsbyImageSharpFixed
+                            fluid(maxWidth:425) {
+                                ...GatsbyImageSharpFluid
                             }
                         }
                     }
