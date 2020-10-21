@@ -118,7 +118,7 @@ export default ({
             value={values.name}
             placeholder={placeHolderByFieldName.name}
             onChange={e => handleUpdate(e, "name")} />
-          <div className="w-full pb-8 md:py-8 flex flex-wrap md:justify-center md:justify-start">
+          <div className="w-full pb-8 md:pb-8 flex flex-wrap md:justify-center md:justify-start">
             <input
                 className="ml-4 mt-8 focus:bg-gray-300 md:pt-0 mr-2 border-b-2 bg-transparent text-black border-solid border-black md:self-start"
                 name="email"
