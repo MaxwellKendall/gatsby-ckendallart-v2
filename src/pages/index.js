@@ -23,8 +23,9 @@ const imgBreakPointsByViewPort = {
 };
 
 const getFeaturedImgUrl = (imgName) => {
+  debugger;
   const splitFileName = imgName.split('--');
-  const productType = splitFileName[2].toLowerCase() === 'print'
+  const productType = splitFileName[2].toLowerCase().includes('print')
     ? 'prints'
     : 'originals';
   const url = splitFileName[3];
