@@ -172,9 +172,9 @@ export default (props) => {
         fluid={responsiveHeroImages}
         imgStyle={{ objectPosition: 'center 55%'}} />
       {/* TAG LINE */}
-      <div className="flex-col-center py-10 md:py-24">
-        {tagLine.map((str) => (
-          <h2 className="w-full py-2 text-center tracking-widest my-5 text-3xl">{str.toUpperCase()}</h2>
+      <div className="flex-col-center py-10 md:py-12">
+        {tagLine.map((str, i) => (
+          <h2 className={`w-full py-2 text-center tracking-widest text-3xl ${i === 1 ? 'my-5' : ''}`}>{str.toUpperCase()}</h2>
         ))}
         <Link to="/portfolio" className="w-5/6 md:w-3/5 tracking-wider border mt-10 text-center mx-auto border-black py-5 text-2xl">
           EXPLORE PORTFOLIO
@@ -182,8 +182,8 @@ export default (props) => {
       </div>
       {/* II. FEATURED WORK */}
       <div className="w-full featured-work pb-5 lg:pb-10">
-        <h3 className="text-2xl tracking-widest text-center py-4 md:text-left md:px-10 md:pt-10">FEATURED WORK</h3>
-        <div className="flex lg:hidden">
+        <h3 className="text-2xl tracking-widest text-center py-4 font-semibold md:text-left md:px-10 md:pt-10 lg:ml-12">FEATURED WORK</h3>
+        <div className="flex p-1 md:p-4 lg:hidden">
           <CarouselProvider
             className="w-full"
             naturalSlideWidth={780}
@@ -206,7 +206,7 @@ export default (props) => {
             </div>
           </CarouselProvider>
         </div>
-        <ul className="hidden lg:flex p-10 flex w-full">
+        <ul className="hidden lg:flex p-4 flex w-full">
           {Object.keys(featuredImages)
             .map((key, i) => {
               const arrayOfImages = featuredImages[key];
@@ -216,10 +216,12 @@ export default (props) => {
                 <li className={`w-1/3 flex flex-col align-center ${margin ? 'mx-2' : ''}`}>
                   <Link className="w-full text-center h-full text-lg tracking-wide" to={getFeaturedImgUrl(key)}>
                     <Img fluid={arrayOfImages} style={{ height: '80%' }} />
-                    <p className="w-full text-center mt-5 text-xl tracking-wide">
+                    <p className="w-full text-center font-semibold mt-5 text-xl tracking-widest">
                       {startCase(name).toUpperCase()}
                     </p>
+                    <p className="tracking-widest">
                       shop now {`>`}
+                    </p>
                   </Link>
                 </li>
               );
@@ -242,8 +244,8 @@ export default (props) => {
             return (
               <li className={`w-full pb-4 md:pb-0 md:w-1/2 flex flex-col align-center mx-2`}>
                 <Link to={section.url} className="w-full cursor-pointer text-center mt-5 text-xl tracking-widest">
-                  <Img fluid={arrayOfImages} style={{ height: section.url === '/commissions' ? '84%' : '80%' }}/>
-                    {`${startCase(section.title).toUpperCase()} >`}
+                  <Img className="mb-4" fluid={arrayOfImages} style={{ height: section.url === '/commissions' ? '84%' : '80%' }}/>
+                    <span>{`${startCase(section.title).toUpperCase()} >`}</span>
                 </Link>
               </li>
             )

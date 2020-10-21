@@ -7,7 +7,7 @@ export default ({
     if (direction === 'right') {
       return (
         <span
-        className="mx-auto cursor-pointer rounded-full w-10 sqrl-pink flex h-10 items-center justify-center self-center lg:w-20 lg:h-20 md:ml-auto"
+        className="mx-auto cursor-pointer rounded-full w-8 h-8 sqrl-pink flex items-center justify-center self-center md:ml-auto"
         onClick={onClick}>
           {`>`}
       </span>
@@ -15,7 +15,7 @@ export default ({
     }
     return (
       <span
-        className="mx-auto cursor-pointer rounded-full w-10 sqrl-pink flex h-10 items-center justify-center self-center lg:w-20 lg:h-20 md:mr-auto"
+        className="mx-auto cursor-pointer rounded-full w-8 h-8 sqrl-pink flex items-center justify-center self-center md:mr-auto"
         onClick={onClick}>
           {`<`}
       </span>
