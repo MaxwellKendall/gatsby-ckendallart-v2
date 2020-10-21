@@ -261,7 +261,6 @@ export default ({
             }
         })
         .slice(0, 3)
-        console.log('otherProducts', otherProducts);
 
     return (
         <Layout pageName="product-page" flexDirection="row" classNames="flex-wrap sqrl-grey" maxWidth="100rem" location={location}>
