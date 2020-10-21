@@ -92,7 +92,7 @@ export default ({
                 <CartIcon numberOfItemsInCart={itemsInCart} />
             </Link>
             <Link to='/' className={`mx-auto`}>
-                <h1 className="text-2xl">CLAIRE KENDALL</h1>
+                <h1 className="text-2xl tracking-widest font-light">CLAIRE KENDALL</h1>
             </Link>
             <ul className={`w-full flex-col items-center text-center justify-center md:flex md:flex-row`}>
                 {[

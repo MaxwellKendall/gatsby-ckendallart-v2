@@ -72,7 +72,7 @@ export default ({
         <header className="flex py-5 items-center md:hidden">
             <NavIcon isNotClosed={isNotClosed} onClick={toggleMenuWithDelayedClose} classNames={`pl-5`} />      
             <Link to='/' className={`mx-auto`}>
-                <h1 className="text-2xl">CLAIRE KENDALL</h1>
+                <h1 className="text-2xl tracking-widest font-light">CLAIRE KENDALL</h1>
             </Link>
             <Link to='/cart' className={`self-center mr-2`}>
                 <CartIcon numberOfItemsInCart={itemsInCart} />
