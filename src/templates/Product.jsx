@@ -81,6 +81,7 @@ export default ({
     const [selectedImg, setSelectedImg] = useState(getResponsiveImages(parsedVariants[0]));
     const [remoteInventory, setRemoteInventory] = useState(1);
     const [remainingInventory, setRemainingInventory] = useState(0);
+    const [showDetails, setShowDetails] = useState(false);
     const [modalImg, showModalImg] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [isZoomed, setIsZoomed] = useState(false);
@@ -246,6 +247,18 @@ export default ({
         setIsModalOpen(true);
     }
 
+    const getTruncatedDescription = (desc) => {
+        return desc.split('Details: ')[0];
+    }
+
+    const getDetails = (desc) => {
+        return desc.split('Details: ')[1];
+    };
+
+    const toggleShowDetails = () => {
+        setShowDetails(!showDetails);
+    };
+
     const otherProducts = otherImagesInCollection
         .nodes
         .filter((product) => {
@@ -352,11 +365,17 @@ export default ({
                             ))}
                         </select>
                     )}
-                    <p className="text-lg py-10 tracking-wide px-5 lg:px-0">{description}</p>
+                    <p className="text-lg py-10 tracking-wide px-5 lg:px-0">{getTruncatedDescription(description)}</p>
+                    <div className="w-full flex flex-wrap px-5 lg:px-0">
+                            <p className="text-lg mr-auto">Details</p><button className="text-xl font-semibold" onClick={toggleShowDetails}>{showDetails && `-`}{!showDetails && `+`}</button>
+                            {showDetails && (
+                                <p className="w-full text-lg">{getDetails(description)}</p>
+                            )}
+                    </div>
                 </div>
             </div>
-            <h3 className="pt-10 pb-5 pl-5 w-full text-xl">More {collection} from {getPrettyPrice(getLowestPrice(otherProducts))}</h3>
-            <ul className="pl-5 flex flex-wrap justify-center items-center w-full">
+            <h3 className="pt-10 pb-5 pl-5 w-full text-xl tracking-wide md:tracking-wider lg:tracking-widest">MORE FROM {getPrettyPrice(getLowestPrice(otherProducts))}</h3>
+            <ul className="pl-5 flex flex-wrap justify-center items-start w-full">
                 {otherProducts
                     .map((product, i) => {
                         const { responsiveImgs } = getResponsiveImages(product, 'fluid');
