@@ -255,7 +255,7 @@ export default ({
         const details = desc.split('Details: ')[1];
         if (details) {
             return (
-                <ul className="w-full text-lg list-disc">
+                <ul className="w-full pl-10 text-lg list-disc">
                     {details
                         .split(',')
                         .map((detail) => {
@@ -360,7 +360,7 @@ export default ({
                 {!isSoldOut && selectedVariant.price >= 35 && selectedVariant.price < 1000 && (
                     <p className="w-full flex text-center lg:text-left justify-center lg:justify-start flex-wrap uppercase tracking-wide">
                         or 4 interest-free installments of <strong className="mx-1">{` ${getAfterPaySingleInstallment(selectedVariant.price)} `}</strong> by 
-                        <button className="mx-1 flex-col-center" onClick={showAfterPayImg}>
+                        <button className="m-1 flex-col-center" onClick={showAfterPayImg}>
                             <Img  fixed={afterPayLogo.fixed} />
                         </button>
                     </p>
@@ -369,7 +369,7 @@ export default ({
                 {!isSoldOut && (selectedVariant.price < 35 || selectedVariant.price >= 1000) && (
                     <p className="w-full flex text-center lg:text-left justify-center lg:justify-start flex-wrap uppercase tracking-wide">
                         Interest free installments by 
-                        <button className="mx-1 flex items-center" onClick={showAfterPayImg}>
+                        <button className="m-1 flex items-center" onClick={showAfterPayImg}>
                             <Img fixed={afterPayLogo.fixed} />
                         </button>
                         available between <strong className="mx-1">{getPrettyPrice(35)}</strong> and <strong className="mx-1">{getPrettyPrice(1000)}</strong>.
@@ -407,12 +407,12 @@ export default ({
             </div>
             {/* OTHER PRODUCTS IN COLLECTION */}
             <h3 className="pt-10 pb-5 pl-5 w-full text-xl tracking-wide md:tracking-wider lg:tracking-widest">MORE FROM {getPrettyPrice(getLowestPrice(otherProducts))}</h3>
-            <ul className="pl-5 flex flex-wrap justify-center items-start w-full">
+            <ul className="px-1 lg:pl-5 flex flex-wrap justify-center items-start w-full">
                 {otherProducts
                     .map((product, i) => {
                         const { responsiveImgs } = getResponsiveImages(product, 'fluid');
                         return (
-                            <li className={i === 1 ? 'px-5 w-1/3' : 'w-1/3'}>
+                            <li className={i === 1 ? 'px-1 md:px-2 lg:px-5 w-1/3' : 'w-1/3'}>
                                 <Link className="w-full" to={product.slug}>
                                     <Img className="w-full" fluid={responsiveImgs} />
                                 </Link>

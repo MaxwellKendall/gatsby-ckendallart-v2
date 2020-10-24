@@ -90,10 +90,6 @@ const CartPage = ({
     })
   };
 
-  const goToCheckout = () => {
-    setLoadingState('checkout')
-  }
-
   const getPriceForCartItem = (price, quantity) => {
     const cleanPrice = typeof price === 'number'
       ? price
@@ -131,6 +127,7 @@ const CartPage = ({
                   const pricePerItem = getCustomAttributeFromCartByVariantId([lineItem], variantId, 'pricePerUnit');
                   const productTitle = getCustomAttributeFromCartByVariantId([lineItem], variantId, 'productTitle');
                   const variantTitle = getCustomAttributeFromCartByVariantId([lineItem], variantId, 'variantTitle');
+                  const title = variantTitle === productTitle ? productTitle : `${productTitle}, (${variantTitle})`;
                   const productId = getCustomAttributeFromCartByVariantId([lineItem], variantId, 'productId');
                   const collection = getCustomAttributeFromCartByVariantId([lineItem], variantId, 'collection');
                   const handle = getCustomAttributeFromCartByVariantId([lineItem], variantId, 'handle');
@@ -143,7 +140,7 @@ const CartPage = ({
                         <>
                           <Link to={slug} className="flex flex-col-center w-full">
                             <Img fixed={responsiveImgs.find(({ imgSize }) => imgSize === 'small' )} />
-                            <strong className="mt-4 text-center lg:text-left w-full">{variantTitle}</strong>
+                            <strong className="mt-4 text-center lg:text-left w-full">{title}</strong>
                           </Link>
                           <div className="flex-col-center mt-2 lg:m-0">
                             <button className="self-center cursor-pointer py-2 px-4 m-2 sqrl-pink text-white rounded-full lg:m-10 lg:p-5 lg:tracking-wider" onClick={() => removeVariant(lineItemId, 0, variantId)}>REMOVE</button>
@@ -190,7 +187,7 @@ const CartPage = ({
                 SUB TOTAL: {cart.totalPrice && <strong>{getPrettyPrice(cart.totalPrice)}</strong>}
               </span>
               {cart.totalPrice < 1000 && cart.totalPrice >= 35 && (
-                <p className="w-full items-center justify-center lg:justify-end pb-10 tracking-wider flex flex-wrap">
+                <p className="w-full text-center items-center justify-center lg:justify-end pb-10 tracking-wider flex flex-wrap">
                     or 4 interest-free installments of <strong className="mx-1">{` ${getAfterPaySingleInstallment(cart.totalPrice)} `}</strong> by 
                     <button className="mx-1 flex-col-center" onClick={() => setIsModalOpen(true)}>
                         <Img fixed={afterPayLogo.fixed} />
@@ -198,7 +195,7 @@ const CartPage = ({
                 </p>
               )}
               {(cart.totalPrice >= 1000 || cart.totalPrice < 35) && (
-                <p className="w-full items-center justify-center mt-4 lg:justify-end pb-10 tracking-wide flex flex-wrap">
+                <p className="w-full text-center items-center justify-center mt-4 lg:justify-end pb-10 tracking-wide flex flex-wrap">
                   Interest free installments by 
                   <button className="mx-1 flex-col-center" onClick={() => setIsModalOpen(true)}>
                       <Img fixed={afterPayLogo.fixed} />
@@ -209,8 +206,8 @@ const CartPage = ({
             </>
           )}
           <div className="w-auto m-5 lg:w-3/4 xl:w-1/2 flex-col-center">
-            {cart.lineItems.length > 0 &&<a className="w-full md:w-3/4 lg:w-1/2 text-center checkout-button font-bold tracking-widest px-10 py-5 p-10" href={cart.webUrl}>CHECKOUT</a>}
-            <Link to="/originals/" className="w-full md:w-3/4 lg:w-1/2 text-center sqrl-purple mt-5 text-white px-10 py-5 lg:p-10 tracking-widest">
+            {cart.lineItems.length > 0 &&<a className="w-full md:w-3/4 lg:w-1/2 text-center checkout-button font-bold tracking-widest px-10 py-5" href={cart.webUrl}>CHECKOUT</a>}
+            <Link to="/originals/" className="w-full md:w-3/4 lg:w-1/2 text-center sqrl-purple mt-5 text-white px-10 py-5 tracking-widest">
               CONTINUE SHOPPING
             </Link>
           </div>

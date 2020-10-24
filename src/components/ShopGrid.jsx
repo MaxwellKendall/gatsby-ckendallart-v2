@@ -58,7 +58,7 @@ export default ({
                     .map(({ slug, img, title, variants, priceRange: { low: lowestPrice }, className }) => {
                         const hasVariantForSale = variants.some((({ availableForSale }) => availableForSale));
                         return (
-                            <li className={`my-2 mx-4 ${className}`}>
+                            <li className={`my-2 lg:mr-2 ${className}`}>
                                 <Link to={slug} className="grid-product-img flex flex-col items-center lg:items-end w-full">
                                     <div className="relative">
                                         <Img imgRef={imgRef} responsiveImgs={img} imgName={kebabCase(title)} />
@@ -95,7 +95,7 @@ export default ({
                     .map(({ slug, img, title, variants, priceRange: { low: lowestPrice }, className }) => {
                         const hasVariantForSale = variants.some((({ availableForSale }) => availableForSale));
                         return (
-                            <li className={`my-2 mx-4 ${className}`}>
+                            <li className={`my-2 ml-2 ${className}`}>
                                 <Link to={slug} className="grid-product-img flex flex-col items-start w-full">
                                     <div className="relative">
                                         <Img imgRef={imgRef} responsiveImgs={img} imgName={kebabCase(title)} />

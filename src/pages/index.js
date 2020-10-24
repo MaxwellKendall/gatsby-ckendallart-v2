@@ -174,7 +174,7 @@ export default (props) => {
       {/* TAG LINE */}
       <div className="flex-col-center py-10 md:py-24">
         {tagLine.map((str, i) => (
-          <h2 className={`w-full py-2 text-center tracking-wide md:tracking-wider lg:tracking-widest text-xl md:text-2xl lg:text-3xl ${i === 1 ? 'my-2' : ''}`}>{str.toUpperCase()}</h2>
+          <h2 className={`w-full p-2 text-center tracking-wide md:tracking-wider lg:tracking-widest text-xl md:text-2xl lg:text-3xl ${i === 1 ? 'my-2' : ''}`}>{str.toUpperCase()}</h2>
         ))}
         <Link to="/portfolio" className="border mt-10 text-center mx-auto border-black py-5 px-10 md:text-xl tracking-wide md:tracking-wider lg:tracking-widest">
           EXPLORE PORTFOLIO
@@ -183,7 +183,7 @@ export default (props) => {
       {/* II. FEATURED WORK */}
       <div className="w-full featured-work pb-5 lg:pb-10">
         <h2 className="text-xl font-semibold lg:text-2xl px-4 pt-8 tracking-wide md:tracking-wider lg:tracking-widest text-center md:text-left xl:ml-12">FEATURED WORK</h2>
-        <div className="flex md:p-4 lg:hidden">
+        <div className="flex pt-4 lg:hidden">
           <CarouselProvider
             className="w-full"
             naturalSlideWidth={780}
@@ -232,7 +232,7 @@ export default (props) => {
       {/* III. REFERRALS */}
       <ReferralCarousel />
       {/* IV. REQUEST COMMISSION | MEET THE ARTIST */}
-      <ul className="pt-10 flex flex-col md:flex-row w-full lg:px-10">
+      <ul className="pb-10 flex flex-col md:flex-row w-full lg:px-10">
         {Object.keys(otherImages)
           .sort((a, b) => a.includes('commission') ? -1 : 1)
           .map((key, i) => {

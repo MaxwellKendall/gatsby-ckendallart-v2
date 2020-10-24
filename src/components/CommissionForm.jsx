@@ -192,7 +192,7 @@ export default ({
             name="attachment"
             type="file" />
         </div>
-        <h3 className="ml-4 py-4 tracking-widest w-full">TELL ME MORE:</h3>
+        <h3 className="ml-4 py-4 tracking-wide w-full">TELL ME MORE:</h3>
         <textarea
           className="mx-2 border-solid border-black border-2 w-11/12 md:w-full"
           name="details"

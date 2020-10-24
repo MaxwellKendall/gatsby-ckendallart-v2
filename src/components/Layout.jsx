@@ -10,7 +10,8 @@ import {
     faMinusCircle,
     faPlusCircle,
     faTimes,
-    faSearch
+    faSearch,
+    faEnvelope
 } from '@fortawesome/free-solid-svg-icons';
 import {
     faFacebookSquare,
@@ -135,7 +136,7 @@ export const Layout = ({
                 }, toastDelay);
             })
             .catch((e) => {
-                console.error('e', e);
+                console.error('Error Subscribing Member to List: ', e);
                 if (e.title === 'Member Exists') {
                     setSubscribeStatus({
                         subscribed: true,
@@ -205,7 +206,7 @@ export const Layout = ({
                     <input type="hidden" name="id" value="2e064274d9" />
                     <div className="flex flex-col md:flex-row  items-center justify-center w-full">
                         <label className="pr-5 leading-7 tracking-wider">be the first to know</label>
-                        <input className="leading-7 w-full px-10 md:px-0 md:w-auto border-solid border-black" type="email" name="MERGE0" value={userEmail} onChange={updateUserEmail} />
+                        <input className="leading-7 w-full md:w-auto border-solid border-black" type="email" name="MERGE0" value={userEmail} onChange={updateUserEmail} />
                         <button
                             disabled={subscribeStatus.subscribed}
                             type="submit"
@@ -234,6 +235,9 @@ export const Layout = ({
                         </a>
                         <a href="https://www.pinterest.com/CKendallart/_created/" target="_blank">
                             <FontAwesomeIcon icon={faPinterestP} size="3x" className="mx-2" color="#dcd0d0" />
+                        </a>
+                        <a href="mailto:info@ckendallart.com" target="_blank">
+                            <FontAwesomeIcon icon={faEnvelope} size="3x" className="mx-2" color="#dcd0d0" />
                         </a>
                     </div>
                     <div className="text-xs mt-12 lg:mt-24">
