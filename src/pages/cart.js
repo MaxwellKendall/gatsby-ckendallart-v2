@@ -121,7 +121,7 @@ const CartPage = ({
               <th className="w-full text-right tracking-wider sqrl-font-1">TOTAL</th>
             </tr>
           </thead>
-          <tbody className="flex w-11/12 flex-col-center mx-auto">
+          <tbody className="flex w-full flex-col-center">
             {cart.lineItems
                 .filter((item) => item.variantId && item.quantity > 0)
                 .map((lineItem, i, src) => {

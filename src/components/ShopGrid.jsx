@@ -6,6 +6,7 @@ import { getDefaultProductImage, getPrettyPrice } from "../helpers/products"
 import Img from './Img';
 
 const defaultSort = ({ variants: variantsA, priceRange: { low: lowestPriceA } }, { variants: variantsB, priceRange: { low: lowestPriceB } }) => {
+
     const a = variantsA.some((({ availableForSale }) => availableForSale));
     const b = variantsB.some((({ availableForSale }) => availableForSale));
     if (a && !b) return -1;
@@ -46,14 +47,19 @@ export default ({
         <>
             <ul className="flex flex-col w-full lg:w-1/2">
                 {sortedProducts
-                    .filter((_, i) => i % 2 === 0)
-                    .map((product) => ({ ...product, img: getDefaultProductImage(product)}))
+                    .map((product, i) => {
+                        const className = i % 2 === 0
+                            ? 'flex'
+                            // show the odd ones in  the first column until desktop
+                            : 'flex lg:hidden'
+                        return ({ ...product, className, img: getDefaultProductImage(product)})
+                    })
                     .filter(({ img }) => img)
-                    .map(({ slug, img, title, variants, priceRange: { low: lowestPrice } }) => {
+                    .map(({ slug, img, title, variants, priceRange: { low: lowestPrice }, className }) => {
                         const hasVariantForSale = variants.some((({ availableForSale }) => availableForSale));
                         return (
-                            <li className="my-2 mx-4">
-                                <Link to={slug} className="grid-product-img flex flex-col items-end w-full">
+                            <li className={`my-2 mx-4 ${className}`}>
+                                <Link to={slug} className="grid-product-img flex flex-col items-center lg:items-end w-full">
                                     <div className="relative">
                                         <Img imgRef={imgRef} responsiveImgs={img} imgName={kebabCase(title)} />
                                         {!hasVariantForSale && ctx === "forSale" && (
@@ -76,15 +82,20 @@ export default ({
                         );
                     })}
             </ul>
-            <ul className="flex flex-col w-full lg:w-1/2">
+            <ul className="hidden lg:flex flex-col w-full lg:w-1/2">
                 {sortedProducts
-                    .filter((_, i) => i % 2 !== 0)
-                    .map((product) => ({ ...product, img: getDefaultProductImage(product)}))
+                    .map((product, i) => {
+                        const className = i % 2 !== 0
+                            ? 'hidden lg:flex'
+                            // always hide the even ones
+                            : 'hidden'
+                        return ({ ...product, className, img: getDefaultProductImage(product) })
+                    })
                     .filter(({ img }) => img)
-                    .map(({ slug, img, title, variants, priceRange: { low: lowestPrice } }) => {
+                    .map(({ slug, img, title, variants, priceRange: { low: lowestPrice }, className }) => {
                         const hasVariantForSale = variants.some((({ availableForSale }) => availableForSale));
                         return (
-                            <li className="my-2 mx-4">
+                            <li className={`my-2 mx-4 ${className}`}>
                                 <Link to={slug} className="grid-product-img flex flex-col items-start w-full">
                                     <div className="relative">
                                         <Img imgRef={imgRef} responsiveImgs={img} imgName={kebabCase(title)} />
