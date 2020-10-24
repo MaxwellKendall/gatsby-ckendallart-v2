@@ -12,6 +12,13 @@ import {
     faTimes,
     faSearch
 } from '@fortawesome/free-solid-svg-icons';
+import {
+    faFacebookSquare,
+    faInstagramSquare,
+    faLinkedinIn,
+    faLinkedin,
+    faPinterestP
+} from '@fortawesome/free-brands-svg-icons'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import moment from 'moment';
 import { delay } from 'lodash';
@@ -217,7 +224,23 @@ export const Layout = ({
                             )}                        
                         </button>
                     </div>
-                    <div className="text-xs mt-48">
+                    <div className="flex w-full justify-center items-center mt-12">
+                        {/* F292B8 */}
+                        {/* EF70A3 */}
+                        <a href="https://www.facebook.com/ckendallart/" target="_blank">
+                            <FontAwesomeIcon icon={faFacebookSquare} size="3x" className="mx-2" color="#dcd0d0" />
+                        </a>
+                        <a href="https://www.linkedin.com/in/claire-kendall-08049471/" target="_blank">
+                            <FontAwesomeIcon icon={faLinkedin} size="3x" className="mx-2" color="#dcd0d0" />
+                        </a>
+                        <a href="https://www.instagram.com/ckendallart/" target="_blank">
+                            <FontAwesomeIcon icon={faInstagramSquare} size="3x" className="mx-2" color="#dcd0d0" />
+                        </a>
+                        <a href="https://www.pinterest.com/CKendallart/_created/" target="_blank">
+                            <FontAwesomeIcon icon={faPinterestP} size="3x" className="mx-2" color="#dcd0d0" />
+                        </a>
+                    </div>
+                    <div className="text-xs mt-24">
                         <p>
                             {`Claire Kendall Art, ${new Date().getFullYear()}`}
                             <FontAwesomeIcon className="ml-2" icon={['fas', 'copyright']} />
