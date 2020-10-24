@@ -3,8 +3,11 @@ import { graphql } from "gatsby"
 import Img from "gatsby-image"
 
 import Layout from "../components/Layout"
+import SEO from "../components/SEO";
 
-import { getResponsiveImages } from "../helpers/img"
+import { getResponsiveImages } from "../helpers/img";
+
+const description = "Claire is a fine artist residing in Charleston South Carolina. She specializes in oil painting. She is inspired by the masters.";
 
 export default ({
   data: {
@@ -31,6 +34,11 @@ export default ({
 
   return (
     <Layout classNames="bg-white" maxWidth="75rem" location={location}>
+      <SEO
+        title={"About the Artist"}
+        pathname={location.pathname}
+        image={profilePic[0]}
+        description={description} />
       <div className="w-full flex flex-wrap justify-center mx-5">
         <div className="hidden md:flex flex-wrap w-1/2 pr-5">
           <Img className="w-full mb-2" fluid={paintImg} />

@@ -296,6 +296,7 @@ export default ({
         <Layout pageName="product-page" flexDirection="row" classNames="flex-wrap sqrl-grey" maxWidth="100rem" location={location}>
             <SEO
                 title={title}
+                pathname={location.pathname}
                 image={selectedImg?.responsiveImgs[0]}
                 description={description} />
             {/* MOBILE TITLE ONLY */}

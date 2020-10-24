@@ -8,6 +8,7 @@ import Layout from '../components/Layout';
 import CommissionForm from '../components/CommissionForm';
 import { kebabCase } from 'lodash';
 import ReferralCarousel from '../components/ReferralCarousel';
+import SEO from "../components/SEO";
 
 const getActiveImgDimensions = (commissions, activeIndex) => {
     const { ref } = commissions[activeIndex];
@@ -22,6 +23,8 @@ const getActiveImgDimensions = (commissions, activeIndex) => {
 };
 
 const showCommissionCarousel = false;
+
+const siteDescription = "Request a commission. Your own custom piece of fine art.";
 
 const CarouselContainer = ({ slide, onSlideChange }) => {
     useEffect(() => {
@@ -59,6 +62,7 @@ export default ({
 
     return (
         <Layout location={location} classNames="md:px-8">
+            <SEO title="Commission Request" description={siteDescription} pathname={location.pathname} image={seaScapeCommissionImgs[0]} />
             <h2 className="w-full text-center tracking-wide md:tracking-wider lg:tracking-widest text-xl md:text-3xl pt-12 md:pt-0 pb-12">YOUR DREAM CONCEPT MADE REALITY.</h2>
             <div className="w-full">
                 {showCommissionCarousel && (

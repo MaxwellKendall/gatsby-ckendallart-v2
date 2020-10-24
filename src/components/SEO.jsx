@@ -3,6 +3,8 @@ import PropTypes from "prop-types"
 import { Helmet } from "react-helmet"
 import { useStaticQuery, graphql } from "gatsby"
 
+// const siteSuffix = "| Claire Kendall"
+
 const SEO = ({
     description,
     lang = 'en',
@@ -36,7 +38,7 @@ const SEO = ({
       ? `${site.siteMetadata.siteUrl}${metaImage.src}`
       : null
   const canonical = pathname ? `${site.siteMetadata.siteUrl}${pathname}` : null
-  console.log('image', metaImage)
+
   return (
     <Helmet
       htmlAttributes={{ lang, }}

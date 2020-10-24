@@ -7,6 +7,7 @@ import { kebabCase, uniqueId, startCase, groupBy, flatten } from "lodash";
 import Layout from "../components/Layout";
 import Arrow from "../components/Arrow";
 import ReferralCarousel from "../components/ReferralCarousel";
+import SEO from "../components/SEO";
 
 import 'pure-react-carousel/dist/react-carousel.es.css';
 
@@ -15,6 +16,8 @@ const tagLine = [
   'Reverence for Beauty',
   'Fine art made for you, with love.'
 ];
+
+const siteDescription = "Claire Kendall Art. Fine studio artist. We provide fine studio art. Custom art is available. Prints are available.";
 
 const imgBreakPointsByViewPort = {
   mobile: `(min-width: 0px) and (max-width: 767px)`,
@@ -166,6 +169,7 @@ export default (props) => {
 
   return (
     <Layout pageName="home" location={props.location}>
+      <SEO title="Fine Art Made For You" description={siteDescription} pathname={"/"} image={responsiveHeroImages[0]} />
       {/* I. HERO IMG */}
       <Img
         className="w-full hero-img"
@@ -219,7 +223,7 @@ export default (props) => {
                     <p className="w-full text-center font-semibold mt-5 text-lg xl:text-xl tracking-wide md:tracking-wider lg:tracking-widest">
                       {startCase(name).toUpperCase()}
                     </p>
-                    <p className="tracking-wide text-sm mt-5 md:tracking-wider">
+                    <p className="tracking-wide text-sm xl:text-base mt-5 md:tracking-wider">
                       shop now {`>`}
                     </p>
                   </Link>
