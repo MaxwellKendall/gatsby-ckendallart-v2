@@ -11,10 +11,8 @@ import ReferralCarousel from '../components/ReferralCarousel';
 
 const getActiveImgDimensions = (commissions, activeIndex) => {
     const { ref } = commissions[activeIndex];
-    console.log('ref', ref,  activeIndex);
     if (ref.current && ref.current.imageRef.current) {
         const { width, height } = ref.current.imageRef.current.getBoundingClientRect();
-        console.log('dimensions', width, height);
         return {
             width: `${width}px`,
             // height: `${height}px`
@@ -50,7 +48,6 @@ export default ({
     const commissionsWithRef = commissions.map((obj) => ({ ...obj, ref: useRef() }));
     const seaScape = commissions[0];
     const seaScapeCommissionImgs = getResponsiveImages(seaScape.variants[0]).responsiveImgs;
-    console.log(seaScapeCommissionImgs);
 
     useEffect(() => {
         setImgDimensions(getActiveImgDimensions(commissionsWithRef, activeSlideIndex));

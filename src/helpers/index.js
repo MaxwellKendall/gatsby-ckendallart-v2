@@ -21,7 +21,7 @@ export const getImages = (selectedVariantIds, products) => {
         .reduce((acc, product) => {
             const selectedProductVariants = product.variants.filter((variant) => selectedVariantIds.includes(variant.id));
             return selectedProductVariants.reduce((nestedAcc, variant) => {
-                console.log('variant', variant);
+                console.error('variant', variant);
                 return {
                     ...nestedAcc,
                     [variant.id]: getResponsiveImages({ img: variant.localFile })

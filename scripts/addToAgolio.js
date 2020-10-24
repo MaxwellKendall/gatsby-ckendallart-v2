@@ -74,7 +74,7 @@ const addProductVariantsToSearchIndex = (variants, product, collection) => {
             .then(async (data) => {
                 const isAdded = await isItemInIndex(variantIndex, variant.id);
                 if (isAdded) return Promise.resolve();
-                console.log("************************* ADDING Variant *************************", product.title, variant.title)
+                console.info("************************* ADDING Variant *************************", product.title, variant.title)
                 return variantIndex
                     .saveObject(createVariantRecord(variant, product, collection))
                     .then(() => aggregateIndex.saveObject(createVariantRecord(variant, product, collection)));
@@ -96,7 +96,7 @@ const addProductsToSearchIndex = (collection, products) => {
                     return addProductVariantsToSearchIndex(product.variants.edges, product, collection)
                         .then(() => {
                             if (!isAdded) {
-                                console.log("************************* ADDING PRODUCT *************************", product.images.edges)
+                                console.info("************************* ADDING PRODUCT *************************", product.images.edges)
                                 return productIndex
                                     .saveObject(createProductRecord(product, collection))
                                     .then(() => aggregateIndex.saveObject(createProductRecord(product, collection)));

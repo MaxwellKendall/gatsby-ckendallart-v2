@@ -208,10 +208,9 @@ const CartPage = ({
               )}
             </>
           )}
-          {/* <span className="text-center w-full">{`Tax Applied: ${cart.totalTax ? getPrettyPrice(cart.totalTax) : "$0.00"}`}</span> */}
-          <div className="w-full m-5 lg:w-3/4 xl:w-1/2 flex-col-center">
-            {cart.lineItems.length > 0 &&<a className="w-full md:w-3/4 lg:w-1/2 text-center checkout-button font-bold tracking-widest p-10" href={cart.webUrl}>CHECKOUT</a>}
-            <Link to="/originals/" className="w-full md:w-3/4 lg:w-1/2 text-center sqrl-purple mt-5 text-white p-10 tracking-widest">
+          <div className="w-auto m-5 lg:w-3/4 xl:w-1/2 flex-col-center">
+            {cart.lineItems.length > 0 &&<a className="w-full md:w-3/4 lg:w-1/2 text-center checkout-button font-bold tracking-widest px-10 py-5 p-10" href={cart.webUrl}>CHECKOUT</a>}
+            <Link to="/originals/" className="w-full md:w-3/4 lg:w-1/2 text-center sqrl-purple mt-5 text-white px-10 py-5 lg:p-10 tracking-widest">
               CONTINUE SHOPPING
             </Link>
           </div>

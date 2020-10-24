@@ -135,7 +135,7 @@ export const Layout = ({
                 }, toastDelay);
             })
             .catch((e) => {
-                console.log('e', e);
+                console.error('e', e);
                 if (e.title === 'Member Exists') {
                     setSubscribeStatus({
                         subscribed: true,
@@ -144,9 +144,7 @@ export const Layout = ({
                         showError: true,
                         emailAddress: e.detail.split(' ')[0]
                     });
-                    console.log('hello?');
                     confirmationToast = delay(() => {
-                        console.log('yooo');
                         setSubscribeStatus({
                             ...subscribeStatus,
                             showConfirmation: false,
@@ -225,8 +223,6 @@ export const Layout = ({
                         </button>
                     </div>
                     <div className="flex w-full justify-center items-center mt-12">
-                        {/* F292B8 */}
-                        {/* EF70A3 */}
                         <a href="https://www.facebook.com/ckendallart/" target="_blank">
                             <FontAwesomeIcon icon={faFacebookSquare} size="3x" className="mx-2" color="#dcd0d0" />
                         </a>
@@ -240,7 +236,7 @@ export const Layout = ({
                             <FontAwesomeIcon icon={faPinterestP} size="3x" className="mx-2" color="#dcd0d0" />
                         </a>
                     </div>
-                    <div className="text-xs mt-24">
+                    <div className="text-xs mt-12 lg:mt-24">
                         <p>
                             {`Claire Kendall Art, ${new Date().getFullYear()}`}
                             <FontAwesomeIcon className="ml-2" icon={['fas', 'copyright']} />
