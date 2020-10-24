@@ -6,7 +6,6 @@ import { getDefaultProductImage, getPrettyPrice } from "../helpers/products"
 import Img from './Img';
 
 const defaultSort = ({ variants: variantsA, priceRange: { low: lowestPriceA } }, { variants: variantsB, priceRange: { low: lowestPriceB } }) => {
-    debugger;
     const a = variantsA.some((({ availableForSale }) => availableForSale));
     const b = variantsB.some((({ availableForSale }) => availableForSale));
     if (a && !b) return -1;
@@ -53,7 +52,7 @@ export default ({
                     .map(({ slug, img, title, variants, priceRange: { low: lowestPrice } }) => {
                         const hasVariantForSale = variants.some((({ availableForSale }) => availableForSale));
                         return (
-                            <li className="m-2">
+                            <li className="my-2 mx-4">
                                 <Link to={slug} className="grid-product-img flex flex-col items-end w-full">
                                     <div className="relative">
                                         <Img imgRef={imgRef} responsiveImgs={img} imgName={kebabCase(title)} />
@@ -85,7 +84,7 @@ export default ({
                     .map(({ slug, img, title, variants, priceRange: { low: lowestPrice } }) => {
                         const hasVariantForSale = variants.some((({ availableForSale }) => availableForSale));
                         return (
-                            <li className="m-2">
+                            <li className="my-2 mx-4">
                                 <Link to={slug} className="grid-product-img flex flex-col items-start w-full">
                                     <div className="relative">
                                         <Img imgRef={imgRef} responsiveImgs={img} imgName={kebabCase(title)} />

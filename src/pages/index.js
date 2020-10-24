@@ -23,7 +23,6 @@ const imgBreakPointsByViewPort = {
 };
 
 const getFeaturedImgUrl = (imgName) => {
-  debugger;
   const splitFileName = imgName.split('--');
   const productType = splitFileName[2].toLowerCase().includes('print')
     ? 'prints'
@@ -173,18 +172,18 @@ export default (props) => {
         fluid={responsiveHeroImages}
         imgStyle={{ objectPosition: 'center 55%'}} />
       {/* TAG LINE */}
-      <div className="flex-col-center py-10 md:py-12">
+      <div className="flex-col-center py-10 md:py-24">
         {tagLine.map((str, i) => (
-          <h2 className={`w-full py-2 text-center tracking-widest text-3xl ${i === 1 ? 'my-5' : ''}`}>{str.toUpperCase()}</h2>
+          <h2 className={`w-full py-2 text-center tracking-wide md:tracking-wider lg:tracking-widest text-xl md:text-2xl lg:text-3xl ${i === 1 ? 'my-2' : ''}`}>{str.toUpperCase()}</h2>
         ))}
-        <Link to="/portfolio" className="w-5/6 md:w-3/5 tracking-wider border mt-10 text-center mx-auto border-black py-5 text-2xl">
+        <Link to="/portfolio" className="border mt-10 text-center mx-auto border-black py-5 px-10 md:text-xl tracking-wide md:tracking-wider lg:tracking-widest">
           EXPLORE PORTFOLIO
         </Link>
       </div>
       {/* II. FEATURED WORK */}
       <div className="w-full featured-work pb-5 lg:pb-10">
-        <h3 className="text-2xl tracking-widest text-center py-4 font-semibold md:text-left md:px-10 md:pt-10 lg:ml-12">FEATURED WORK</h3>
-        <div className="flex p-1 md:p-4 lg:hidden">
+        <h2 className="text-xl font-semibold lg:text-2xl px-4 pt-8 tracking-wide md:tracking-wider lg:tracking-widest text-center md:text-left xl:ml-12">FEATURED WORK</h2>
+        <div className="flex md:p-4 lg:hidden">
           <CarouselProvider
             className="w-full"
             naturalSlideWidth={780}
@@ -217,10 +216,10 @@ export default (props) => {
                 <li className={`w-1/3 flex flex-col align-center ${margin ? 'mx-2' : ''}`}>
                   <Link className="w-full text-center h-full text-lg tracking-wide" to={getFeaturedImgUrl(key)}>
                     <Img fluid={arrayOfImages} style={{ height: '80%' }} />
-                    <p className="w-full text-center font-semibold mt-5 text-xl tracking-widest">
+                    <p className="w-full text-center font-semibold mt-5 text-lg xl:text-xl tracking-wide md:tracking-wider lg:tracking-widest">
                       {startCase(name).toUpperCase()}
                     </p>
-                    <p className="tracking-widest">
+                    <p className="tracking-wide text-sm mt-5 md:tracking-wider">
                       shop now {`>`}
                     </p>
                   </Link>
@@ -233,10 +232,10 @@ export default (props) => {
       {/* III. REFERRALS */}
       <ReferralCarousel />
       {/* IV. REQUEST COMMISSION | MEET THE ARTIST */}
-      <ul className="pt-10 flex flex-col md:flex-row w-full">
+      <ul className="pt-10 flex flex-col md:flex-row w-full lg:px-10">
         {Object.keys(otherImages)
           .sort((a, b) => a.includes('commission') ? -1 : 1)
-          .map((key) => {
+          .map((key, i) => {
             const arrayOfImages = otherImages[key];
             const splitFileName = key.split('--');
             const section = startCase(splitFileName[1]).toLowerCase() === 'request commission'
@@ -244,9 +243,9 @@ export default (props) => {
               : { title: 'MEET THE ARTIST', url: '/about' };
             return (
               <li className={`w-full pb-4 md:pb-0 md:w-1/2 flex flex-col align-center mx-2`}>
-                <Link to={section.url} className="w-full cursor-pointer text-center mt-5 text-xl tracking-widest">
-                  <Img className="mb-4" fluid={arrayOfImages} style={{ height: section.url === '/commissions' ? '84%' : '80%' }}/>
-                    <span>{`${startCase(section.title).toUpperCase()} >`}</span>
+                <Link to={section.url} className="w-full cursor-pointer text-center mt-5 tracking-wide md:tracking-wider lg:tracking-widest lg:text-xl">
+                  <Img className={`mb-4 xl:mb-8 ${i === 0 ? 'xl:mr-10' : 'xl:ml-10'}`} fluid={arrayOfImages} style={{ height: section.url === '/commissions' ? '84%' : '80%' }}/>
+                    <span className={`${i === 0 ? 'xl:mr-10' : 'xl:ml-10'} flex w-full justify-center md:justify-start tracking-wide md:tracking-wider lg:tracking-widest`}>{`${startCase(section.title).toUpperCase()} >`}</span>
                 </Link>
               </li>
             )

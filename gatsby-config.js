@@ -61,7 +61,7 @@ module.exports = {
         postCssPlugins: [
           require("tailwindcss"),
           // Optional: Load custom Tailwind CSS configuration
-          // require("./tailwind.config.js"),
+          require("./tailwind.config.js")
         ],
       },
     },

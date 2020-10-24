@@ -52,15 +52,15 @@ export const ExpandableMenuIcon = ({
 
     if (expanded) {
         return (
-            <li className={`p-2 mt-10 md:mt-2 md:mx-4 md:relative text-xl md:text-lg`}>
-                <button onClick={toggleExpand} className={`focus:outline-none flex items-start mx-auto justify-center md:justify-evenly`}>
-                    <span className="mr-2">{name.toUpperCase()}</span>
+            <li className={`p-2 mt-10 md:mt-2 md:mx-4 lg:px-8 lg:px-8 md:relative text-xl md:text-lg`}>
+                <button onClick={toggleExpand} className={`focus:outline-none lg:tracking-wider xl:tracking-widest flex items-start mx-auto justify-center md:justify-evenly`}>
+                    <span className="mr-2 ">{name.toUpperCase()}</span>
                     <MinusIcon />
                 </button>
                 <ul className="md:absolute md:bg-white md:z-10 md:rounded md:shadow">
                     {childPages.map((childPage, i) => (
-                        <li className={`p-2 mt-2 text-sm md:m-0 md:text-lg md:px-4 ${i === 1 ? 'test': ''}`}>
-                            <Link to={`/${childPage.name.toLowerCase()}`}>
+                        <li className={`p-2 mt-2 lg:px-8 lg:px-8 text-sm md:m-0 md:text-lg ${i === 1 ? 'test': ''}`}>
+                            <Link className="lg:tracking-wider xl:tracking-widest " to={`/${childPage.name.toLowerCase()}`}>
                                 {childPage.name.toUpperCase()}
                             </Link>
                         </li>
@@ -70,9 +70,9 @@ export const ExpandableMenuIcon = ({
         );
     }
     return (
-        <li className={`p-2 mt-10 md:mt-2 md:mx-4 text-xl md:text-lg`}>
-            <button onClick={toggleExpand} className={`focus:outline-none flex items-center mx-auto justify-center md:items-center md:justify-evenly ${isActive ? 'sqrl-active-link-shop' : '' }`}>
-                <span className="mr-2">{name.toUpperCase()}</span>
+        <li className={`p-2 mt-10 md:mt-2 lg:px-8 lg:px-8 md:mx-4 text-xl md:text-lg`}>
+            <button onClick={toggleExpand} className={`focus:outline-none lg:tracking-wider xl:tracking-widest flex items-center mx-auto justify-center md:items-center md:justify-evenly ${isActive ? 'sqrl-active-link-shop' : '' }`}>
+                <span className="mr-2 ">{name.toUpperCase()}</span>
                 <PlusIcon />
             </button>
         </li>
@@ -87,14 +87,14 @@ export default ({
     const { pages, logo } = usePages();
 
     return (
-        <header className="hidden w-full self-center mb-4 md:p-4 md:align-center md:flex md:flex-col md:justify-center" style={{ maxWidth }}>
-            <Link to='/cart' className="ml-auto self-center order-2 md:order-none md:self-start">
+        <header className="hidden w-full self-center md:mt-10 md:mb-4 md:align-center md:flex md:flex-col lg:justify-center lg:p-4" style={{ maxWidth }}>
+            <Link to='/cart' className="ml-auto self-center order-2 md:order-none md:self-start mr-5">
                 <CartIcon numberOfItemsInCart={itemsInCart} />
             </Link>
             <Link to='/' className={`mx-auto`}>
-                <h1 className="text-2xl tracking-widest font-light">CLAIRE KENDALL</h1>
+                <h1 className="text-3xl lg:text-4xl font-normal md:tracking-wider lg:tracking-widest">CLAIRE KENDALL</h1>
             </Link>
-            <ul className={`w-full flex-col items-center text-center justify-center md:flex md:flex-row`}>
+            <ul className={`w-full flex-col items-center text-center justify-center md:flex md:flex-row lg:mt-6`}>
                 {[
                     // <li className="flex items-center p-5 mt-10 text-xl md:text-lg">
                     //     <SearchIcon />
@@ -107,22 +107,22 @@ export default ({
                                 );
                             }
                             return  (
-                                <li className="p-2 mt-2 text-xl md:text-lg mx-4">
-                                    <Link className="pb-2 border-white border-opacity-0 border-b-2 border-solid hover:border-opacity-100 hover:border-black" activeClassName="sqrl-active-link" to={page.link}>
+                                <li className="p-2 lg:px-8 mt-2 md:text-lg">
+                                    <Link className="pb-2 border-white lg:tracking-wider xl:tracking-widest border-opacity-0 border-b-2 border-solid hover:border-opacity-100 hover:border-black" activeClassName="sqrl-active-link" to={page.link}>
                                         {page.name.toUpperCase()}
                                     </Link>
                                 </li>
                             )
                         }),
-                        <li className="hidden md:flex p-2 mt-2 ml-5 text-xl md:text-lg mx-4">
+                        <li className="hidden lg:tracking-wider xl:tracking-widest md:flex lg:px-8 p-2 mt-2 ml-5 md:text-lg mx-4">
                             <Link to="/">
                                 <Img fluid={logo} className="w-24 mx-auto h-12" />
                             </Link>
                         </li>,
                     ...pages.slice(2, 4)
                         .map((page) => (
-                            <li className="p-5 mt-2 text-xl md:text-lg mx-4">
-                                <Link className="pb-2 border-white border-opacity-0 border-b-2 border-solid hover:border-opacity-100 hover:border-black" activeClassName="sqrl-active-link" to={page.link}>
+                            <li className="p-5 mt-2 md:text-lg mx-4">
+                                <Link className="pb-2  lg:tracking-wider xl:tracking-widest border-white border-opacity-0 border-b-2 border-solid hover:border-opacity-100 hover:border-black" activeClassName="sqrl-active-link" to={page.link}>
                                     {page.name.toUpperCase()}
                                 </Link>
                             </li>

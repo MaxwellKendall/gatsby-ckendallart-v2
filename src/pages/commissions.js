@@ -61,8 +61,8 @@ export default ({
     }, [activeSlideIndex])
 
     return (
-        <Layout location={location}>
-            <h2 className="w-full text-center tracking-widest text-3xl pt-12 md:pt-0 pb-12">YOUR DREAM CONCEPT MADE REALITY.</h2>
+        <Layout location={location} classNames="md:px-8">
+            <h2 className="w-full text-center tracking-wide md:tracking-wider lg:tracking-widest text-xl md:text-3xl pt-12 md:pt-0 pb-12">YOUR DREAM CONCEPT MADE REALITY.</h2>
             <div className="w-full">
                 {showCommissionCarousel && (
                     <CarouselProvider
@@ -113,7 +113,7 @@ export default ({
                     </div>
                 )}
             </div>
-            <h2 className="w-full text-center tracking-widest text-3xl py-12">
+            <h2 className="w-full text-center tracking-wide md:tracking-wider lg:tracking-widest text-xl md:text-3xl py-12">
                 LET'S GET STARTED:
             </h2>
             <CommissionForm requestStatus={requestStatus} setRequestStatus={setRequestStatus} />

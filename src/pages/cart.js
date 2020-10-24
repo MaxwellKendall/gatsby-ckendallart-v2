@@ -102,13 +102,15 @@ const CartPage = ({
   };
 
   return (
-    <Layout pageName="order-summary" location={location} isCheckoutLoading={loadingState === 'checkout'} maxWidth="72rem">
+    <Layout pageName="order-summary" classNames="lg:mt-12" location={location} isCheckoutLoading={loadingState === 'checkout'} maxWidth="72rem" classNames="px-4 md:px-8">
       {isUnavailable && <span>Out of stock! You got the last one! :)</span>}
       {cart.loading && <FontAwesomeIcon icon="spinner" spin />}
       {!cart.loading && cart.lineItems.length > 0 && (
-        <table className="w-full sqrl-font-1 mx-5">
+        <table className="w-full sqrl-font-1 mx-0 lg:mx-5">
           <thead className="flex w-full">
-            <tr className="w-full lg:w-1/2"></tr>
+            <tr className="w-full lg:w-1/2">
+            <th className="w-full hidden lg:flex text-center tracking-wider sqrl-font-1">PRODUCT</th>
+            </tr>
             <tr className="w-1/6 hidden lg:flex justify-center">
               <th className="w-full text-center tracking-wider sqrl-font-1">PRICE</th>
             </tr>
@@ -119,7 +121,7 @@ const CartPage = ({
               <th className="w-full text-right tracking-wider sqrl-font-1">TOTAL</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="flex w-11/12 flex-col-center mx-auto">
             {cart.lineItems
                 .filter((item) => item.variantId && item.quantity > 0)
                 .map((lineItem, i, src) => {
@@ -139,12 +141,12 @@ const CartPage = ({
                     <tr key={uniqueId('')} className={`flex w-full py-5 border-b-2`} style={{ borderColor: "#cdbdbd" }}>
                       <td className="w-full flex flex-col items-center lg:w-1/2 lg:flex-row">
                         <>
-                          <Link to={slug} className="flex">
+                          <Link to={slug} className="flex flex-col-center w-full">
                             <Img fixed={responsiveImgs.find(({ imgSize }) => imgSize === 'small' )} />
+                            <strong className="mt-4 text-center lg:text-left w-full">{variantTitle}</strong>
                           </Link>
                           <div className="flex-col-center mt-2 lg:m-0">
-                            <strong className="text-center self-center w-full lg:mx-2">{variantTitle}</strong>
-                            <button className="self-center cursor-pointer p-2 lg:p-5 tracking-wider sqrl-pink m-10 text-white rounded-full" onClick={() => removeVariant(lineItemId, 0, variantId)}>REMOVE</button>
+                            <button className="self-center cursor-pointer py-2 px-4 m-2 sqrl-pink text-white rounded-full lg:m-10 lg:p-5 lg:tracking-wider" onClick={() => removeVariant(lineItemId, 0, variantId)}>REMOVE</button>
                           </div>
                           <div className="flex-col-center lg:hidden">
                             <span>{`${getPrettyPrice(pricePerItem)} each.`}</span>
@@ -153,7 +155,7 @@ const CartPage = ({
                               <AddOrRemoveInventoryIcon classNames="ml-2" isLoading={loadingState === 'decrement'} icon='minus-circle' handler={(e) => removeVariant(lineItemId, quantity, variantId)} />
                               <AddOrRemoveInventoryIcon classNames="ml-1"  isLoading={loadingState === 'increment'} icon='plus-circle' handler={(e) => addVariant(lineItemId, quantity, variantId)} />
                             </div>
-                            <span className="pt-2">{`TOTAL: ${getPriceForCartItem(pricePerItem, quantity)}`}</span>
+                            <strong className="pt-2">{`TOTAL: ${getPriceForCartItem(pricePerItem, quantity)}`}</strong>
                           </div>
                         </>
                       </td>
@@ -171,7 +173,7 @@ const CartPage = ({
                           </div>
                         </>
                       </td>
-                      <td className="w-1/6 hidden lg:flex justify-end items-center tracking-wider">
+                      <td className="w-1/6 hidden lg:flex justify-end items-center tracking-wide md:tracking-wider">
                         <span className="text-lg text-right">{getPriceForCartItem(pricePerItem, quantity)}</span>
                       </td>
                     </tr>
@@ -184,7 +186,7 @@ const CartPage = ({
         <>
           {cart.lineItems.length > 0 && (
             <>
-              <span className="text-center text-2xl w-full pt-10 mr-5 lg:text-right tracking-wider">
+              <span className="text-center text-2xl w-full pt-10 mr-5 lg:text-right md:tracking-wide">
                 SUB TOTAL: {cart.totalPrice && <strong>{getPrettyPrice(cart.totalPrice)}</strong>}
               </span>
               {cart.totalPrice < 1000 && cart.totalPrice >= 35 && (
@@ -196,7 +198,7 @@ const CartPage = ({
                 </p>
               )}
               {(cart.totalPrice >= 1000 || cart.totalPrice < 35) && (
-                <p className="w-full items-center justify-center lg:justify-end pb-10 tracking-wider flex flex-wrap">
+                <p className="w-full items-center justify-center mt-4 lg:justify-end pb-10 tracking-wide flex flex-wrap">
                   Interest free installments by 
                   <button className="mx-1 flex-col-center" onClick={() => setIsModalOpen(true)}>
                       <Img fixed={afterPayLogo.fixed} />

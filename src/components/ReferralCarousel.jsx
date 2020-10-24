@@ -33,12 +33,16 @@ export default () => {
         `
     )
     return (
-        <div className="py-12 lg:py-24 flex align-center w-full">
-            <Arrow onClick={previousReferral} direction="left"/>
-            <p className="self-center text-center w-4/6 script-font tracking-wide text-4xl opacity-75 md:text-left">
+        <div className="py-12 lg:py-24 flex flex-col md:flex-row align-center w-full">
+            <Arrow onClick={previousReferral} direction="left" classNames="hidden md:flex" />
+            <p className="self-center text-center w-full text-xl md:text-2xl lg:text-3xl xl:text-4xl px-2 md:px-auto md:w-4/6 script-font tracking-wide opacity-75">
                 {referrals[activeReferral]}
             </p>
-            <Arrow onClick={previousReferral} direction="right" onClick={nextReferral} />
+            <div className="flex md:hidden">
+                <Arrow onClick={previousReferral} direction="left" classNames="mr-2" />
+                <Arrow onClick={previousReferral} direction="right" onClick={nextReferral} classNames="ml-2" />
+            </div>
+            <Arrow onClick={previousReferral} direction="right" onClick={nextReferral} classNames="hidden md:flex" />
         </div>
     );
 };

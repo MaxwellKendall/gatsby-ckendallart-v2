@@ -39,7 +39,7 @@ export default ({
         <Img className="w-full md:w-1/2" fluid={profilePic} />
       </div>
       <div className="text w-full flex flex-col m-5">
-        <p className="tracking-wider sqrl-font-1">
+        <p className="sqrl-font-1">
           Claire Kendall is a contemporary realist painter and private
           instructor in Charleston, SC. Trained from the age of thirteen by
           Susan Burgoyne, BFA, Claire received comprehensive instruction in
@@ -47,7 +47,7 @@ export default ({
           history education at the College of Charleston, graduating in 2013 and
           became an independent artist in 2017.
         </p>
-        <p className="my-5 tracking-wider sqrl-font-1">
+        <p className="my-5 sqrl-font-1">
           Claire is most inspired by the beauty of the natural world, especially
           the intricate varieties of flowers and flowing fabrics that she used
           to admire while working in the floral and wedding design industry of
@@ -56,7 +56,7 @@ export default ({
           particular for mof expression is always striving to achieve the
           elusive balance of timelessness and freshness in her paintings.
         </p>
-        <p className="my-5 tracking-wider sqrl-font-1">psalm 92:4-5</p>
+        <p className="my-5 tracking-wide sqrl-font-1">psalm 92:4-5</p>
       </div>
     </Layout>
   )
