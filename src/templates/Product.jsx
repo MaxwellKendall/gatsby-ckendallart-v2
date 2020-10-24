@@ -8,6 +8,7 @@ import Modal from 'react-modal';
 
 import CartContext from "../../globalState";
 import Layout from "../components/Layout";
+import SEO from "../components/SEO";
 import {
     getParsedVariants,
     localStorageKey,
@@ -293,6 +294,10 @@ export default ({
 
     return (
         <Layout pageName="product-page" flexDirection="row" classNames="flex-wrap sqrl-grey" maxWidth="100rem" location={location}>
+            <SEO
+                title={title}
+                image={selectedImg?.responsiveImgs[0]}
+                description={description} />
             {/* MOBILE TITLE ONLY */}
             <h2 className="text-xl tracking-widest text-center w-full my-4 md:text-2xl lg:text-4xl lg:hidden">{title.toUpperCase()}</h2>
             {/* MAIN PRODUCT IMG */}

@@ -10,9 +10,22 @@ require('dotenv').config({
 
 module.exports = {
   siteMetadata: {
-    title: `Ckendall Art V2`,
-    description: `Claire Kendall Art; V2.`,
-    author: `Maxwell Kendall`,
+    title: `Claire Kendall | Fine Studio Artist`,
+    description: `Claire Kendall Art is a fine studio artist from Charleston South Carolina.`,
+    siteUrl: 'https://clairekendallartv2.gtsb.io',
+    author: `Claire Kendall Art`,
+    keywords: [
+      'studio artist',
+      'charleston',
+      'oil paintings',
+      'oil painting',
+      'flower painting',
+      'art',
+      'floral painting',
+      'fine artist',
+      'art commissions'
+    ],
+    email: 'info@ckendallart.com',
     pages: [
       {
         name: 'Portfolio',
