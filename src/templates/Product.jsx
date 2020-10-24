@@ -266,7 +266,7 @@ export default ({
         <Layout pageName="product-page" flexDirection="row" classNames="flex-wrap sqrl-grey" maxWidth="100rem" location={location}>
             <h2 className="text-xl tracking-widest text-center w-full my-4 md:text-2xl lg:text-4xl lg:hidden">{title}</h2>
             {selectedVariant.img && (
-                <div className="md:mx-5 lg:w-3/5">
+                <div className="md:mx-5 lg:w-1/2 xl:w-3/5">
                     <div className="flex justify-center mb-4">
                         <style>{getServerSideMediaQueries(selectedImg.responsiveImgs, ".product-img, .product-img img")}</style>
                         <Img
@@ -311,12 +311,12 @@ export default ({
                     </ul>
                 </div>
             )}
-            <div className="product-desc flex flex-col items-center self-center w-full mt-5 lg:w-1/4 xl:w-1/3 lg:mr-5 lg:my-0">
-                <h2 className="hidden lg:inline text-4xl tracking-widest text-center">{title}</h2>
-                {!isSoldOut && <p className="lg:inline text-2xl py-4 tracking-widest">{getPrettyPrice(selectedVariant.price)}</p>}
+            <div className="product-desc flex flex-col items-center self-center w-full mt-5 lg:w-2/5 xl:w-1/3 lg:mr-5 lg:my-0">
+                <h2 className="hidden lg:inline text-4xl tracking-widest text-left">{title.toUpperCase()}</h2>
+                {!isSoldOut && <p className="lg:inline w-full text-2xl py-4 tracking-widest text-center lg:my-5 lg:text-left">{getPrettyPrice(selectedVariant.price)}</p>}
                 {high !== low && !isSoldOut && <p className="lg:flex text-sm italic">{`from ${getPrettyPrice(low)} to ${getPrettyPrice(high)}`}</p>}
                 {!isSoldOut && selectedVariant.price >= 35 && selectedVariant.price < 1000 && (
-                    <p className="items-center tracking-wider flex flex-wrap justify-center flex-wrap">
+                    <p className="w-full flex text-center lg:text-left justify-center lg:justify-start flex-wrap uppercase tracking-wide">
                         or 4 interest-free installments of <strong className="mx-1">{` ${getAfterPaySingleInstallment(selectedVariant.price)} `}</strong> by 
                         <button className="mx-1 flex-col-center" onClick={showAfterPayImg}>
                             <Img  fixed={afterPayLogo.fixed} />
@@ -324,7 +324,7 @@ export default ({
                     </p>
                 )}
                 {!isSoldOut && (selectedVariant.price < 35 || selectedVariant.price >= 1000) && (
-                    <p className="flex justify-center w-full flex-wrap align-center tracking-wider">
+                    <p className="w-full flex text-center lg:text-left justify-center lg:justify-start flex-wrap uppercase tracking-wide">
                         Interest free installments by 
                         <button className="mx-1 flex items-center" onClick={showAfterPayImg}>
                             <Img fixed={afterPayLogo.fixed} />
@@ -334,7 +334,7 @@ export default ({
                 )}
                 <div className="actions w-full flex flex-col my-5 justify-start items-center">
                     <button
-                        className="border text-white border-black w-64 py-5 px-2 text-xl uppercase mb-2 self-center sqrl-purple"
+                        className="border text-white border-black w-64 py-5 px-2 text-xl uppercase mb-2 self-center lg:self-start sqrl-purple"
                         disabled={(isSoldOut || isLoading)}
                         onClick={handleAddToCart}>
                         {isLoading && <FontAwesomeIcon icon="spinner" spin />}
