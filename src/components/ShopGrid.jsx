@@ -6,7 +6,6 @@ import { getDefaultProductImage, getPrettyPrice } from "../helpers/products"
 import Img from './Img';
 
 const defaultSort = ({ variants: variantsA, priceRange: { low: lowestPriceA } }, { variants: variantsB, priceRange: { low: lowestPriceB } }) => {
-
     const a = variantsA.some((({ availableForSale }) => availableForSale));
     const b = variantsB.some((({ availableForSale }) => availableForSale));
     if (a && !b) return -1;
@@ -19,14 +18,16 @@ const defaultSort = ({ variants: variantsA, priceRange: { low: lowestPriceA } },
 export default ({
     products,
     sortFn = defaultSort,
-    ctx = "forSale"
+    ctx = "forSale",
+    path
 }) => {
     const imgRef = useRef(null);
     const [titleDimensions, setTitleDimensions] = useState({ width: 300 });
 
     const handleResize = () => {
         if (imgRef.current.imageRef && imgRef.current.imageRef.current) {
-            const { width } = imgRef.current.imageRef.current.getBoundingClientRect();
+            const { naturalWidth: width } = imgRef.current.imageRef.current;
+            console.log("test HELLOO", width)
             setTitleDimensions({ width });
         }
     }
@@ -38,11 +39,12 @@ export default ({
 
     useEffect(() => {
         handleResize();
-    }, [imgRef.current]);
+    }, [imgRef.current, path]);
 
     const sortedProducts = products
         .sort(sortFn);
-
+    
+    console.log('test', imgRef);
     return (
         <>
             <ul className="flex flex-col w-full lg:w-1/2">
@@ -52,16 +54,16 @@ export default ({
                             ? 'flex'
                             // show the odd ones in  the first column until desktop
                             : 'flex lg:hidden'
-                        return ({ ...product, className, img: getDefaultProductImage(product)})
+                        return ({ ...product, className, img: getDefaultProductImage(product) })
                     })
                     .filter(({ img }) => img)
-                    .map(({ slug, img, title, variants, priceRange: { low: lowestPrice }, className }) => {
+                    .map(({ slug, img, title, variants, priceRange: { low: lowestPrice }, className }, i) => {
                         const hasVariantForSale = variants.some((({ availableForSale }) => availableForSale));
                         return (
                             <li className={`my-2 lg:mr-2 ${className}`}>
                                 <Link to={slug} className="grid-product-img flex flex-col items-center lg:items-end w-full">
                                     <div className="relative">
-                                        <Img imgRef={imgRef} responsiveImgs={img} imgName={kebabCase(title)} />
+                                        <Img imgRef={i === 0 ? imgRef : null} responsiveImgs={img} imgName={kebabCase(title)} />
                                         {!hasVariantForSale && ctx === "forSale" && (
                                             <span
                                                 className="absolute top-0 mt-4 md:mt-12 text-white font-semibold text-center w-24 md:w-40 text-2xl md:text-3xl py-2 left-0 tracking-widest"
@@ -98,7 +100,7 @@ export default ({
                             <li className={`my-2 ml-2 ${className}`}>
                                 <Link to={slug} className="grid-product-img flex flex-col items-start w-full">
                                     <div className="relative">
-                                        <Img imgRef={imgRef} responsiveImgs={img} imgName={kebabCase(title)} />
+                                        <Img responsiveImgs={img} imgName={kebabCase(title)} />
                                         {!hasVariantForSale && ctx === "forSale" && (
                                             <span
                                                 className="absolute top-0 mt-4 md:mt-12 text-white font-semibold text-center w-24 md:w-40 text-2xl md:text-3xl py-2 left-0 tracking-widest"

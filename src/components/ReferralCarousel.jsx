@@ -35,7 +35,7 @@ export default () => {
     return (
         <div className="py-12 lg:py-24 flex flex-col md:flex-row align-center w-full">
             <Arrow onClick={previousReferral} direction="left" classNames="hidden md:flex" />
-            <p className="self-center text-center w-full text-xl md:text-2xl lg:text-3xl xl:text-4xl px-2 md:px-auto md:w-4/6 script-font tracking-wide opacity-75">
+            <p className="self-center text-center w-full text-base xl:text-xl px-2 md:px-auto md:w-4/6 tracking-wide script-font opacity-75">
                 {referrals[activeReferral]}
             </p>
             <div className="flex md:hidden">

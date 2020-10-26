@@ -8,6 +8,10 @@ require('dotenv').config({
   path: `.env`
 });
 
+const caroleHarrisonReview = `"My family commissioned Claire to paint a portrait of our precious Boykin Spaniel. The finished piece is excellent.  Claire took the original portrait photos of our pup (she is such a dog lover) and then captured the dog's likeness (especially) and the overall composition to our complete satisfaction.  Claire was timely and very open to suggestions or critique.  She wanted us to be completely satisfied with the final product and we could not be happier. Highly recommend!"
+Carol H., Asheville, NC`;
+const debbieCharlesReview = `“Claire listens - she was able to take my vision and duplicate it on canvas. She is a true talent - easy to work with and my finished masterpiece is a joy to sit and admire.” Debbie C., Charleston, S.C.`;
+
 module.exports = {
   siteMetadata: {
     title: `Claire Kendall | Fine Studio Artist`,
@@ -60,8 +64,9 @@ module.exports = {
       'Fine art made for you, with love.'
     ],
     referrals: [
-      `“Claire listens - she was able to take my vision and duplicate it on canvas. She is a true talent - easy to work with and my finished masterpiece is a joy to sit and admire.” Debbie C. Charleston, S.C.`,
-      `"SQRLE is a real good painter. She paints real good." TKL BOI TKLVILLE, USA`
+      debbieCharlesReview,
+      `"SQRLE is a real good painter. She paints real good." TKL BOI TKLVILLE, USA`,
+      caroleHarrisonReview
     ]    
   },
   plugins: [

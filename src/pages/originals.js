@@ -12,7 +12,7 @@ export default ({
 }) => {
     return (
         <Layout classNames="sqrl-grey" location={location}>
-            <ShopGrid products={originals} />
+            <ShopGrid products={originals} path={location.pathname} />
         </Layout>
     );
 }
