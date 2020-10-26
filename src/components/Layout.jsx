@@ -117,8 +117,8 @@ export const Layout = ({
         setSubscribeStatus({ isLoading: true, alreadyExists: false });
         return subscribeToEmail(userEmail, status)
             .then((data) => {
-                if (data.title === 'Member Exists') {
-                    throw(data);
+                if (data.title === 'Member Exists' || data.title === "Invalid Resource") {
+                    throw({ email_address: userEmail, ...data });
                 }
                 setSubscribeStatus({
                     ...defaultSubscribeStatus,
@@ -137,25 +137,20 @@ export const Layout = ({
             })
             .catch((e) => {
                 console.error('Error Subscribing Member to List: ', e);
-                if (e.title === 'Member Exists') {
+                setSubscribeStatus({
+                    ...subscribeStatus,
+                    subscribed: e.title === "Member Exists",
+                    isLoading: false,
+                    showError: e.title,
+                    emailAddress: e.email_address
+                });
+                confirmationToast = delay(() => {
                     setSubscribeStatus({
-                        subscribed: true,
-                        isLoading: false,
-                        subscribed: true,
-                        showError: true,
-                        emailAddress: e.detail.split(' ')[0]
+                        ...subscribeStatus,
+                        showConfirmation: false,
+                        showError: false
                     });
-                    confirmationToast = delay(() => {
-                        setSubscribeStatus({
-                            ...subscribeStatus,
-                            showConfirmation: false,
-                            showError: false
-                        });
-                    }, toastDelay);
-                }
-                else {
-                    setSubscribeStatus(defaultSubscribeStatus)
-                }
+                }, toastDelay);
             })
     };
 
@@ -189,8 +184,11 @@ export const Layout = ({
                     {!isCheckoutLoading && children}
             </main>
             <footer className='flex-shrink-0 p-5 text-center'>
-                {subscribeStatus.showError && (
+                {subscribeStatus.showError && subscribeStatus.showError === 'Member Exists' && (
                     <p>Hey, {subscribeStatus.emailAddress} is already subscribed! 🙌</p>
+                )}
+                {subscribeStatus.showError && subscribeStatus.showError === 'Invalid Resource' && (
+                    <p>Uh oh... {subscribeStatus.emailAddress} doesn't appear to be a valid email! 😢</p>
                 )}
                 {subscribeStatus.showConfirmation && subscribeStatus.status === 'subscribed' && (
                     <p>Hey, {subscribeStatus.emailAddress} welcome to the family! 🙌</p>
@@ -208,7 +206,7 @@ export const Layout = ({
                         <label className="pr-5 leading-7 tracking-wider">be the first to know</label>
                         <input className="leading-7 w-full md:w-auto border-solid border-black" type="email" name="MERGE0" value={userEmail} onChange={updateUserEmail} />
                         <button
-                            disabled={subscribeStatus.subscribed}
+                            disabled={(subscribeStatus.subscribed || !userEmail)}
                             type="submit"
                             className="leading-7 w-full px-10 md:px-5 md:w-auto md:ml-2"
                             onClick={handleSubmit}>
