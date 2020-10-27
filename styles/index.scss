@@ -97,6 +97,9 @@ body,
     }
 
     .default-page {
+        svg .st0 {
+            fill:#FFFFFF;
+        }
         &.home {
             background: white;
         }

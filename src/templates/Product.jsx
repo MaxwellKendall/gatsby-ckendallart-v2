@@ -20,6 +20,7 @@ import {
 import { initCheckout, addLineItemsToCart, updateLineItemsInCart } from '../../client';
 import { getAfterPaySingleInstallment, getPrettyPrice, useAllProducts } from '../helpers/products';
 import { getResponsiveImages, getServerSideMediaQueries } from '../helpers/img';
+import AfterPay from '../components/AfterPay';
 
 const isSSR = (typeof window === 'undefined');
 const hoverPositionOffset = 0.25;
@@ -69,7 +70,6 @@ export default ({
         shopifyProduct: product,
         productImages,
         otherImagesInCollection,
-        afterPayImg: { img: afterPayLogo },
         afterPayPopup: { img: afterPayPopup }
     },
     location
@@ -364,19 +364,19 @@ export default ({
                 )}
                 {/* AFTER PAY DISCLOSURE WHEN INSTALLMENTS ARE KNOWN (Product price is under $1K) */}
                 {!isSoldOut && selectedVariant.price >= 35 && selectedVariant.price < 1000 && (
-                    <p className="w-full flex text-center lg:text-left justify-center lg:justify-start flex-wrap uppercase tracking-wide">
+                    <p className="w-full flex text-center lg:text-left justify-center items-center lg:justify-start flex-wrap uppercase tracking-wide">
                         or 4 interest-free installments of <strong className="mx-1">{` ${getAfterPaySingleInstallment(selectedVariant.price)} `}</strong> by 
                         <button className="m-1 flex-col-center" onClick={showAfterPayImg}>
-                            <Img  fixed={afterPayLogo.fixed} />
+                            <AfterPay />
                         </button>
                     </p>
                 )}
                 {/* AFTER PAY DISCLOSURE WHEN INSTALLMENTS ARE UNKNOWN (Product price is over $1K) */}
                 {!isSoldOut && (selectedVariant.price < 35 || selectedVariant.price >= 1000) && (
-                    <p className="w-full flex text-center lg:text-left justify-center lg:justify-start flex-wrap uppercase tracking-wide">
+                    <p className="w-full flex text-center lg:text-left justify-center items-center lg:justify-start flex-wrap uppercase tracking-wide px-5 lg:px-0">
                         Interest free installments by 
                         <button className="m-1 flex items-center" onClick={showAfterPayImg}>
-                            <Img fixed={afterPayLogo.fixed} />
+                            <AfterPay />
                         </button>
                         available between <strong className="mx-1">{getPrettyPrice(35)}</strong> and <strong className="mx-1">{getPrettyPrice(1000)}</strong>.
                     </p>
@@ -551,13 +551,6 @@ export const query = graphql`
                             }
                         }
                     }
-                }
-            }
-        }
-        afterPayImg: file(name: {eq: "afterpay"}) {
-            img: childImageSharp {
-                fixed(width:75) {
-                    ...GatsbyImageSharpFixed
                 }
             }
         }

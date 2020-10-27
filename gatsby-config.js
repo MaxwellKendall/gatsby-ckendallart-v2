@@ -10,7 +10,8 @@ require('dotenv').config({
 
 const caroleHarrisonReview = `"My family commissioned Claire to paint a portrait of our precious Boykin Spaniel. The finished piece is excellent.  Claire took the original portrait photos of our pup (she is such a dog lover) and then captured the dog's likeness (especially) and the overall composition to our complete satisfaction.  Claire was timely and very open to suggestions or critique.  She wanted us to be completely satisfied with the final product and we could not be happier. Highly recommend!"
 Carol H., Asheville, NC`;
-const debbieCharlesReview = `“Claire listens - she was able to take my vision and duplicate it on canvas. She is a true talent - easy to work with and my finished masterpiece is a joy to sit and admire.” Debbie C., Charleston, S.C.`;
+const debbieCharlesReview = `“Claire listens - she was able to take my vision and duplicate it on canvas. She is a true talent - easy to work with and my finished masterpiece is a joy to sit and admire.” Debbie C., Charleston, SC`;
+const pudIveyReview = `"I reached out to Claire to paint a portrait of my wife’s wedding bouquet as a gift for our 3rd anniversary. She delivered above and beyond expectation! She patiently worked with me and used her expertise to help me decide on the right background color. She was insightful, kind, and helpful. The painting is exquisite and one of our favorite pieces in our home!" Pud I., Jacksonville, FL`
 
 module.exports = {
   siteMetadata: {
@@ -65,8 +66,8 @@ module.exports = {
     ],
     referrals: [
       debbieCharlesReview,
-      `"SQRLE is a real good painter. She paints real good." TKL BOI TKLVILLE, USA`,
-      caroleHarrisonReview
+      pudIveyReview,
+      caroleHarrisonReview,
     ]    
   },
   plugins: [

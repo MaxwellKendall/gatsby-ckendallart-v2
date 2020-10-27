@@ -3,16 +3,18 @@ import { Link } from "gatsby"
 import Img from "gatsby-image"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import Modal from 'react-modal';
+import { uniqueId, delay } from "lodash";
 
-import CartContext from "../../globalState"
-import Layout from "../components/Layout"
+import CartContext from "../../globalState";
+import Layout from "../components/Layout";
+import afterpay from "../components/AfterPay";
 import { getCustomAttributeFromCartByVariantId, getInventoryDetails } from "../helpers"
 import {
   removeLineItemsFromCart,
   updateLineItemsInCart,
 } from "../../client"
-import { uniqueId, delay } from "lodash"
 import { getPrettyPrice, useAllProducts, getAfterPaySingleInstallment } from "../helpers/products";
+import AfterPay from "../components/AfterPay";
 
 const AddOrRemoveInventoryIcon = ({ isLoading, icon, handler, classNames = '' }) => {
   if (isLoading) {
@@ -42,7 +44,6 @@ Modal.setAppElement('#___gatsby');
 const CartPage = ({
   location,
   data: {
-    afterPayImg: { img: afterPayLogo },
     afterPayPopup: { img: afterPayPopup }
   }
 }) => {
@@ -190,7 +191,7 @@ const CartPage = ({
                 <p className="w-full text-center items-center justify-center lg:justify-end pb-10 tracking-wider flex flex-wrap">
                     or 4 interest-free installments of <strong className="mx-1">{` ${getAfterPaySingleInstallment(cart.totalPrice)} `}</strong> by 
                     <button className="mx-1 flex-col-center" onClick={() => setIsModalOpen(true)}>
-                        <Img fixed={afterPayLogo.fixed} />
+                        <AfterPay />
                     </button>
                 </p>
               )}
@@ -198,7 +199,7 @@ const CartPage = ({
                 <p className="w-full text-center items-center justify-center mt-4 lg:justify-end pb-10 tracking-wide flex flex-wrap">
                   Interest free installments by 
                   <button className="mx-1 flex-col-center" onClick={() => setIsModalOpen(true)}>
-                      <Img fixed={afterPayLogo.fixed} />
+                      <AfterPay />
                   </button>
                   available between <strong className="mx-1">{getPrettyPrice(35)}</strong> and <strong className="mx-1">{getPrettyPrice(1000)}</strong>.
               </p>
