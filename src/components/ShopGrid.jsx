@@ -21,33 +21,9 @@ export default ({
     ctx = "forSale",
     path
 }) => {
-    const imgRef = useRef(null);
-    const [titleDimensions, setTitleDimensions] = useState({ width: 0 });
-
-    const handleResize = () => {
-        if (imgRef.current.imageRef && imgRef.current.imageRef.current) {
-            const { naturalWidth: width } = imgRef.current.imageRef.current;
-            console.log("test HELLOO", width)
-            if (width > 0) {
-                setTitleDimensions({ width });
-            }
-        }
-    }
-
-    useEffect(() => {
-        window.addEventListener('resize', handleResize);
-        handleResize();
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
-
-    useEffect(() => {
-        handleResize();
-    }, [imgRef.current, path]);
-
     const sortedProducts = products
         .sort(sortFn);
     
-    console.log('test', imgRef);
     return (
         <>
             <ul className="flex flex-col w-full lg:w-1/2">
@@ -66,7 +42,7 @@ export default ({
                             <li className={`my-2 lg:mr-2 ${className}`}>
                                 <Link to={`${slug}/`} className="grid-product-img flex flex-col items-center lg:items-end w-full">
                                     <div className="relative">
-                                        <Img imgRef={i === 0 ? imgRef : null} responsiveImgs={img} imgName={kebabCase(title)} />
+                                        <Img responsiveImgs={img} imgName={kebabCase(title)} />
                                         {!hasVariantForSale && ctx === "forSale" && (
                                             <span
                                                 className="absolute top-0 mt-4 md:mt-12 text-white font-semibold text-center w-24 md:w-40 text-2xl md:text-3xl py-2 left-0 tracking-widest"
@@ -75,8 +51,8 @@ export default ({
                                             </span>
                                         )}
                                         <span
-                                            className="hidden md:flex opacity-0 product-info font-semibold text-base md:text-xl py-5 mb-5 bottom-0 absolute flex-wrap items-center justify-center bg-gray-300 tracking-widest text-center w-full"
-                                            style={{ ...titleDimensions, marginBottom: '7px' }}>
+                                            className="hidden md:flex opacity-0 product-info font-semibold text-base md:text-xl py-5 mb-5 px-5 bottom-0 absolute flex-wrap items-center justify-center bg-gray-300 tracking-widest text-center w-full"
+                                            style={{ width: '100%', marginBottom: '7px' }}>
                                                 {title.toUpperCase()}
                                                 {hasVariantForSale && variants.length > 1 && <span className="w-full text-center">from {getPrettyPrice(lowestPrice)}</span>}
                                                 {hasVariantForSale && variants.length === 1 && <span className="w-full text-center">{getPrettyPrice(lowestPrice)}</span>}
@@ -112,8 +88,8 @@ export default ({
                                             </span>
                                         )}
                                         <span
-                                            className="hidden md:flex opacity-0 product-info font-semibold text-base md:text-xl py-5 mb-5 bottom-0 absolute flex-wrap items-center justify-center bg-gray-300 tracking-widest text-center w-full"
-                                            style={{ ...titleDimensions, marginBottom: '7px' }}>
+                                            className="hidden md:flex opacity-0 product-info font-semibold text-base md:text-xl py-5 mb-5 px-5 bottom-0 absolute flex-wrap items-center justify-center bg-gray-300 tracking-widest text-center w-full"
+                                            style={{ width: '100%', marginBottom: '7px' }}>
                                                 {title.toUpperCase()}
                                                 {hasVariantForSale && variants.length > 1 && <span className="w-full text-center">from {getPrettyPrice(lowestPrice)}</span>}
                                                 {hasVariantForSale && variants.length === 1 && <span className="w-full text-center">{getPrettyPrice(lowestPrice)}</span>}
