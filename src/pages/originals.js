@@ -19,7 +19,7 @@ export default ({
 
 export const query = graphql`
     query GetOnlyOriginals {
-        allShopifyProduct(filter: {collection: {regex: "/^((?!Print|Commissions).)*$/"}}) {
+        allShopifyProduct(filter: {collection: {eq: "Originals Shop"}}) {
             nodes {
                 optimizedImages
                 title

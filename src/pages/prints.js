@@ -19,7 +19,7 @@ export default ({
 
 export const query = graphql`
     query GetOnlyPrints {
-        allShopifyProduct(filter: {collection: {eq: "Print Shop"}}) {
+        allShopifyProduct(filter: {collection: {eq: "Prints Shop"}}) {
             nodes {
                 optimizedImages
                 title

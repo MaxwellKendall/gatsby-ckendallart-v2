@@ -37,83 +37,91 @@ exports.sourceNodes = async ({ actions, createNodeId, createContentDigest }, opt
         internal: {
             type: name,
             mediaType: `applicaton/json`,
-            // content: JSON.stringify(content),
+            content: JSON.stringify(content),
             content: '',
             contentDigest: createContentDigest([])
         },
     });
     
-    const { data: { collections: { edges }}} = await fetchData(GetAllCollections, {
+    const { data: { collections: { edges: allCollections }}} = await fetchData(GetAllCollections, {
         first: 250
     });
 
-    return edges
-        .reduce((prevPromise, collection) => prevPromise
-        .then(async (resp) => {
-            if (!resp) {
-                return fetchData(GetAllProductsInCollection, { first: 250, handle: collection.node.handle });
-            }
-
-            // create CollectionNodes
-            const { data: { collectionByHandle }} = resp;
-            const { title, description, id, handle } = collectionByHandle;
-            const collectionNode = createNodeWithMeta(id, { title, description, id, handle, count: collectionByHandle.products.length }, 'ShopifyCollection');
-
-            await createNode(collectionNode);
-
-            // create ProductNodes
-            const products = collectionByHandle.products.edges.map((product) => {
-                const {
-                    createdAt,
-                    description,
-                    images,
-                    handle,
-                    title,
-                    productType,
-                    totalInventory,
-                    priceRange,
-                    id,
-                    variants,
-                    tags
-                } = product.node;
-                return {
-                    id,
-                    productId: id,
-                    createdAt,
-                    description,
-                    tags,
-                    images: images.edges.map((image) => image.node.originalSrc),
-                    variants: variants.edges.map(({ node }) => {
-                        return {
-                            ...node,
-                            image: node.image.originalSrc
-                        };
-                    }),
-                    hasOnlyDefaultVariant: (variants.edges.length === 1),
-                    title,
-                    collection: collectionByHandle.title,
-                    handle,
-                    productType,
-                    slug: productType.toLowerCase() === 'print'
-                        ? `prints/${handle}`
-                        : `originals/${handle}`,
-                    totalInventory,
-                    priceRange: {
-                        high: priceRange.maxVariantPrice.amount,
-                        low: priceRange.minVariantPrice.amount
-                    }
-                };
-            });
-            return products.reduce((prevPromise, product) => prevPromise
+    const parseProductsFromCollection = async ({ data: { collectionByHandle } }) => {
+        // create CollectionNodes
+        const { title, description, id, handle, products: { edges: allProducts} } = collectionByHandle;
+        const collectionNode = createNodeWithMeta(id, { title, description, id, handle, count: allProducts.length }, 'ShopifyCollection');
+    
+        await createNode(collectionNode);
+        const parsedProducts = allProducts.map((product) => {
+            const {
+                createdAt,
+                description,
+                images,
+                handle,
+                title,
+                productType,
+                totalInventory,
+                priceRange,
+                id,
+                variants,
+                tags
+            } = product.node;
+            return {
+                id,
+                productId: id,
+                createdAt,
+                description,
+                tags,
+                images: images.edges.map((image) => image.node.originalSrc),
+                variants: variants.edges.map(({ node }) => {
+                    return {
+                        ...node,
+                        image: node.image.originalSrc
+                    };
+                }),
+                hasOnlyDefaultVariant: (variants.edges.length === 1),
+                title,
+                collection: collectionByHandle.title,
+                handle,
+                productType,
+                slug: productType.toLowerCase() === 'print'
+                    ? `prints/${handle}`
+                    : `originals/${handle}`,
+                totalInventory,
+                priceRange: {
+                    high: priceRange.maxVariantPrice.amount,
+                    low: priceRange.minVariantPrice.amount
+                }
+            };
+        })
+        return parsedProducts
+            .reduce((prevPromise, product) => prevPromise
                 .then((resp) => {
                     return createNode(createNodeWithMeta(product.id, product, 'ShopifyProduct'));
-                }), Promise.resolve(null))
+                })
+            , Promise.resolve(null))
+            .then(() => {
+                console.info(`Products for ${title} added 🙌 `);
+            });
+    };
+
+    return allCollections
+        .reduce((prevPromise, { node: { handle } }) => prevPromise
+        .then((resp) => {
+            if (!resp) {
+                return fetchData(GetAllProductsInCollection, { first: 250, handle });
+            }
+            return parseProductsFromCollection(resp)
+                .then(() => fetchData(GetAllProductsInCollection, { first: 250, handle }))
+            }), Promise.resolve(null))
+            .then((resp) => {
+                return parseProductsFromCollection(resp);
             })
-            .then(() => fetchData(GetAllProductsInCollection, { first: 250, handle: collection.node.handle }))
             .catch((e) => {
-                console.log(`error fetching data ${e}`);
-            }), Promise.resolve(null));
-};
+                console.error(`Error fetching data 😭 : ${e}`);
+            })
+}
 
 const processFileNode = (fileNode, previousImage, node) => {
     const isFileNodeDefined = (fileNode)

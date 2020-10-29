@@ -125,7 +125,7 @@ export default ({
 
 export const query = graphql`
     query GetPreviousCommissions {
-        commissions: allShopifyProduct(filter: {collection: {eq: "Commissions v2"}}) {
+        commissions: allShopifyProduct(filter: {collection: {eq: "Commissions"}}) {
             nodes {
                 productType
                 handle
