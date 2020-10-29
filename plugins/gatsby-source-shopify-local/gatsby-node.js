@@ -73,13 +73,15 @@ exports.sourceNodes = async ({ actions, createNodeId, createContentDigest }, opt
                     totalInventory,
                     priceRange,
                     id,
-                    variants
+                    variants,
+                    tags
                 } = product.node;
                 return {
                     id,
                     productId: id,
                     createdAt,
                     description,
+                    tags,
                     images: images.edges.map((image) => image.node.originalSrc),
                     variants: variants.edges.map(({ node }) => {
                         return {
