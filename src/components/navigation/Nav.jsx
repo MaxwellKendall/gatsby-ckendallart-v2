@@ -60,7 +60,7 @@ export const ExpandableMenuIcon = ({
                 <ul className="md:absolute md:bg-white md:z-10 md:rounded md:shadow">
                     {childPages.map((childPage, i) => (
                         <li className={`p-2 mt-2 lg:px-8 lg:px-8 text-sm md:m-0 md:text-lg ${i === 1 ? 'test': ''}`}>
-                            <Link className="lg:tracking-wider xl:tracking-widest " to={`/${childPage.name.toLowerCase()}`}>
+                            <Link className="lg:tracking-wider xl:tracking-widest " to={`/${childPage.name.toLowerCase()}/`}>
                                 {childPage.name.toUpperCase()}
                             </Link>
                         </li>
