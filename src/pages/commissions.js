@@ -49,7 +49,7 @@ export default ({
     const [requestStatus, setRequestStatus] = useState("pristine")
 
     const commissionsWithRef = commissions.map((obj) => ({ ...obj, ref: useRef() }));
-    const seaScape = commissions[0];
+    const seaScape = commissions.find(({ handle }) => handle === 'pelican-seascape');
     const seaScapeCommissionImgs = getResponsiveImages(seaScape.variants[0]).responsiveImgs;
 
     useEffect(() => {
