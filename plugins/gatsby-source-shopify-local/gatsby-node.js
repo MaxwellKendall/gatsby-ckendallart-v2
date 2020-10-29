@@ -12,7 +12,7 @@ const { kebabCase } = require('lodash');
 const client = new ApolloClient({
   cache: new InMemoryCache(),
   link: new HttpLink({
-    uri: `https://${process.env.SHOP_NAME}.com/api/2020-04/graphql.json`,
+    uri: `https://${process.env.SHOP_NAME}.myshopify.com/api/2020-04/graphql.json`,
     headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -23,7 +23,7 @@ const client = new ApolloClient({
 });
 
 const fetchData = async (query, vars) => {
-    return client.query({ query, variables: vars })
+    return client.query({ query, variables: vars });
 };
 
 exports.sourceNodes = async ({ actions, createNodeId, createContentDigest }, options = {}) => {
@@ -37,11 +37,12 @@ exports.sourceNodes = async ({ actions, createNodeId, createContentDigest }, opt
         internal: {
             type: name,
             mediaType: `applicaton/json`,
-            content: JSON.stringify(content),
+            // content: JSON.stringify(content),
+            content: '',
             contentDigest: createContentDigest([])
         },
     });
-
+    
     const { data: { collections: { edges }}} = await fetchData(GetAllCollections, {
         first: 250
     });
