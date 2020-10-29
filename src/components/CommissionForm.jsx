@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { trackCustomEvent } from 'gatsby-plugin-google-analytics'
 
 import { requestCommission } from "../../client"
 import { getFileAsBase64String } from "../helpers/img"
@@ -68,6 +69,16 @@ export default ({
   }
 
   const submit = async () => {
+    trackCustomEvent({
+      // string - required - The object that was interacted with (e.g.video)
+      category: "Commission Request",
+      // string - required - Type of interaction (e.g. 'play')
+      action: "Submit",
+      // string - optional - Useful for categorizing events (e.g. 'Spring Campaign')
+      label: "Submission Request",
+      // number - optional - Numeric value associated with the event. (e.g. A product ID)
+      value: values?.email
+    });
     setRequestStatus("loading")
     const uploadedFileAsString = file.current
       ? await getFileAsBase64String(file.current.files[0])

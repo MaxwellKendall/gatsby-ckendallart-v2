@@ -71,6 +71,31 @@ module.exports = {
     ]    
   },
   plugins: [
+    {
+      resolve: `gatsby-plugin-gtag`,
+      options: {
+        // The property ID; the tracking code won't be generated without it
+        trackingId: "UA-93812603-1",
+        // Defines where to place the tracking script - `true` in the head and `false` in the body
+        head: true,
+        // Avoids sending pageview hits from custom paths
+        exclude: [""],
+        // Delays sending pageview hits on route update (in milliseconds)
+        pageTransitionDelay: 0,
+        // Enables Google Optimize using your container Id
+        optimizeId: "",
+        // Enables Google Optimize Experiment ID
+        experimentId: "",
+        // Set Variation ID. 0 for original 1,2,3....
+        variationId: "",
+        // Defers execution of google analytics script after page load
+        defer: false,
+        // Any additional optional fields
+        sampleRate: 5,
+        siteSpeedSampleRate: 10,
+        cookieDomain: "ckendallart.com",
+      },
+    },
     // re-captcha
     `gatsby-plugin-recaptcha`,
     // styles
@@ -124,7 +149,7 @@ module.exports = {
         // Any invalid keyword or empty string defaults to `anonymous`
         crossOrigin: `use-credentials`,
       }
-    }
+    },
   ]
 };
 
