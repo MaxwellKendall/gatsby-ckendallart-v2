@@ -61,10 +61,14 @@ export default ({
           to admire while working in the floral and wedding design industry of
           Charleston. Ever a lover of the classical portrait, the old masters
           are a strong point of reference for Claire in every piece. Her
-          particular for mof expression is always striving to achieve the
+          particular form of expression is always striving to achieve the
           elusive balance of timelessness and freshness in her paintings.
         </p>
-        <p className="my-5 tracking-wide sqrl-font-1">psalm 92:4-5</p>
+        <p className="my-5 tracking-wide sqrl-font-1">
+          <a href="https://www.biblegateway.com/passage/?search=Psalm+92%3A4-5&version=ESV" target="_blank">
+            psalm 92:4-5
+          </a>
+        </p>
       </div>
     </Layout>
   )
