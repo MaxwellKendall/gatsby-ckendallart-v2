@@ -258,7 +258,7 @@ export default ({
             return (
                 <ul className="w-full pl-10 text-lg list-disc">
                     {details
-                        .split(',')
+                        .split(';')
                         .map((detail) => {
                             return (
                                 <li className="text-left">{detail}</li>

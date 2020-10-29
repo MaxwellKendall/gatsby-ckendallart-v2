@@ -22,18 +22,21 @@ export default ({
     path
 }) => {
     const imgRef = useRef(null);
-    const [titleDimensions, setTitleDimensions] = useState({ width: 300 });
+    const [titleDimensions, setTitleDimensions] = useState({ width: 0 });
 
     const handleResize = () => {
         if (imgRef.current.imageRef && imgRef.current.imageRef.current) {
             const { naturalWidth: width } = imgRef.current.imageRef.current;
             console.log("test HELLOO", width)
-            setTitleDimensions({ width });
+            if (width > 0) {
+                setTitleDimensions({ width });
+            }
         }
     }
 
     useEffect(() => {
         window.addEventListener('resize', handleResize);
+        handleResize();
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
