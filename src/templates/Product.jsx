@@ -448,7 +448,7 @@ export default ({
                     {modalImg === 'afterpay' && <Img className="w-5/6 md:w-1/2" style={{ maxWidth: '500px' }} fluid={afterPayPopup.fluid} />}
                     {modalImg === 'product' && (
                         <div className="h-auto">
-                            <Img fixed={selectedImg.responsiveHoverImgs} />
+                            <Img fixed={selectedImg.responsiveHoverImgs} className="overlay-product-img" />
                         </div>
                     )}                    
                 </div>
