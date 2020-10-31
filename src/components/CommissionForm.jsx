@@ -1,9 +1,9 @@
 import React, { useState, useRef } from "react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { trackCustomEvent } from 'gatsby-plugin-google-analytics'
 
 import { requestCommission } from "../../client"
 import { getFileAsBase64String } from "../helpers/img"
+import { logEvent } from "../helpers/analytics";
 
 const placeHolderByFieldName = {
   name: "YOUR NAME",
@@ -69,13 +69,13 @@ export default ({
   }
 
   const submit = async () => {
-    trackCustomEvent({
+    logEvent({
       // string - required - The object that was interacted with (e.g.video)
       category: "Commission Request",
       // string - required - Type of interaction (e.g. 'play')
       action: "Submit",
       // string - optional - Useful for categorizing events (e.g. 'Spring Campaign')
-      label: "Submission Request",
+      label: "Submission Request Pending...",
       // number - optional - Numeric value associated with the event. (e.g. A product ID)
       value: values?.email
     });
@@ -102,11 +102,31 @@ export default ({
     })
       .then(res => {
         console.info("Commission Request Response", res)
-        setRequestStatus("success")
+        setRequestStatus("success");
+        logEvent({
+          // string - required - The object that was interacted with (e.g.video)
+          category: "Commission Request",
+          // string - required - Type of interaction (e.g. 'play')
+          action: "Submit",
+          // string - optional - Useful for categorizing events (e.g. 'Spring Campaign')
+          label: "Submission Request Success",
+          // number - optional - Numeric value associated with the event. (e.g. A product ID)
+          value: values?.email
+        });
       })
       .catch(e => {
         console.error("Commission Request Response", e)
         setRequestStatus("error")
+        logEvent({
+          // string - required - The object that was interacted with (e.g.video)
+          category: "Commission Request",
+          // string - required - Type of interaction (e.g. 'play')
+          action: "Submit",
+          // string - optional - Useful for categorizing events (e.g. 'Spring Campaign')
+          label: "Submission Request Error",
+          // number - optional - Numeric value associated with the event. (e.g. A product ID)
+          value: values?.email
+        });
       })
   }
 
