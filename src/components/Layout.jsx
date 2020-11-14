@@ -158,7 +158,7 @@ export const Layout = ({
     const handleSubmit = async (e) => {
         setSubscribeStatus({ ...subscribeStatus, isLoading: true });
         window.grecaptcha.ready(() => {
-            window.grecaptcha.execute(GATSBY_SITE_KEY, { action: 'submit' })
+            window.grecaptcha.execute(GATSBY_RECAPTCHA_ID, { action: 'submit' })
                 .then((token) => {
                     return verifyCaptcha(token)                    
                 })
