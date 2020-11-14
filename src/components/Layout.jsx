@@ -170,6 +170,10 @@ export const Layout = ({
                         handleSubscribe('pending')
                     }
                 })
+                .catch((e) => {
+                    console.error('Error in handle newsletter subscribe', e);
+                    handleSubscribe();
+                })
         })
     };
 

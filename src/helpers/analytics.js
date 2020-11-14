@@ -15,6 +15,7 @@ export const logEvent = ({
 }) => {
     if (window.dataLayer) {
         window.dataLayer.push({
+            event: 'event',
             category,
             action,
             label,
@@ -23,6 +24,7 @@ export const logEvent = ({
     }
     else if (window) {
         window.dataLayer = [{
+            event: 'event',
             category,
             action,
             label,
