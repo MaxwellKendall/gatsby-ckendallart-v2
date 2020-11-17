@@ -59,8 +59,12 @@ const SEO = ({
           content: metaDescription,
         },
         {
-          name: "keywords",
-          content: site.siteMetadata.keywords.join(","),
+          property: `og:type`,
+          content: `website`,
+        },
+        {
+          property: `og:url`,
+          content: `${site.siteMetadata.siteUrl}${pathname}`,
         },
         {
           property: `og:title`,
@@ -71,8 +75,8 @@ const SEO = ({
           content: metaDescription,
         },
         {
-          property: `og:type`,
-          content: `website`,
+          name: "keywords",
+          content: site.siteMetadata.keywords.join(","),
         },
         {
           name: `twitter:creator`,
