@@ -38,7 +38,6 @@ const SEO = ({
       ? `${site.siteMetadata.siteUrl}${metaImage.src}`
       : null
   const canonical = pathname ? `${site.siteMetadata.siteUrl}${pathname}` : null
-
   return (
     <Helmet
       htmlAttributes={{ lang, }}
@@ -95,14 +94,14 @@ const SEO = ({
                   property: "og:image",
                   content: image,
                 },
-                {
-                  property: "og:image:width",
-                  content: metaImage.width,
-                },
-                {
-                  property: "og:image:height",
-                  content: metaImage.height,
-                },
+                // {
+                //   property: "og:image:width",
+                //   content: metaImage.width,
+                // },
+                // {
+                //   property: "og:image:height",
+                //   content: metaImage.height,
+                // },
                 {
                   name: "twitter:card",
                   content: "summary_large_image",

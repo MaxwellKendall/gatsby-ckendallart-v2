@@ -6,6 +6,7 @@ import moment from 'moment';
 import { uniqueId, kebabCase, debounce } from 'lodash';
 import Modal from 'react-modal';
 
+import { logEvent } from "../helpers/analytics";
 import CartContext from "../../globalState";
 import Layout from "../components/Layout";
 import SEO from "../components/SEO";
@@ -171,6 +172,16 @@ export default ({
 
     const handleAddToCart = (e) => {
         e.preventDefault();
+        logEvent({
+            // string - required - The object that was interacted with (e.g.video)
+            category: "Cart",
+            // string - required - Type of interaction (e.g. 'play')
+            action: "Add to Cart",
+            // string - optional - Useful for categorizing events (e.g. 'Spring Campaign')
+            label: "Add",
+            // number - optional - Numeric value associated with the event. (e.g. A product ID)
+            value: `${title} : ${selectedVariant.title}`
+        });
         setIsLoading(true);
         if (product.tags.includes('affordable-art')) {
             setIsLoading(false);
@@ -191,6 +202,17 @@ export default ({
             })
             .catch((e) => {
                 console.error('error initCheckout', e);
+                logEvent({
+                    // string - required - The object that was interacted with (e.g.video)
+                    category: "Cart",
+                    // string - required - Type of interaction (e.g. 'play')
+                    action: "Error adding to Cart",
+                    // string - optional - Useful for categorizing events (e.g. 'Spring Campaign')
+                    label: "Error",
+                    // number - optional - Numeric value associated with the event. (e.g. A product ID)
+                    value: e
+                });
+                throw(e);
             })
     };
 
@@ -242,13 +264,34 @@ export default ({
 
     const handleProductImgClick = (e, i) => {
         e.preventDefault();
+        logEvent({
+            // string - required - The object that was interacted with (e.g.video)
+            category: "Product",
+            // string - required - Type of interaction (e.g. 'play')
+            action: "Show Details",
+            // string - optional - Useful for categorizing events (e.g. 'Spring Campaign')
+            label: "Show Details",
+            // number - optional - Numeric value associated with the event. (e.g. A product ID)
+            value: `${title} : ${selectedVariant.title}`
+        })
         setSelectedImg(getResponsiveImages({ img: productImages.nodes[i] }));
         handleResize();
+        
     }
 
     const showAfterPayImg = () => {
         showModalImg('afterpay');
         setIsModalOpen(true);
+        logEvent({
+            // string - required - The object that was interacted with (e.g.video)
+            category: "AfterPay",
+            // string - required - Type of interaction (e.g. 'play')
+            action: "Show Details",
+            // string - optional - Useful for categorizing events (e.g. 'Spring Campaign')
+            label: "Show Details",
+            // number - optional - Numeric value associated with the event. (e.g. A product ID)
+            value: `${title} : ${selectedVariant.title}`
+        })
     }
 
     const showProductOverlay = () => {
