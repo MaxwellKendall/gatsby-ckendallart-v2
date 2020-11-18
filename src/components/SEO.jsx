@@ -6,12 +6,13 @@ import { useStaticQuery, graphql } from "gatsby"
 // const siteSuffix = "| Claire Kendall"
 
 const SEO = ({
-    description,
-    lang = 'en',
-    meta,
-    image: metaImage,
-    title,
-    pathname
+  description,
+  lang = 'en',
+  meta,
+  image: metaImage,
+  title,
+  pathname,
+  children
 }) => {
   const { site } = useStaticQuery(
     graphql`
@@ -39,87 +40,90 @@ const SEO = ({
       : null
   const canonical = pathname ? `${site.siteMetadata.siteUrl}${pathname}` : null
   return (
-    <Helmet
-      htmlAttributes={{ lang, }}
-      title={title}
-      titleTemplate={`%s | ${site.siteMetadata.title}`}
-      link={
-        canonical
-          ? [
-              {
-                rel: "canonical",
-                href: canonical,
-              },
-            ]
-          : []
-      }
-      meta={[
-        {
-          name: `description`,
-          content: metaDescription,
-        },
-        {
-          property: `og:type`,
-          content: `website`,
-        },
-        {
-          property: `og:url`,
-          content: `${site.siteMetadata.siteUrl}${pathname}`,
-        },
-        {
-          property: `og:title`,
-          content: title,
-        },
-        {
-          property: `og:description`,
-          content: metaDescription,
-        },
-        {
-          name: "keywords",
-          content: site.siteMetadata.keywords.join(","),
-        },
-        {
-          name: `twitter:creator`,
-          content: site.siteMetadata.author,
-        },
-        {
-          name: `twitter:title`,
-          content: title,
-        },
-        {
-          name: `twitter:description`,
-          content: metaDescription,
-        },
-      ]
-        .concat(
-          metaImage
+    <>
+      <Helmet
+        htmlAttributes={{ lang, }}
+        title={title}
+        titleTemplate={`%s | ${site.siteMetadata.title}`}
+        link={
+          canonical
             ? [
                 {
-                  property: "og:image",
-                  content: image,
-                },
-                // {
-                //   property: "og:image:width",
-                //   content: metaImage.width,
-                // },
-                // {
-                //   property: "og:image:height",
-                //   content: metaImage.height,
-                // },
-                {
-                  name: "twitter:card",
-                  content: "summary_large_image",
+                  rel: "canonical",
+                  href: canonical,
                 },
               ]
-            : [
-                {
-                  name: "twitter:card",
-                  content: "summary",
-                },
-              ]
-        )
-        .concat(meta)}
-    />
+            : []
+        }
+        meta={[
+          {
+            name: `description`,
+            content: metaDescription,
+          },
+          {
+            property: `og:type`,
+            content: `website`,
+          },
+          {
+            property: `og:url`,
+            content: `${site.siteMetadata.siteUrl}${pathname}`,
+          },
+          {
+            property: `og:title`,
+            content: title,
+          },
+          {
+            property: `og:description`,
+            content: metaDescription,
+          },
+          {
+            name: "keywords",
+            content: site.siteMetadata.keywords.join(","),
+          },
+          {
+            name: `twitter:creator`,
+            content: site.siteMetadata.author,
+          },
+          {
+            name: `twitter:title`,
+            content: title,
+          },
+          {
+            name: `twitter:description`,
+            content: metaDescription,
+          },
+        ]
+          .concat(
+            metaImage
+              ? [
+                  {
+                    property: "og:image",
+                    content: image,
+                  },
+                  // {
+                  //   property: "og:image:width",
+                  //   content: metaImage.width,
+                  // },
+                  // {
+                  //   property: "og:image:height",
+                  //   content: metaImage.height,
+                  // },
+                  {
+                    name: "twitter:card",
+                    content: "summary_large_image",
+                  },
+                ]
+              : [
+                  {
+                    name: "twitter:card",
+                    content: "summary",
+                  },
+                ]
+          )
+          .concat(meta)}
+      />
+      {children}
+    </>
   )
 }
 

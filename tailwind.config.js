@@ -1,5 +1,7 @@
 module.exports = {
-  purge: [],
+  purge: [
+    './src/**/*.jsx',
+  ],
   theme: {
     letterSpacing: {
       'wide': '3px',

@@ -61,65 +61,66 @@ export default ({
     }, [activeSlideIndex])
 
     return (
-        <Layout location={location} classNames="md:px-8">
-            <SEO title="Commission Request" description={siteDescription} pathname={location.pathname} image={seaScapeCommissionImgs[0]} />
-            <h2 className="w-full text-center tracking-wide md:tracking-wider lg:tracking-widest text-xl md:text-3xl pt-12 md:pt-0 pb-12">YOUR DREAM CONCEPT MADE REALITY.</h2>
-            <div className="w-full">
-                {showCommissionCarousel && (
-                    <CarouselProvider
-                        className="w-full flex justify-center items-center"
-                        naturalSlideWidth={700}
-                        naturalSlideHeight={700}
-                        totalSlides={commissions.length}>
-                        <>
-                            <CarouselHOC onSlideChange={setActiveSlideIndex} />
-                            <Slider
-                                className="order-2 w-full my-auto"
-                                style={imgDimensions}>
-                                {commissionsWithRef
-                                    .map(({ title, variants, ref }, i) => {
-                                        const imgs = getResponsiveImages(variants[0]).responsiveImgs;
-                                        const cssSelector = `.${kebabCase(title)}, .${kebabCase(title)} img`;
-                                        return (
-                                            <Slide index={i}>
-                                                <div className="flex h-full">
-                                                    <style>{getServerSideMediaQueries(imgs, cssSelector)}</style>
-                                                    <Img
-                                                        className={kebabCase(title)}
-                                                        ref={ref}
-                                                        fixed={imgs}
-                                                        style={{ margin: 'auto', display: 'flex', alignSelf: 'center' }} />
-                                                </div>
-                                            </Slide>
-                                        );
-                                    })
-                                }
-                            </Slider>
-                        </>
-                        <ButtonBack className="md:flex items-center order-1 p-2 text-2xl mx-4">
-                            <span value='back'>{`<`}</span>
-                        </ButtonBack>
-                        <ButtonNext className="md:flex items-center order-3 p-2 text-2xl mx-4">
-                            <span value='next'>{`>`}</span>
-                        </ButtonNext>
-                    </CarouselProvider>
-                )}
-                {!showCommissionCarousel && (
-                    <div className="flex h-full">
-                        <style>{getServerSideMediaQueries(seaScapeCommissionImgs, `.${kebabCase(seaScape.title)}, .${kebabCase(seaScape.title)} img`)}</style>
-                        <Img
-                            className={kebabCase(seaScape.title)}
-                            fixed={seaScapeCommissionImgs}
-                            style={{ margin: 'auto', display: 'flex', alignSelf: 'center' }} />
-                    </div>
-                )}
-            </div>
-            <h2 className="w-full text-center tracking-wide md:tracking-wider lg:tracking-widest text-xl md:text-3xl py-12">
-                LET'S GET STARTED:
+        <SEO title="Commission Request" description={siteDescription} pathname={location.pathname} image={seaScapeCommissionImgs[0]}>
+            <Layout location={location} classNames="md:px-8">
+                <h2 className="w-full text-center tracking-wide md:tracking-wider lg:tracking-widest text-xl md:text-3xl pt-12 md:pt-0 pb-12">YOUR DREAM CONCEPT MADE REALITY.</h2>
+                <div className="w-full">
+                    {showCommissionCarousel && (
+                        <CarouselProvider
+                            className="w-full flex justify-center items-center"
+                            naturalSlideWidth={700}
+                            naturalSlideHeight={700}
+                            totalSlides={commissions.length}>
+                            <>
+                                <CarouselHOC onSlideChange={setActiveSlideIndex} />
+                                <Slider
+                                    className="order-2 w-full my-auto"
+                                    style={imgDimensions}>
+                                    {commissionsWithRef
+                                        .map(({ title, variants, ref }, i) => {
+                                            const imgs = getResponsiveImages(variants[0]).responsiveImgs;
+                                            const cssSelector = `.${kebabCase(title)}, .${kebabCase(title)} img`;
+                                            return (
+                                                <Slide index={i}>
+                                                    <div className="flex h-full">
+                                                        <style>{getServerSideMediaQueries(imgs, cssSelector)}</style>
+                                                        <Img
+                                                            className={kebabCase(title)}
+                                                            ref={ref}
+                                                            fixed={imgs}
+                                                            style={{ margin: 'auto', display: 'flex', alignSelf: 'center' }} />
+                                                    </div>
+                                                </Slide>
+                                            );
+                                        })
+                                    }
+                                </Slider>
+                            </>
+                            <ButtonBack className="md:flex items-center order-1 p-2 text-2xl mx-4">
+                                <span value='back'>{`<`}</span>
+                            </ButtonBack>
+                            <ButtonNext className="md:flex items-center order-3 p-2 text-2xl mx-4">
+                                <span value='next'>{`>`}</span>
+                            </ButtonNext>
+                        </CarouselProvider>
+                    )}
+                    {!showCommissionCarousel && (
+                        <div className="flex h-full">
+                            <style>{getServerSideMediaQueries(seaScapeCommissionImgs, `.${kebabCase(seaScape.title)}, .${kebabCase(seaScape.title)} img`)}</style>
+                            <Img
+                                className={kebabCase(seaScape.title)}
+                                fixed={seaScapeCommissionImgs}
+                                style={{ margin: 'auto', display: 'flex', alignSelf: 'center' }} />
+                        </div>
+                    )}
+                </div>
+                <h2 className="w-full text-center tracking-wide md:tracking-wider lg:tracking-widest text-xl md:text-3xl py-12">
+                    LET'S GET STARTED:
             </h2>
-            <CommissionForm requestStatus={requestStatus} setRequestStatus={setRequestStatus} />
-            <ReferralCarousel />
-        </Layout>
+                <CommissionForm requestStatus={requestStatus} setRequestStatus={setRequestStatus} />
+                <ReferralCarousel />
+            </Layout>
+        </SEO>
     );
 }
 

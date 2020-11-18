@@ -11,7 +11,7 @@ export const logEvent = ({
     category,
     action,
     label,
-    value
+    value = ''
 }) => {
     if (window.dataLayer) {
         window.dataLayer.push({

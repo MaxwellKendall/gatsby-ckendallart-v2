@@ -178,9 +178,8 @@ export default ({
             // string - required - Type of interaction (e.g. 'play')
             action: "Add to Cart",
             // string - optional - Useful for categorizing events (e.g. 'Spring Campaign')
-            label: "Add",
             // number - optional - Numeric value associated with the event. (e.g. A product ID)
-            value: `${title} : ${selectedVariant.title}`
+            label: `${title} : ${selectedVariant.title}`
         });
         setIsLoading(true);
         if (product.tags.includes('affordable-art')) {
@@ -208,9 +207,8 @@ export default ({
                     // string - required - Type of interaction (e.g. 'play')
                     action: "Error adding to Cart",
                     // string - optional - Useful for categorizing events (e.g. 'Spring Campaign')
-                    label: "Error",
+                    label: e
                     // number - optional - Numeric value associated with the event. (e.g. A product ID)
-                    value: e
                 });
                 throw(e);
             })
@@ -345,158 +343,159 @@ export default ({
         .slice(0, 3)
 
     return (
-        <Layout pageName="product-page" flexDirection="row" classNames="flex-wrap sqrl-grey" maxWidth="100rem" location={location}>
-            <SEO
-                title={title}
-                pathname={location.pathname}
-                image={selectedImg?.responsiveImgs[0]}
-                description={description} />
-            {/* MOBILE TITLE ONLY */}
-            <h2 className="text-xl tracking-widest text-center w-full my-4 md:text-2xl lg:text-4xl lg:hidden">{title.toUpperCase()}</h2>
-            {/* MAIN PRODUCT IMG */}
-            {selectedVariant.img && (
-                <div className="md:mx-5 lg:w-1/2 xl:w-3/5">
-                    <div className="flex justify-center mb-4">
-                        <style>{getServerSideMediaQueries(selectedImg.responsiveImgs, ".product-img, .product-img img")}</style>
-                        <Img
-                            ref={imgRef}
-                            className="product-img w-full"
-                            fixed={selectedImg.responsiveImgs} />
-                    </div>
-                    {/* ZOOM IMG */}
-                    <div
-                        className={`${isZoomed ? 'opacity-100' : ' opacity-0'} hidden md:block absolute overflow-hidden`}
-                        onMouseEnter={() => setImgZoom(true)}
-                        onMouseLeave={() => setImgZoom(false)}
-                        onClick={showProductOverlay}
-                        onMouseMove={handleHoverZoom}
-                        onTouchMove={handleHoverZoom}
-                        style={{
-                            width: `${hoverImageDimensions.width}px`,
-                            top: `${hoverImageDimensions.top}px`,
-                            height: `${hoverImageDimensions.height}px`,
-                            left: `${hoverImageDimensions.left}px`,
-                            transition: 'opacity .25s ease-in .05s'
-                        }}>
-                        <style>{getServerSideMediaQueries(selectedImg.responsiveHoverImgs, ".hover-img img, .hover-img")}</style>
-                        <Img
-                            ref={magnifyImg}
-                            className="w-full hover-img"
-                            onClick={showProductOverlay}
-                            fixed={selectedImg.responsiveHoverImgs}
-                            imgStyle={{
-                                top: `${magnifyDimensions.top > 0 ? -magnifyDimensions.top : 0}%`,
-                                left: `${magnifyDimensions.left > 0 ? -magnifyDimensions.left : 0}%`,
-                            }}
-                            style={{
-                                transform: 'transition all ease-in'
-                            }} />
-                    </div>
-                    {/* OTHER AVAILABLE PRODUCT IMAGES */}
-                    <ul className="flex justify-center flex-wrap w-full xl:px-10">
-                        {productImages.nodes.map(({ thumbnail }, i) => (
-                            <li className="mr-2" onClick={(e) => handleProductImgClick(e, i)}>
-                                <Img fixed={thumbnail.fixed} />
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            )}
-            {/* PRODUCT DESCRIPTION */}
-            <div className="product-desc flex flex-col items-center self-center w-full mt-5 lg:w-2/5 xl:w-1/3 lg:mr-5 lg:my-0">
-                {/* DESKTOP TITLE */}
-                <h2 className="hidden lg:inline text-4xl tracking-widest text-left w-full">{title.toUpperCase()}</h2>
-                {/* PRODUCT PRICE */}
-                {!isSoldOut && (
-                    <p className="lg:inline w-full text-2xl py-4 tracking-widest text-center lg:my-5 lg:text-left">{getPrettyPrice(selectedVariant.price)}</p>
-                )}
-                {/* PRODUCT VARIANTS PRICE RANGE */}
-                {high !== low && !isSoldOut && (
-                    <p className="lg:flex text-sm italic w-full text-center mb-5 lg:text-left">{`from ${getPrettyPrice(low)} to ${getPrettyPrice(high)}`}</p>
-                )}
-                {/* AFTER PAY DISCLOSURE WHEN INSTALLMENTS ARE KNOWN (Product price is under $1K) */}
-                {!isSoldOut && selectedVariant.price >= 35 && selectedVariant.price < 1000 && (
-                    <p className="w-full flex text-center lg:text-left justify-center items-center lg:justify-start flex-wrap uppercase tracking-wide">
-                        or 4 interest-free installments of <strong className="mx-1">{` ${getAfterPaySingleInstallment(selectedVariant.price)} `}</strong> by 
-                        <button className="m-1 flex-col-center" onClick={showAfterPayImg}>
-                            <AfterPay />
-                        </button>
-                    </p>
-                )}
-                {/* AFTER PAY DISCLOSURE WHEN INSTALLMENTS ARE UNKNOWN (Product price is over $1K) */}
-                {!isSoldOut && (selectedVariant.price < 35 || selectedVariant.price >= 1000) && (
-                    <p className="w-full flex text-center lg:text-left justify-center items-center lg:justify-start flex-wrap uppercase tracking-wide px-5 lg:px-0">
-                        Interest free installments by 
-                        <button className="m-1 flex items-center" onClick={showAfterPayImg}>
-                            <AfterPay />
-                        </button>
-                        available between <strong className="mx-1">{getPrettyPrice(35)}</strong> and <strong className="mx-1">{getPrettyPrice(1000)}</strong>.
-                    </p>
-                )}
-                {/* ADD TO CART BUTTON */}
-                <div className="actions w-full flex flex-col my-5 justify-start items-center">
-                    <button
-                        className="border text-white border-black w-64 py-5 px-2 text-xl uppercase mb-2 self-center lg:self-start sqrl-purple"
-                        disabled={(isSoldOut || isLoading)}
-                        onClick={handleAddToCart}>
-                        {isLoading && <FontAwesomeIcon icon="spinner" spin />}
-                        {!isLoading && !isSoldOut && 'Add to Cart'}
-                        {isSoldOut && !isLoading && 'SOLD OUT'}
-                    </button>
-                    {/* VARIANT DROPDOWN SELECTOR */}
-                    {parsedVariants.length > 1 && (
-                        <select
-                            className="border border-black w-1/2 lg:self-start lg:mt-5"
-                            name="variants"
-                            onChange={handleSelectVariant}
-                            value={selectedVariant.title}>
-                            {parsedVariants.map((variant) => (
-                                <option key={uniqueId('')} value={variant.title}>{variant.title}</option>
-                            ))}
-                        </select>
-                    )}
-                    {/* PRODUCT DESCRIPTION AND DETAILS */}
-                    <p className="text-lg py-10 tracking-wide px-5 lg:px-0">{getTruncatedDescription(description)}</p>
-                    <button className="active:outline-none focus:outline-none w-full flex flex-wrap px-5 lg:px-0" onClick={toggleShowDetails}>
-                        <p className="text-lg mr-auto">Details</p><button className="active:outline-none focus:outline-none text-xl font-semibold" onClick={toggleShowDetails}>{showDetails && `-`}{!showDetails && `+`}</button>
-                        {showDetails && getDetails(description)}
-                    </button>
-                </div>
-            </div>
-            {/* OTHER PRODUCTS IN COLLECTION */}
-            <h3 className="pt-10 pb-5 pl-5 w-full text-xl tracking-wide md:tracking-wider lg:tracking-widest">MORE FROM {getPrettyPrice(getLowestPrice(otherProducts))}</h3>
-            <ul className="px-1 lg:pl-5 flex flex-wrap justify-center items-start w-full">
-                {otherProducts
-                    .map((product, i) => {
-                        const { responsiveImgs } = getResponsiveImages(product, 'fluid');
-                        return (
-                            <li className={i === 1 ? 'px-1 md:px-2 lg:px-5 w-1/3' : 'w-1/3'}>
-                                <Link className="w-full" to={product.slug}>
-                                    <Img className="w-full" fluid={responsiveImgs} />
-                                </Link>
-                            </li>
-                        );
-                    })
-                }
-            </ul>
-            {/* BIG IMG OVERLAY ON PRODUCT IMG CLICK */}
-            <Modal
-                onRequestClose={() => {
-                    setIsModalOpen(false);
-                    showModalImg('');
-                }}
-                isOpen={isModalOpen}
-                style={modalStyles}>
-                <div className={`w-full flex-col-center h-full relative`} onClick={() => setIsModalOpen(false)}>
-                    {modalImg === 'afterpay' && <Img className="w-5/6 md:w-1/2" style={{ maxWidth: '500px' }} fluid={afterPayPopup.fluid} />}
-                    {modalImg === 'product' && (
-                        <div className="h-auto" style={{ marginTop: '50%' }}>
-                            <Img fixed={selectedImg.responsiveHoverImgs} className="overlay-product-img" />
+        <SEO
+            title={title}
+            pathname={location.pathname}
+            image={selectedImg?.responsiveImgs[0]}
+            description={description}>
+            <Layout pageName="product-page" flexDirection="row" classNames="flex-wrap sqrl-grey" maxWidth="100rem" location={location}>
+                {/* MOBILE TITLE ONLY */}
+                <h2 className="text-xl tracking-widest text-center w-full my-4 md:text-2xl lg:text-4xl lg:hidden">{title.toUpperCase()}</h2>
+                {/* MAIN PRODUCT IMG */}
+                {selectedVariant.img && (
+                    <div className="md:mx-5 lg:w-1/2 xl:w-3/5">
+                        <div className="flex justify-center mb-4">
+                            <style>{getServerSideMediaQueries(selectedImg.responsiveImgs, ".product-img, .product-img img")}</style>
+                            <Img
+                                ref={imgRef}
+                                className="product-img w-full"
+                                fixed={selectedImg.responsiveImgs} />
                         </div>
-                    )}                    
+                        {/* ZOOM IMG */}
+                        <div
+                            className={`${isZoomed ? 'opacity-100' : ' opacity-0'} hidden md:block absolute overflow-hidden`}
+                            onMouseEnter={() => setImgZoom(true)}
+                            onMouseLeave={() => setImgZoom(false)}
+                            onClick={showProductOverlay}
+                            onMouseMove={handleHoverZoom}
+                            onTouchMove={handleHoverZoom}
+                            style={{
+                                width: `${hoverImageDimensions.width}px`,
+                                top: `${hoverImageDimensions.top}px`,
+                                height: `${hoverImageDimensions.height}px`,
+                                left: `${hoverImageDimensions.left}px`,
+                                transition: 'opacity .25s ease-in .05s'
+                            }}>
+                            <style>{getServerSideMediaQueries(selectedImg.responsiveHoverImgs, ".hover-img img, .hover-img")}</style>
+                            <Img
+                                ref={magnifyImg}
+                                className="w-full hover-img"
+                                onClick={showProductOverlay}
+                                fixed={selectedImg.responsiveHoverImgs}
+                                imgStyle={{
+                                    top: `${magnifyDimensions.top > 0 ? -magnifyDimensions.top : 0}%`,
+                                    left: `${magnifyDimensions.left > 0 ? -magnifyDimensions.left : 0}%`,
+                                }}
+                                style={{
+                                    transform: 'transition all ease-in'
+                                }} />
+                        </div>
+                        {/* OTHER AVAILABLE PRODUCT IMAGES */}
+                        <ul className="flex justify-center flex-wrap w-full xl:px-10">
+                            {productImages.nodes.map(({ thumbnail }, i) => (
+                                <li className="mr-2" onClick={(e) => handleProductImgClick(e, i)}>
+                                    <Img fixed={thumbnail.fixed} />
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+                {/* PRODUCT DESCRIPTION */}
+                <div className="product-desc flex flex-col items-center self-center w-full mt-5 lg:w-2/5 xl:w-1/3 lg:mr-5 lg:my-0">
+                    {/* DESKTOP TITLE */}
+                    <h2 className="hidden lg:inline text-4xl tracking-widest text-left w-full">{title.toUpperCase()}</h2>
+                    {/* PRODUCT PRICE */}
+                    {!isSoldOut && (
+                        <p className="lg:inline w-full text-2xl py-4 tracking-widest text-center lg:my-5 lg:text-left">{getPrettyPrice(selectedVariant.price)}</p>
+                    )}
+                    {/* PRODUCT VARIANTS PRICE RANGE */}
+                    {high !== low && !isSoldOut && (
+                        <p className="lg:flex text-sm italic w-full text-center mb-5 lg:text-left">{`from ${getPrettyPrice(low)} to ${getPrettyPrice(high)}`}</p>
+                    )}
+                    {/* AFTER PAY DISCLOSURE WHEN INSTALLMENTS ARE KNOWN (Product price is under $1K) */}
+                    {!isSoldOut && selectedVariant.price >= 35 && selectedVariant.price < 1000 && (
+                        <p className="w-full flex text-center lg:text-left justify-center items-center lg:justify-start flex-wrap uppercase tracking-wide">
+                            or 4 interest-free installments of <strong className="mx-1">{` ${getAfterPaySingleInstallment(selectedVariant.price)} `}</strong> by 
+                            <button className="m-1 flex-col-center" onClick={showAfterPayImg}>
+                                <AfterPay />
+                            </button>
+                        </p>
+                    )}
+                    {/* AFTER PAY DISCLOSURE WHEN INSTALLMENTS ARE UNKNOWN (Product price is over $1K) */}
+                    {!isSoldOut && (selectedVariant.price < 35 || selectedVariant.price >= 1000) && (
+                        <p className="w-full flex text-center lg:text-left justify-center items-center lg:justify-start flex-wrap uppercase tracking-wide px-5 lg:px-0">
+                            Interest free installments by 
+                            <button className="m-1 flex items-center" onClick={showAfterPayImg}>
+                                <AfterPay />
+                            </button>
+                            available between <strong className="mx-1">{getPrettyPrice(35)}</strong> and <strong className="mx-1">{getPrettyPrice(1000)}</strong>.
+                        </p>
+                    )}
+                    {/* ADD TO CART BUTTON */}
+                    <div className="actions w-full flex flex-col my-5 justify-start items-center">
+                        <button
+                            className="border text-white border-black w-64 py-5 px-2 text-xl uppercase mb-2 self-center lg:self-start sqrl-purple"
+                            disabled={(isSoldOut || isLoading)}
+                            onClick={handleAddToCart}>
+                            {isLoading && <FontAwesomeIcon icon="spinner" spin />}
+                            {!isLoading && !isSoldOut && 'Add to Cart'}
+                            {isSoldOut && !isLoading && 'SOLD OUT'}
+                        </button>
+                        {/* VARIANT DROPDOWN SELECTOR */}
+                        {parsedVariants.length > 1 && (
+                            <select
+                                className="border border-black w-1/2 lg:self-start lg:mt-5"
+                                name="variants"
+                                onChange={handleSelectVariant}
+                                value={selectedVariant.title}>
+                                {parsedVariants.map((variant) => (
+                                    <option key={uniqueId('')} value={variant.title}>{variant.title}</option>
+                                ))}
+                            </select>
+                        )}
+                        {/* PRODUCT DESCRIPTION AND DETAILS */}
+                        <p className="text-lg py-10 tracking-wide px-5 lg:px-0">{getTruncatedDescription(description)}</p>
+                        <button className="active:outline-none focus:outline-none w-full flex flex-wrap px-5 lg:px-0" onClick={toggleShowDetails}>
+                            <p className="text-lg mr-auto">Details</p><button className="active:outline-none focus:outline-none text-xl font-semibold" onClick={toggleShowDetails}>{showDetails && `-`}{!showDetails && `+`}</button>
+                            {showDetails && getDetails(description)}
+                        </button>
+                    </div>
                 </div>
-            </Modal>
-        </Layout>
+                {/* OTHER PRODUCTS IN COLLECTION */}
+                <h3 className="pt-10 pb-5 pl-5 w-full text-xl tracking-wide md:tracking-wider lg:tracking-widest">MORE FROM {getPrettyPrice(getLowestPrice(otherProducts))}</h3>
+                <ul className="px-1 lg:pl-5 flex flex-wrap justify-center items-start w-full">
+                    {otherProducts
+                        .map((product, i) => {
+                            const { responsiveImgs } = getResponsiveImages(product, 'fluid');
+                            return (
+                                <li className={i === 1 ? 'px-1 md:px-2 lg:px-5 w-1/3' : 'w-1/3'}>
+                                    <Link className="w-full" to={product.slug}>
+                                        <Img className="w-full" fluid={responsiveImgs} />
+                                    </Link>
+                                </li>
+                            );
+                        })
+                    }
+                </ul>
+                {/* BIG IMG OVERLAY ON PRODUCT IMG CLICK */}
+                <Modal
+                    onRequestClose={() => {
+                        setIsModalOpen(false);
+                        showModalImg('');
+                    }}
+                    isOpen={isModalOpen}
+                    style={modalStyles}>
+                    <div className={`w-full flex-col-center h-full relative overflow-auto`} onClick={() => setIsModalOpen(false)}>
+                        {modalImg === 'afterpay' && <Img className="w-5/6 md:w-1/2" style={{ maxWidth: '500px' }} fluid={afterPayPopup.fluid} />}
+                        {modalImg === 'product' && (
+                            <div className="h-auto" style={{ marginTop: '50%' }}>
+                                <Img fixed={selectedImg.responsiveHoverImgs} className="overlay-product-img" />
+                            </div>
+                        )}                    
+                    </div>
+                </Modal>
+            </Layout>
+        </SEO>
     );
 };
 
