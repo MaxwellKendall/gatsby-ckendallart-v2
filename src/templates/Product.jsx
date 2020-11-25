@@ -469,7 +469,7 @@ export default ({
                             const { responsiveImgs } = getResponsiveImages(product, 'fluid');
                             return (
                                 <li className={i === 1 ? 'px-1 md:px-2 lg:px-5 w-1/3' : 'w-1/3'}>
-                                    <Link className="w-full" to={product.slug}>
+                                    <Link className="w-full" to={`${product.slug}/`}>
                                         <Img className="w-full" fluid={responsiveImgs} />
                                     </Link>
                                 </li>
