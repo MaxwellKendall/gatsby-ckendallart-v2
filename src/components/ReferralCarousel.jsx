@@ -11,14 +11,14 @@ export default () => {
           return;
         }
         setActiveReferral(activeReferral + 1);
-      }
+    }
     
     const previousReferral = (e) => {
-    e.preventDefault();
-    if (activeReferral === 0) {
-        return;
-    }
-    setActiveReferral(activeReferral - 1);
+        e.preventDefault();
+        if (activeReferral === 0) {
+            return;
+        }
+        setActiveReferral(activeReferral - 1);
     }
 
     const { site: { siteMetadata: { referrals }}} = useStaticQuery(
@@ -32,6 +32,7 @@ export default () => {
             }
         `
     )
+
     return (
         <div className="py-12 lg:py-24 flex flex-col md:flex-row align-center w-full">
             <Arrow onClick={previousReferral} direction="left" classNames="hidden md:flex" />

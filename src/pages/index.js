@@ -34,9 +34,9 @@ const getFeaturedImgUrl = (imgName) => {
   const productSize = splitFileName[4];
 
   if (productSize) {
-    return `${productType}/${kebabCase(url)}-${productSize}`;
+    return `${productType}/${kebabCase(url)}-${productSize}/`;
   }
-  return `${productType}/${kebabCase(url)}`;
+  return `${productType}/${kebabCase(url)}/`;
 }
 
 // TODO: should be using getresponsiveImages via fluid
@@ -180,7 +180,7 @@ export default (props) => {
           {tagLine.map((str, i) => (
             <h2 className={`w-full p-2 text-center tracking-wide md:tracking-wider lg:tracking-widest text-xl md:text-2xl lg:text-3xl ${i === 1 ? 'my-2' : ''}`}>{str.toUpperCase()}</h2>
           ))}
-          <Link to="/portfolio" className="border mt-10 text-center mx-auto border-black py-5 px-10 md:text-xl tracking-wide md:tracking-wider lg:tracking-widest">
+          <Link to="/portfolio/" className="border mt-10 text-center mx-auto border-black py-5 px-10 md:text-xl tracking-wide md:tracking-wider lg:tracking-widest">
             EXPLORE PORTFOLIO
         </Link>
         </div>
@@ -243,8 +243,8 @@ export default (props) => {
               const arrayOfImages = otherImages[key];
               const splitFileName = key.split('--');
               const section = startCase(splitFileName[1]).toLowerCase() === 'request commission'
-                ? { title: 'REQUEST COMMISSION', url: '/commissions' }
-                : { title: 'MEET THE ARTIST', url: '/about' };
+                ? { title: 'REQUEST COMMISSION', url: '/commissions/' }
+                : { title: 'MEET THE ARTIST', url: '/about/' };
               return (
                 <li className={`w-full pb-4 md:pb-0 md:w-1/2 flex flex-col align-center mx-2`}>
                   <Link to={section.url} className="w-full cursor-pointer text-center mt-5 tracking-wide md:tracking-wider lg:tracking-widest lg:text-xl">

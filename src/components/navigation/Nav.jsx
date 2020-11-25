@@ -88,7 +88,7 @@ export default ({
 
     return (
         <header className="hidden w-full self-center md:mt-10 md:mb-4 md:align-center md:flex md:flex-col lg:justify-center lg:p-4" style={{ maxWidth }}>
-            <Link to='/cart' className="ml-auto self-center order-2 md:order-none md:self-start mr-5">
+            <Link to='/cart/' className="ml-auto self-center order-2 md:order-none md:self-start mr-5">
                 <CartIcon numberOfItemsInCart={itemsInCart} />
             </Link>
             <Link to='/' className={`mx-auto`}>
