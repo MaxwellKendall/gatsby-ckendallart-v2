@@ -35,10 +35,6 @@ const getLowestPrice = (otherProducts) => {
         }, null);
 }
 
-const goToNewPage = () => {
-    window.open('https://www.affordableartofcharleston.com/');
-};
-
 const modalStyles = {
     content: {
         display: 'flex',
@@ -182,9 +178,14 @@ export default ({
             label: `${title} : ${selectedVariant.title}`
         });
         setIsLoading(true);
-        if (product.tags.includes('affordable-art')) {
+        if (product.tags.some((tag) => tag.includes('link'))) {
             setIsLoading(false);
-            return goToNewPage();
+            return window.open(product.tags.reduce((acc, str) => {
+                if (str.includes('link')) {
+                    return `https://${str.split(':https://')[1]}`;
+                }
+                return acc;
+            }, ''));
         }
         if (cart.id) {
             return modifyCart(cart.id);
