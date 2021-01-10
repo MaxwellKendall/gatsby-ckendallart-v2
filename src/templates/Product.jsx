@@ -19,7 +19,7 @@ import {
     getInventoryDetails
 } from '../helpers';
 import { initCheckout, addLineItemsToCart, updateLineItemsInCart } from '../../client';
-import { getAfterPaySingleInstallment, getPrettyPrice, useAllProducts } from '../helpers/products';
+import { getAfterPaySingleInstallment, getDefaultProductImage, getPrettyPrice, useAllProducts } from '../helpers/products';
 import { getResponsiveImages, getServerSideMediaQueries } from '../helpers/img';
 import AfterPay from '../components/AfterPay';
 
@@ -467,7 +467,7 @@ export default ({
                 <ul className="px-1 lg:pl-5 flex flex-wrap justify-center items-start w-full">
                     {otherProducts
                         .map((product, i) => {
-                            const { responsiveImgs } = getResponsiveImages(product, 'fluid');
+                            const responsiveImgs = getDefaultProductImage(product, 'fluid');
                             return (
                                 <li className={i === 1 ? 'px-1 md:px-2 lg:px-5 w-1/3' : 'w-1/3'}>
                                     <Link className="w-full" to={`${product.slug}/`}>
@@ -584,6 +584,23 @@ export const query = graphql`
                 slug
                 priceRange {
                     low
+                }
+                localFile {
+                    small: childImageSharp {
+                        fluid(maxWidth:150) {
+                            ...GatsbyImageSharpFluid
+                        }
+                    }
+                    medium: childImageSharp {
+                        fluid(maxWidth:300) {
+                            ...GatsbyImageSharpFluid
+                        }
+                    }
+                    large: childImageSharp {
+                        fluid(maxWidth:425) {
+                            ...GatsbyImageSharpFluid
+                        }
+                    }
                 }
                 variants {
                     availableForSale 

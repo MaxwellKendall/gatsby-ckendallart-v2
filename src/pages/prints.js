@@ -30,8 +30,27 @@ export const query = graphql`
                     high
                     low
                 }
+                localFile {
+                  small: childImageSharp {
+                        fixed(width: 300) {
+                            
+                            ...GatsbyImageSharpFixed
+                        }
+                    }
+                    medium: childImageSharp {
+                        fixed(width: 500) {
+                            ...GatsbyImageSharpFixed
+                        }
+                    }
+                    large: childImageSharp {
+                        fixed(width: 700) {
+                            ...GatsbyImageSharpFixed
+                        }
+                    }
+                }
                 variants {
                     image
+                    title
                     availableForSale
                     localFile {
                         small: childImageSharp {

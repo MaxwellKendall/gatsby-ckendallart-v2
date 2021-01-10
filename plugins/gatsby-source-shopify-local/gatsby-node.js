@@ -67,6 +67,9 @@ exports.sourceNodes = async ({ actions, createNodeId, createContentDigest }, opt
                 variants,
                 tags
             } = product.node;
+            const productImgs = images.edges.length
+                ? images.edges.map(({ node }, i) => ({ id, url: node.originalSrc, variantTitle: null, isFirst: i === 0 }))
+                : [];
             return {
                 id,
                 productId: id,
@@ -74,6 +77,19 @@ exports.sourceNodes = async ({ actions, createNodeId, createContentDigest }, opt
                 description,
                 tags,
                 images: images.edges.map((image) => image.node.originalSrc),
+                allImages: productImgs
+                    .concat(variants.edges
+                        .map(({ node }) => ({ id: node.id, url: node.image.originalSrc, variantTitle: node.title }))
+                    )
+                    .filter(({ url, variantTitle }) => {
+                        // in this case, the same image will be used for both the product image (shop grid page) and the product page (one of the variants)
+                        // so the array  is like [imgXForProduct, imgXForVariant]
+                        if (!variantTitle) {
+                            const isProductImgAVariantImg = variants.edges.some(({ node }) => node.image.originalSrc === url)
+                            if (isProductImgAVariantImg) return false;
+                        }
+                        return true;
+                    }),
                 variants: variants.edges.map(({ node }) => {
                     return {
                         ...node,
@@ -124,8 +140,7 @@ exports.sourceNodes = async ({ actions, createNodeId, createContentDigest }, opt
 }
 
 const processFileNode = (fileNode, previousImage, node) => {
-    const isFileNodeDefined = (fileNode)
-    if (isFileNodeDefined && previousImage.isVariantImage) {
+    if (fileNode && previousImage.variantTitle) {
         node.variants = node.variants.map((variant) => {
             if (variant.id === previousImage.id) {
                 return {
@@ -136,10 +151,13 @@ const processFileNode = (fileNode, previousImage, node) => {
             return variant;
         });
     }
-    if (isFileNodeDefined) {
+    else if (fileNode && previousImage.isFirst) {
+        node.localFile___NODE = fileNode.id;
+    }
+    if (fileNode) {
         node.optimizedImages = node.optimizedImages
-            ? node.optimizedImages.concat([fileNode.base])
-            : [fileNode.base]
+            ? node.optimizedImages.concat([fileNode.relativePath])
+            : [fileNode.relativePath]
     }
 }
 // https://www.gatsbyjs.org/packages/gatsby-source-filesystem/
@@ -154,27 +172,17 @@ exports.onCreateNode = async ({
     
     // For all product nodes, call createRemoteFileNode
     if (type === "ShopifyProduct") {
-        return node.variants
-            .filter((variant) => variant.image && variant.id)
-            .map((variant) => ({ isVariantImage: true, url: variant.image, id: variant.id }))
-            .concat(node.images
-                .filter((image) => {
-                    // if a product image is also a variant, don't use it.
-                    const imageIsVariant = node.variants.some((variant) => variant.image === image);
-                    if (imageIsVariant) return false;
-                    return true;
-                })
-                .map((image) => ({ url: image, id: node.id, isVariantImage: false })))
-            .reduce((prevPromise, image, i, arr) => {
+        return node.allImages
+            .reduce((prevPromise, img, i, arr) => {
                 return prevPromise
                     .then ((fileNode) => {
                         // the previous image is the one associated with the current fileNode.
                         const previousImage = i === 0
-                            ? null
+                            ? img
                             : arr[i - 1];
                         processFileNode(fileNode, previousImage, node);
                         return createRemoteFileNode({
-                            url: image.url, // string that points to the URL of the image
+                            url: img.url, // string that points to the URL of the image
                             // parentNodeId: image.id, // id of the parent node of the fileNode you are going to create
                             parentNodeId: node.id,
                             createNode, // helper function in gatsby-node to generate the node
@@ -190,7 +198,7 @@ exports.onCreateNode = async ({
                         });
                     })
                     .catch((e) => {
-                        console.log("error onCreateNode: ", e);
+                        console.error("error onCreateNode: ", e);
                     })
             }, Promise.resolve(null))
     }

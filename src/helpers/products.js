@@ -57,19 +57,20 @@ export const useAllProducts = () => {
     return useProducts();
 };
 
-export const getDefaultProductImage = (product) => {
+export const getDefaultProductImage = (product, imgType = "fixed") => {
     // Considering the most expensive variant to be the default. 
-    const defaultVariant = product.variants
+    const defaultImg = product.variants
+        .concat([{ localFile: product.localFile, isProductImg: true }])
         .filter(({ localFile }) => localFile)
-        .reduce((acc, variant) => {
-            if (!acc) return variant;
-            if (parseInt(acc.price, 10) < parseInt(variant.price, 10)) return variant;
+        .reduce((acc, img) => {
+            if (!acc) return img;
+            if (img.isProductImg) return img;
             return acc;
         }, null);
-    if (defaultVariant && defaultVariant.localFile) {
+    if (defaultImg && defaultImg.localFile) {
         return getResponsiveImages({
-            img: defaultVariant.localFile
-        })
+            img: defaultImg.localFile
+        }, imgType)
         .responsiveImgs;
     }
     return null;

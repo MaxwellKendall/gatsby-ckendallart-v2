@@ -34,7 +34,7 @@ const isItemInIndex = (index, id) => {
         .then((data) => {
             return data.hits.length > 0;
         })
-        .catch((e) => console.log('error from isItemInIndex',  e));
+        .catch((e) => console.error('error from isItemInIndex',  e));
 }
 
 const fetchData = async (query, vars) => {
@@ -79,7 +79,7 @@ const addProductVariantsToSearchIndex = (variants, product, collection) => {
                     .saveObject(createVariantRecord(variant, product, collection))
                     .then(() => aggregateIndex.saveObject(createVariantRecord(variant, product, collection)));
             })
-            .catch((e) => console.log('Error from variants', e)), Promise.resolve())
+            .catch((e) => console.error('Error from variants', e)), Promise.resolve())
 };
 
 const addProductsToSearchIndex = (collection, products) => {
@@ -102,7 +102,7 @@ const addProductsToSearchIndex = (collection, products) => {
                                     .then(() => aggregateIndex.saveObject(createProductRecord(product, collection)));
                             }
                         })
-                        .catch((e) => console.log('Some Error: ', e));
+                        .catch((e) => console.error('Some Error: ', e));
                 })
         }, Promise.resolve());
 };
