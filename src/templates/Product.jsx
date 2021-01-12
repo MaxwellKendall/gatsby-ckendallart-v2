@@ -331,14 +331,14 @@ export default ({
         .nodes
         .filter((product) => {
             return (
-                product.variants.some((variant) => variant.img && variant.availableForSale) &&
+                product.variants.some((variant) => variant.localFile && variant.availableForSale) &&
                 product.handle !== handle
             );
         })
         .map((node) => {
             return {
                 ...node,
-                img: node.variants.find(({ img }) => img).img
+                img: node.variants.find(({ localFile }) => localFile).localFile
             }
         })
         .slice(0, 3)
@@ -604,7 +604,7 @@ export const query = graphql`
                 }
                 variants {
                     availableForSale 
-                    img: localFile {
+                    localFile {
                         small: childImageSharp {
                             fluid(maxWidth:150) {
                                 ...GatsbyImageSharpFluid
