@@ -391,6 +391,12 @@ export default ({
                                     transform: 'transition all ease-in'
                                 }} />
                         </div>
+                        {/* <div className="flex w-full flex-wrap">
+                            <span className="lg:pt-10 w-full tracking-widest text-xl font-semibold text-center uppercase">
+                                free shipping &#38; package insurance included!
+                            </span>
+                            <Link className="text-left w-full font-normal cursor-pointer text-xl uppercase pt-5" to="/shipping-and-returns">review our shipping policy</Link>
+                        </div> */}
                         {/* OTHER AVAILABLE PRODUCT IMAGES */}
                         <ul className="flex justify-center flex-wrap w-full xl:px-10">
                             {productImages.nodes.map(({ thumbnail }, i) => (
@@ -399,6 +405,12 @@ export default ({
                                 </li>
                             ))}
                         </ul>
+                        {/* <div className="flex w-full flex-wrap">
+                            <span className="lg:pt-10 w-full tracking-widest text-xl font-semibold text-center uppercase">
+                                free shipping &#38; package insurance included!
+                            </span>
+                            <Link className="text-center w-full font-normal cursor-pointer text-xl uppercase pt-5" to="/shipping-and-returns">review our shipping policy</Link>
+                        </div> */}
                     </div>
                 )}
                 {/* PRODUCT DESCRIPTION */}
@@ -407,30 +419,40 @@ export default ({
                     <h2 className="hidden lg:inline text-4xl tracking-widest text-left w-full">{title.toUpperCase()}</h2>
                     {/* PRODUCT PRICE */}
                     {!isSoldOut && (
-                        <p className="lg:inline w-full text-2xl py-4 tracking-widest text-center lg:my-5 lg:text-left">{getPrettyPrice(selectedVariant.price)}</p>
-                    )}
-                    {/* PRODUCT VARIANTS PRICE RANGE */}
-                    {high !== low && !isSoldOut && (
-                        <p className="lg:flex text-sm italic w-full text-center mb-5 lg:text-left">{`from ${getPrettyPrice(low)} to ${getPrettyPrice(high)}`}</p>
-                    )}
-                    {/* AFTER PAY DISCLOSURE WHEN INSTALLMENTS ARE KNOWN (Product price is under $1K) */}
-                    {!isSoldOut && selectedVariant.price >= 35 && selectedVariant.price < 1000 && (
-                        <p className="w-full flex text-center lg:text-left justify-center items-center lg:justify-start flex-wrap uppercase tracking-wide">
-                            or 4 interest-free installments of <strong className="mx-1">{` ${getAfterPaySingleInstallment(selectedVariant.price)} `}</strong> by 
-                            <button className="m-1 flex-col-center" onClick={showAfterPayImg}>
-                                <AfterPay />
-                            </button>
-                        </p>
-                    )}
-                    {/* AFTER PAY DISCLOSURE WHEN INSTALLMENTS ARE UNKNOWN (Product price is over $1K) */}
-                    {!isSoldOut && (selectedVariant.price < 35 || selectedVariant.price >= 1000) && (
-                        <p className="w-full flex text-center lg:text-left justify-center items-center lg:justify-start flex-wrap uppercase tracking-wide px-5 lg:px-0">
-                            Interest free installments by 
-                            <button className="m-1 flex items-center" onClick={showAfterPayImg}>
-                                <AfterPay />
-                            </button>
-                            available between <strong className="mx-1">{getPrettyPrice(35)}</strong> and <strong className="mx-1">{getPrettyPrice(1000)}</strong>.
-                        </p>
+                        <div className="flex w-full flex-wrap">
+                            <p className="text-center lg:text-left flex flex-wrap w-full py-4 tracking-widest text-left">
+                                <span className="text-3xl w-full pb-5">
+                                    {getPrettyPrice(selectedVariant.price)}
+                                </span>
+                                <span className="w-full text-lg tracking-widest uppercase">
+                                    free shipping &#38; package insurance included!
+                                </span>
+                                <Link className="w-full text-sm font-normal cursor-pointer uppercase" to="/shipping-and-returns">read more</Link>
+                            </p>
+                            {/* PRODUCT VARIANTS PRICE RANGE */}
+                            {high !== low && !isSoldOut && (
+                                <p className="lg:flex text-sm italic w-full text-center mb-5 lg:text-left">{`from ${getPrettyPrice(low)} to ${getPrettyPrice(high)}`}</p>
+                            )}
+                            {/* AFTER PAY DISCLOSURE WHEN INSTALLMENTS ARE KNOWN (Product price is under $1K) */}
+                            {!isSoldOut && selectedVariant.price >= 35 && selectedVariant.price < 1000 && (
+                                <p className="w-full flex text-center lg:text-left justify-center items-center lg:justify-start flex-wrap uppercase tracking-wide">
+                                    or 4 interest-free installments of <strong className="mx-1">{` ${getAfterPaySingleInstallment(selectedVariant.price)} `}</strong> by 
+                                    <button className="m-1 flex-col-center" onClick={showAfterPayImg}>
+                                        <AfterPay />
+                                    </button>
+                                </p>
+                            )}
+                            {/* AFTER PAY DISCLOSURE WHEN INSTALLMENTS ARE UNKNOWN (Product price is over $1K) */}
+                            {!isSoldOut && (selectedVariant.price < 35 || selectedVariant.price >= 1000) && (
+                                <p className="w-full flex text-center lg:text-left justify-center items-center lg:justify-start flex-wrap uppercase tracking-wide px-5 lg:px-0">
+                                    Interest free installments by 
+                                    <button className="m-1 flex items-center" onClick={showAfterPayImg}>
+                                        <AfterPay />
+                                    </button>
+                                    available between <strong className="mx-1">{getPrettyPrice(35)}</strong> and <strong className="mx-1">{getPrettyPrice(1000)}</strong>.
+                                </p>
+                            )}
+                        </div>
                     )}
                     {/* ADD TO CART BUTTON */}
                     <div className="actions w-full flex flex-col my-5 justify-start items-center">
@@ -442,6 +464,12 @@ export default ({
                             {!isLoading && !isSoldOut && 'Add to Cart'}
                             {isSoldOut && !isLoading && 'SOLD OUT'}
                         </button>
+                        {/* <span className="lg:pt-10 w-full tracking-widest text-xl font-semibold lg:text-left uppercase">
+                            free shipping &#38; package insurance included!
+                        </span>
+                        <Link className="text-left w-full font-normal cursor-pointer text-xl uppercase pt-5" to="/shipping-and-returns">review our shipping policy</Link> */}
+                        {/* <div className="w-full lg:pt-10 lg:inline">
+                        </div> */}
                         {/* VARIANT DROPDOWN SELECTOR */}
                         {parsedVariants.length > 1 && (
                             <select
