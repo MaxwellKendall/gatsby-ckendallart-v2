@@ -469,14 +469,30 @@ export default ({
                         <DetailsToggle>
                             {getDetails(description)}
                         </DetailsToggle>
-                        <DetailsToggle header="Shipping &amp; Returns" classNames="pt-2">
-                            <ul className="w-full pl-10 text-lg list-disc">
-                                <li className="text-left">Free shipping to all locations within the continental U.S.</li>
-                                <li className="text-left">Package insurance up to the full price of the painting included with every shipment.</li>
-                                <li className="text-left">All original paintings, prints and commissions are final sale and cannot be returned or exchanged.</li>
-                                <li className="text-left">Please refer to <Link className="underline" to="/shipping-and-returns">our shipping and return policy</Link> for refund exceptions and more details on how we ensure a safe and effective delivery.</li>
-                            </ul>
-                        </DetailsToggle>
+                        {productType.toLowerCase() !== 'commission' && (
+                            <DetailsToggle header="Shipping &amp; Returns" classNames="pt-2">
+                                <ul className="w-full pl-10 text-lg list-disc">
+                                    {productType.toLowerCase().includes('print') && (
+                                        <>
+                                            <li className="text-left"><strong>Free shipping</strong> </li>
+                                            <li className="text-left">Please allow 2-7 days for printing and an additional 3-7 days for shipping</li>
+                                            <li className="text-left">All original paintings, prints and commissions are final sale and cannot be returned or exchanged</li>
+                                            <li className="text-left">Please refer to <Link className="underline" to="/shipping-and-returns">our shipping and return policy</Link> for refund exceptions</li>
+                                            <li className="text-left">Print products ship to most international locations </li>
+                                        </>
+                                    )}
+                                    {!productType.toLowerCase().includes('print') && (
+                                        <>
+                                            <li className="text-left"><strong>Free shipping</strong> to all locations within the continental U.S.</li>
+                                            <li className="text-left">Package insurance <strong>up to the full price of the painting</strong> included with every shipment.</li>
+                                            <li className="text-left">All original paintings, prints and commissions are final sale and cannot be returned or exchanged.</li>
+                                            <li className="text-left">Please refer to <Link className="underline" to="/shipping-and-returns">our shipping and return policy</Link> for refund exceptions and more details on how we ensure a safe and effective delivery.</li>
+                                        </>
+                                    )}
+                                </ul>
+                            </DetailsToggle>
+
+                        )}
                     </div>
                 </div>
                 {/* OTHER PRODUCTS IN COLLECTION */}
