@@ -28,7 +28,7 @@ export default ({
                 </p>
                 <h4 className="font-semibold tracking-wider w-full text-left ml-5">ORIGINAL PAINTINGS + COMMISSIONS</h4>
                 <p className="mb-10 my-2 sqrl-font-1 ml-5">
-                      All original (non-print/reproduction) works are varnished and <span className="font-bold italic">meticulously</span> pre-packaged in Claire Kendall's studio in Charleston, SC before shipping. We use UPS for all shipping orders within the United States. All pieces are carefully packed and reinforced by UPS and <strong>insured for the full purchase price of the painting</strong>. Large paintings may be shipped in a wooden crate to ensure safe delivery. You can expect your order to ship within 3-7 days of your purchase date.
+                      All original (non-print/reproduction) works are varnished and meticulously pre-packaged in Claire Kendall's studio in Charleston, SC before shipping. We use UPS for all shipping orders within the United States. All pieces are carefully packed and reinforced by UPS and <strong>insured for the full purchase price of the painting</strong>. Large paintings may be shipped in a wooden crate to ensure safe delivery. You can expect your order to ship within 3-7 days of your purchase date.
                 </p>
                 <h4 className="font-semibold tracking-wider w-full text-left ml-5">PRINTS</h4>
                 <p className="mb-10 my-2 sqrl-font-1 ml-5">
