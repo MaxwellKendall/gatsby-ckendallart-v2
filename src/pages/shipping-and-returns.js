@@ -15,7 +15,7 @@ export default ({
         title={"Shipping + Return Policy"}
         pathname={location.pathname}
         description={description}>
-        <Layout classNames="sqrl-grey p-10" maxWidth="100rem" location={location}>
+        <Layout classNames="sqrl-grey p-10 mb-10" maxWidth="100rem" location={location}>
             <div className="text w-full flex flex-col m-5">
                 <h2 className="mb-10 font-semibold tracking-wider w-full text-center text-xl">SHIPPING + RETURN POLICY</h2>
                 <h3 className="w-full text-left font-semibold tracking-wider">ORDERING</h3>
