@@ -179,6 +179,7 @@ export const Layout = ({
 
     return (
         <div className="global-container m-auto flex justify-center flex-col min-h-full">
+            <span className="w-full text-center p-2 font-semibold tracking-wider sqrl-background">FREE SHIPPING ON PRINTS &amp; ORIGINALS!</span>
             <MobileNav itemsInCart={totalItemsInCart(cart)} activePath={location.pathname} />
             <Nav itemsInCart={totalItemsInCart(cart)} activePath={location.pathname} maxWidth={maxWidth} />
             <main
