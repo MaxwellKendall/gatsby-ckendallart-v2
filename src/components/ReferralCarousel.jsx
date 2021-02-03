@@ -8,17 +8,21 @@ export default () => {
     const nextReferral = (e) => {
         e.preventDefault();
         if (activeReferral === referrals.length - 1) {
-          return;
+          setActiveReferral(0);
         }
-        setActiveReferral(activeReferral + 1);
+        else {
+            setActiveReferral(activeReferral + 1);
+        }
     }
     
     const previousReferral = (e) => {
         e.preventDefault();
         if (activeReferral === 0) {
-            return;
+            setActiveReferral(referrals.length - 1);
         }
-        setActiveReferral(activeReferral - 1);
+        else {
+            setActiveReferral(activeReferral - 1);
+        }
     }
 
     const { site: { siteMetadata: { referrals }}} = useStaticQuery(
