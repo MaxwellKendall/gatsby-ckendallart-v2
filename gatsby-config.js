@@ -12,6 +12,7 @@ const caroleHarrisonReview = `"My family commissioned Claire to paint a portrait
 Carol H., Asheville, NC`;
 const debbieCharlesReview = `“Claire listens - she was able to take my vision and duplicate it on canvas. She is a true talent - easy to work with and my finished masterpiece is a joy to sit and admire.” Debbie C., Charleston, SC`;
 const pudIveyReview = `"I reached out to Claire to paint a portrait of my wife’s wedding bouquet as a gift for our 3rd anniversary. She delivered above and beyond expectation! She patiently worked with me and used her expertise to help me decide on the right background color. She was insightful, kind, and helpful. The painting is exquisite and one of our favorite pieces in our home!" Pud I., Jacksonville, FL`
+const lynnReview = `"We recently commissioned Claire to create a painting of our grandsons and the result is stunning!  Claire truly captured the essence of our grandchildren and created an heirloom.  Claire regularly and thoughtfully involved us throughout the process, making the experience that much more special. How we loved the look of joy on the faces of our daughter and son-in-law on Christmas morning when they opened this delightful gift! Lynn T., VA Beach, VA"`;
 
 module.exports = {
   siteMetadata: {
@@ -65,9 +66,10 @@ module.exports = {
       'Fine art made for you, with love.'
     ],
     referrals: [
+      lynnReview,
       debbieCharlesReview,
       pudIveyReview,
-      caroleHarrisonReview,
+      caroleHarrisonReview
     ]    
   },
   plugins: [
