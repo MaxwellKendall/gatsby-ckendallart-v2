@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react"
-import { Link } from "gatsby"
+import { Link, graphql } from "gatsby"
 import Img from "gatsby-image"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import Modal from 'react-modal';
@@ -7,7 +7,6 @@ import { uniqueId, delay } from "lodash";
 
 import CartContext from "../../globalState";
 import Layout from "../components/Layout";
-import afterpay from "../components/AfterPay";
 import { getCustomAttributeFromCartByVariantId, getInventoryDetails } from "../helpers"
 import {
   removeLineItemsFromCart,

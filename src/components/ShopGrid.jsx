@@ -40,7 +40,7 @@ export default ({
                         const hasVariantForSale = variants.some((({ availableForSale }) => availableForSale));
                         return (
                             <li className={`my-2 lg:mr-2 ${className}`}>
-                                <Link to={`${slug}/`} className="grid-product-img flex flex-col items-center lg:items-end w-full">
+                                <Link to={`/${slug}/`} className="grid-product-img flex flex-col items-center lg:items-end w-full">
                                     <div className="relative">
                                         <Img responsiveImgs={img} imgName={kebabCase(title)} />
                                         {!hasVariantForSale && ctx === "forSale" && (
@@ -77,7 +77,7 @@ export default ({
                         const hasVariantForSale = variants.some((({ availableForSale }) => availableForSale));
                         return (
                             <li className={`my-2 ml-2 ${className}`}>
-                                <Link to={`${slug}/`} className="grid-product-img flex flex-col items-start w-full">
+                                <Link to={`/${slug}/`} className="grid-product-img flex flex-col items-start w-full">
                                     <div className="relative">
                                         <Img responsiveImgs={img} imgName={kebabCase(title)} />
                                         {!hasVariantForSale && ctx === "forSale" && (
