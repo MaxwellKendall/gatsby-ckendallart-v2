@@ -18,7 +18,7 @@ module.exports = {
   siteMetadata: {
     title: `Claire Kendall | Fine Studio Artist`,
     description: `Claire Kendall Art is a fine studio artist from Charleston South Carolina.`,
-    siteUrl: 'https://ckendallart.com',
+    siteUrl: 'https://www.ckendallart.com',
     author: `Claire Kendall Art`,
     keywords: [
       'studio artist',
