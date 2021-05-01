@@ -73,8 +73,13 @@ module.exports = {
     ]    
   },
   plugins: [
-    // re-captcha
-    // `gatsby-plugin-recaptcha`,
+    {
+      resolve: `gatsby-plugin-robots-txt`,
+      options: {
+        sitemap: null,
+        policy: [{ userAgent: '*', allow: '/' }]
+      }
+    },
     // styles
     {
       resolve: `gatsby-plugin-sass`,
