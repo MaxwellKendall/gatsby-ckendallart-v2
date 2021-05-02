@@ -21,7 +21,7 @@ import {
     faPinterestP
 } from '@fortawesome/free-brands-svg-icons'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import moment from 'moment';
+import { toDate, differenceInHours } from 'date-fns';
 import { delay } from 'lodash';
 
 import CartContext from "../../globalState";
@@ -76,8 +76,8 @@ export const Layout = ({
         const cartFromStorage = JSON.parse(window.localStorage.getItem(localStorageKey));
         if (cartFromStorage && !cart.id) {
             // no local cart but we have a reference to the remote cart!
-            const ageOfCart = moment.duration(moment().diff(moment(cartFromStorage.timeStamp))).asHours();
-            const isCartExpired = ageOfCart > 23.9;
+            const ageOfCart = differenceInHours(Date.now(), cartFromStorage.timeStamp);
+            const isCartExpired = ageOfCart > 23;
             if (isCartExpired) {
                 window.localStorage.removeItem(localStorageKey);
                 dispatch({ 'type': 'RESET_CART' });

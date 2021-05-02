@@ -2,7 +2,6 @@ import React, { useState, useContext, useEffect, useCallback, useRef } from 'rea
 import { graphql, Link } from 'gatsby';
 import Img from "gatsby-image";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import moment from 'moment';
 import { uniqueId, kebabCase, debounce } from 'lodash';
 import Modal from 'react-modal';
 
@@ -227,7 +226,7 @@ export default ({
         }
         return initCheckout()
             .then((resp) => {
-                const timeStamp = moment.now('DD MM YYYY hh:mm:ss');
+                const timeStamp = Date.now();
                 window.localStorage.setItem(localStorageKey, JSON.stringify({'id': resp.id, timeStamp }))
                 dispatch({ type: 'INIT_CART', payload: resp });
                 return resp
