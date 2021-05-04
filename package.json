@@ -16,6 +16,8 @@
   },
   "dependencies": {
     "@apollo/client": "^3.3.12",
+    "@fontsource/lora": "^4.2.2",
+    "@fontsource/nunito": "^4.2.2",
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/free-brands-svg-icons": "^5.15.3",
     "@fortawesome/free-solid-svg-icons": "^5.15.3",

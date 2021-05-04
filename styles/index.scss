@@ -3,37 +3,13 @@
 
 
 @import "tailwindcss/utilities";
+@import "~@fontsource/nunito/scss/mixins";
 
-@import url('https://fonts.googleapis.com/css2?family=Lora&family=Nunito+Sans:ital,wght@0,200;0,300;0,400;0,600;0,700;1,200;1,300;1,400;1,600;1,700&display=swap');
-@import url("https://fonts.googleapis.com/css2?family=Lora&display=swap");
+@import "~@fontsource/nunito/index.css"; // Weight 400.
+@import "~@fontsource/lora/index.css"; // Weight 400.
 
-@font-face {
-    font-family: 'Nunito Sans';
-    src: local("/fonts/Nunito_Sans/NunitoSans-Regular.ttf") format("ttf"),
-    url("https://fonts.googleapis.com/css2?family=Nunito+Sans&display=swap");
-}
 @import "./vars";
 @import "./custom-utilities";
-
-// @font-face {
-//     font-family: 'Nunito Sans Bold';
-//     src: local("/fonts/Nunito_Sans/NunitoSans-Bold.tff") format("ttf");
-// }
-
-// @font-face {
-//     font-family: 'Nunito Sans Italic';
-//     src: local("/fonts/Nunito_Sans/NunitoSans-Regular.ttf") format("ttf");
-// }
-
-// @font-face {
-//     font-family: 'Nunito Sans Light';
-//     src: local("/fonts/Nunito_Sans/NunitoSans-Light.ttf") format("ttf");
-// }
-
-// @font-face {
-//     font-family: 'sans-serif';
-//     src: local("/fonts/Italianno/Italianno-Regular.ttf") format("ttf");
-// }
 
 @keyframes slide-in {
     0% {
@@ -65,7 +41,7 @@ body,
     font-size: 16px;
     width: 100%;
     display: flex;
-    font-family: 'Nunito Sans', 'Nunito Sans Bold', 'Nunito Sans Italic', 'Nunito Sans Light';
+    font-family: 'Nunito';
 
     .grecaptcha-badge {
         visibility: hidden;
@@ -130,19 +106,6 @@ body,
                 @media(min-width: $huge-monitor) {
                     height: 40rem;
                 }
-                // these styles work okay if there is no max-width on the page.
-                // @media(min-width: $large) {
-                //     height: 50rem;
-                // }
-                // @media(min-width: $monitor) {
-                //     height: 55rem;
-                // }
-                // @media(min-width: $huge-monitor) {
-                //     height: 65rem;
-                // }
-                // @media(min-width: $four-k-monitor) {
-                //     height: 75rem;
-                // }
             }
         }
         .product-info {
