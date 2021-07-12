@@ -80,6 +80,15 @@ module.exports = {
         policy: [{ userAgent: '*', allow: '/' }]
       }
     },
+    // {
+    //   resolve: "gatsby-plugin-webpack-bundle-analyser-v2",
+    //   options: {
+    //     analyzerMode: "server",
+    //     analyzerPort: "8888",
+    //     analyzerHost: "localhost",
+    //     defaultSizes: "gzip"
+    //   }
+    // },
     // styles
     {
       resolve: `gatsby-plugin-sass`,

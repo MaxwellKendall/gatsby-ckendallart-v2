@@ -55,21 +55,14 @@ export { wrapRootElement } from "./wrap-root-element";
 
 // Load Analytics & Sort meta tags
 export const onPreRenderHTML = ({
-    getHeadComponents,
-    replaceHeadComponents,
-    replacePreBodyComponents,
-    getPreBodyComponents
+    getPostBodyComponents,
+    replacePostBodyComponents,
 }) => {
-    const order = ["title", "base", "meta", "link", "noscript", "script", "style"]
-
-    const sortedHeadComponents = getHeadComponents()
-        .concat([<LoadScripts />])
-        .slice(0)
-        .flat()
-        .sort((x, y) => order.indexOf(x.type) - order.indexOf(y.type));
-
-    replaceHeadComponents(sortedHeadComponents);
-    replacePreBodyComponents(getPreBodyComponents()
-        .concat([<GtmNoScript />])
+    replacePostBodyComponents(
+        getPostBodyComponents()
+            .concat([
+                <LoadScripts />,
+                <GtmNoScript />
+            ])
     );
-}
+};
