@@ -6,20 +6,20 @@ import ShopGrid from '../components/ShopGrid';
 
 export default ({
     data: {
-        allShopifyProduct: { nodes: portfolio }
+        allShopifyProduct: { nodes: originals }
     },
     location
 }) => {
     return (
         <Layout classNames="sqrl-grey" location={location}>
-            <ShopGrid products={portfolio} ctx="notForSale" path={location.pathname} />
+            <ShopGrid products={originals} path={location.pathname} />
         </Layout>
     );
 }
 
 export const query = graphql`
-    query GetPortfolio {
-        allShopifyProduct(filter: {productType: {regex: "/^((?!Print).)*$/"}}) {
+    query GetAirbnbPrints {
+        allShopifyProduct(filter: { tags: { in: ["airbnb"]} } ) {
             nodes {
                 optimizedImages
                 title

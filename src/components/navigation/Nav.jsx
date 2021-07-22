@@ -60,7 +60,7 @@ export const ExpandableMenuIcon = ({
                 <ul className="md:absolute md:bg-white md:z-10 md:rounded md:shadow">
                     {childPages.map((childPage, i) => (
                         <li className={`p-2 mt-2 lg:px-8 lg:px-8 text-sm md:m-0 md:text-lg ${i === 1 ? 'test': ''}`}>
-                            <Link className="lg:tracking-wider xl:tracking-widest " to={`/${childPage.name.toLowerCase()}/`}>
+                            <Link className="lg:tracking-wider xl:tracking-widest " to={`${childPage.link.toLowerCase()}`}>
                                 {childPage.name.toUpperCase()}
                             </Link>
                         </li>
@@ -122,7 +122,10 @@ export default ({
                     ...pages.slice(2, 4)
                         .map((page) => (
                             <li className="p-5 mt-2 md:text-lg mx-4">
-                                <Link className="pb-2  lg:tracking-wider xl:tracking-widest border-white border-opacity-0 border-b-2 border-solid hover:border-opacity-100 hover:border-black" activeClassName="sqrl-active-link" to={page.link}>
+                                <Link
+                                    className="pb-2  lg:tracking-wider xl:tracking-widest border-white border-opacity-0 border-b-2 border-solid hover:border-opacity-100 hover:border-black"
+                                    activeClassName="sqrl-active-link"
+                                    to={page.link}>
                                     {page.name.toUpperCase()}
                                 </Link>
                             </li>

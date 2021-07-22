@@ -48,6 +48,10 @@ module.exports = {
           {
             name: 'Originals',
             link: '/originals/'
+          },
+          {
+            name: 'Airbnb collection',
+            link: '/airbnb-collection/'
           }
         ]
       },
