@@ -23,6 +23,7 @@ import {
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { toDate, differenceInHours } from 'date-fns';
 import { delay } from 'lodash';
+import { Link } from 'gatsby';
 
 import CartContext from "../../globalState";
 import { localStorageKey } from '../helpers';
@@ -179,7 +180,7 @@ export const Layout = ({
 
     return (
         <div className="global-container m-auto flex justify-center flex-col min-h-full">
-            <span className="w-full text-center p-2 font-semibold tracking-wider sqrl-background">FREE SHIPPING ON PRINTS &amp; ORIGINALS!</span>
+            <Link to="shipping-and-returns" className="w-full text-center p-2 font-semibold tracking-wider sqrl-background">FREE SHIPPING ON PRINTS &amp; ORIGINALS!</Link>
             <MobileNav itemsInCart={totalItemsInCart(cart)} activePath={location.pathname} />
             <Nav itemsInCart={totalItemsInCart(cart)} activePath={location.pathname} maxWidth={maxWidth} />
             <main
