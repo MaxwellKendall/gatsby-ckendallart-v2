@@ -22,9 +22,10 @@ export const fetchProductInventory = (variantId) => {
     }
   })
   .then(async (data) => {
-    const { body: { variant: { inventory_quantity: remainingInventory, fulfillment_service }} } = await data.json();
+    const { body: { variant: { inventory_quantity: remainingInventory, fulfillment_service, inventory_management }} } = await data.json();
     console.info('number of variants remaining', remainingInventory);
-    if (fulfillment_service === 'printful') return 999;
+    const isInfiniteInventory = (inventory_management === null)
+    if (fulfillment_service === 'printful' || isInfiniteInventory) return 999;
     return remainingInventory;
   })
   .catch((e) => {
