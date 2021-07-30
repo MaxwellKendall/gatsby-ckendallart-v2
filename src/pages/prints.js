@@ -33,7 +33,6 @@ export const query = graphql`
                 localFile {
                   small: childImageSharp {
                         fixed(width: 300) {
-                            
                             ...GatsbyImageSharpFixed
                         }
                     }

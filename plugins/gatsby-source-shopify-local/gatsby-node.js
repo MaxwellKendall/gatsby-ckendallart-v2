@@ -139,10 +139,16 @@ exports.sourceNodes = async ({ actions, createNodeId, createContentDigest }, opt
             })
 }
 
+const imagesAddedByProductTitle = {};
+
 const processFileNode = (fileNode, previousImage, node) => {
     if (fileNode && previousImage.variantTitle) {
         node.variants = node.variants.map((variant) => {
             if (variant.id === previousImage.id) {
+                imagesAddedByProductTitle[node.title]
+                    ? imagesAddedByProductTitle[node.title] = { ...imagesAddedByProductTitle[node.title], count: imagesAddedByProductTitle[node.title].count++ }
+                    : imagesAddedByProductTitle[node.title] = { count: 1, slug: node.slug };
+
                 return {
                     ...variant,
                     localFile___NODE: fileNode.id
@@ -151,10 +157,11 @@ const processFileNode = (fileNode, previousImage, node) => {
             return variant;
         });
     }
-    else if (fileNode && previousImage.isFirst) {
-        node.localFile___NODE = fileNode.id;
-    }
     if (fileNode) {
+        imagesAddedByProductTitle[node.title]
+            ? imagesAddedByProductTitle[node.title] = { ...imagesAddedByProductTitle[node.title], count: imagesAddedByProductTitle[node.title].count++ }
+            : imagesAddedByProductTitle[node.title] = { count: 1, slug: node.slug };
+        node.localFile___NODE = fileNode.id;
         node.optimizedImages = node.optimizedImages
             ? node.optimizedImages.concat([fileNode.relativePath])
             : [fileNode.relativePath]
@@ -180,7 +187,9 @@ exports.onCreateNode = async ({
                         const previousImage = i === 0
                             ? img
                             : arr[i - 1];
-                        processFileNode(fileNode, previousImage, node);
+                        if (i > 0) {
+                            processFileNode(fileNode, previousImage, node);
+                        }
                         return createRemoteFileNode({
                             url: img.url, // string that points to the URL of the image
                             // parentNodeId: image.id, // id of the parent node of the fileNode you are going to create
@@ -193,6 +202,17 @@ exports.onCreateNode = async ({
                         .then((resp) => {
                             if (i === arr.length - 1) {
                                 processFileNode(resp, arr[arr.length - 1], node);
+                                Object
+                                    .entries(imagesAddedByProductTitle)
+                                    .forEach(([k, { count: v, slug }]) => {
+                                        console.info(`📸 ✨ ${k} has ${v} images 📸 ✨ https://ckendallart.com/${slug}`);
+                                    })
+
+                                const totalImagesAdded = Object
+                                    .values(imagesAddedByProductTitle)
+                                    .reduce((acc, { count: int }) => acc + int, 0);
+                                    
+                                console.info(`Total images added: ${totalImagesAdded} 💪💪💪💪`)
                             }
                             return resp;
                         });
