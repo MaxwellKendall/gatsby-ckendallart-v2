@@ -131,9 +131,7 @@ const CartPage = ({
                   const productId = getCustomAttributeFromCartByVariantId([lineItem], variantId, 'productId');
                   const collection = getCustomAttributeFromCartByVariantId([lineItem], variantId, 'collection');
                   const handle = getCustomAttributeFromCartByVariantId([lineItem], variantId, 'handle');
-                  const slug = collection.toLowerCase() === 'print'
-                    ? `/prints/${handle}`
-                    : `/originals/${handle}`;
+                  const slug = `/products/${handle}`;
                   return (
                     <tr key={uniqueId('')} className={`flex w-full py-5 border-b-2`} style={{ borderColor: "#cdbdbd" }}>
                       <td className="w-full flex flex-col items-center lg:w-1/2 lg:flex-row">

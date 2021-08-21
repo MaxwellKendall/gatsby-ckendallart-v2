@@ -9,6 +9,8 @@ const {
 } = require('./queries');
 const { kebabCase } = require('lodash');
 
+const PRODUCT_SLUG_PREFIX = 'products';
+
 const client = new ApolloClient({
   cache: new InMemoryCache(),
   link: new HttpLink({
@@ -101,9 +103,7 @@ exports.sourceNodes = async ({ actions, createNodeId, createContentDigest }, opt
                 collection: collectionByHandle.title,
                 handle,
                 productType,
-                slug: productType.toLowerCase() === 'print'
-                    ? `prints/${handle}`
-                    : `originals/${handle}`,
+                slug: `${PRODUCT_SLUG_PREFIX}/${handle}`,
                 totalInventory,
                 priceRange: {
                     high: priceRange.maxVariantPrice.amount,
@@ -202,17 +202,12 @@ exports.onCreateNode = async ({
                         .then((resp) => {
                             if (i === arr.length - 1) {
                                 processFileNode(resp, arr[arr.length - 1], node);
-                                Object
-                                    .entries(imagesAddedByProductTitle)
-                                    .forEach(([k, { count: v, slug }]) => {
-                                        console.info(`📸 ✨ ${k} has ${v} images 📸 ✨ https://ckendallart.com/${slug}`);
-                                    })
 
                                 const totalImagesAdded = Object
                                     .values(imagesAddedByProductTitle)
                                     .reduce((acc, { count: int }) => acc + int, 0);
                                     
-                                console.info(`Total images added: ${totalImagesAdded} 💪💪💪💪`)
+                                console.info(`Total images added: 📸 ✨ ${totalImagesAdded} 📸 ✨`)
                             }
                             return resp;
                         });
