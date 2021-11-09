@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useCallback, useRef } from 'react';
-import { graphql, Link } from 'gatsby';
+import { graphql, Link, navigate } from 'gatsby';
 import Img from "gatsby-image";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { uniqueId, kebabCase, debounce } from 'lodash';
@@ -222,6 +222,7 @@ export default ({
             }, ''));
         }
         if (cart.id) {
+            // cart already exists, don't send to cart page
             return modifyCart(cart.id);
         }
         return initCheckout()
@@ -232,7 +233,9 @@ export default ({
                 return resp
             })
             .then((newCart) => {
-                modifyCart(newCart.id)
+                return modifyCart(newCart.id).then(() => {
+                    navigate('/cart/');
+                })
             })
             .catch((e) => {
                 console.error('error initCheckout', e);
