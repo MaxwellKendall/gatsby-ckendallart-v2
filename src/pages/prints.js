@@ -3,6 +3,7 @@ import { graphql } from 'gatsby';
 
 import Layout from '../components/Layout';
 import ShopGrid from '../components/ShopGrid';
+import SEO from "../components/SEO";
 
 export default ({
     data: {
@@ -11,9 +12,14 @@ export default ({
     location
 }) => {
     return (
-        <Layout classNames="sqrl-grey" location={location}>
-             <ShopGrid products={prints} path={location.pathname} />
-        </Layout>
+        <SEO
+            title="Prints"
+            pathname={location.pathname}
+            description="Prints of original artwork by Claire Kendall.">
+            <Layout classNames="sqrl-grey" location={location}>
+                <ShopGrid products={prints} path={location.pathname} />
+            </Layout>
+        </SEO>
     );
 }
 
