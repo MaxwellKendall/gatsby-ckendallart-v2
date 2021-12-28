@@ -3,3 +3,5 @@ export const totalItemsInCart = ({ lineItems }) => {
         return acc + quantity;
     }, 0);
 }
+
+export const hasAvailableInventory = (productVariants) => productVariants.some((({ availableForSale }) => availableForSale));

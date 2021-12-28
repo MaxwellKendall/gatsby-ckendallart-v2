@@ -4,6 +4,7 @@ import { kebabCase } from 'lodash';
 
 import { getDefaultProductImage, getPrettyPrice } from "../helpers/products"
 import Img from './Img';
+import { hasAvailableInventory } from '../helpers/cart';
 
 const defaultSort = ({ variants: variantsA, priceRange: { low: lowestPriceA } }, { variants: variantsB, priceRange: { low: lowestPriceB } }) => {
     const a = variantsA.some((({ availableForSale }) => availableForSale));
@@ -37,7 +38,7 @@ export default ({
                     })
                     .filter(({ img }) => img)
                     .map(({ slug, img, title, variants, priceRange: { low: lowestPrice }, className }, i) => {
-                        const hasVariantForSale = variants.some((({ availableForSale }) => availableForSale));
+                        const hasVariantForSale = hasAvailableInventory(variants);
                         return (
                             <li className={`my-2 lg:mr-2 ${className}`}>
                                 <Link to={`/${slug}/`} className="grid-product-img flex flex-col items-center lg:items-end w-full">

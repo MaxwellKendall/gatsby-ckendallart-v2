@@ -361,7 +361,7 @@ export default ({
             pathname={location.pathname}
             image={selectedImg?.responsiveImgs[0]}
             description={description}>
-            <Layout pageName="product-page" flexDirection="row" classNames="flex-wrap sqrl-grey" maxWidth="100rem" location={location}>
+            <Layout pageName="product-page" flexDirection="row" classNames="flex-wrap" maxWidth="100rem" location={location}>
                 {/* MOBILE TITLE ONLY */}
                 <h2 className="text-xl tracking-widest text-center w-full my-4 md:text-2xl lg:text-4xl lg:hidden">{title.toUpperCase()}</h2>
                 {/* MAIN PRODUCT IMG */}

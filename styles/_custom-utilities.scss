@@ -19,3 +19,9 @@
 .sqrl-font-1 {
     font-family: 'Nunito';
 }
+
+.filter-pop-out {
+    @apply flex flex-col justify-start items-center fixed z-10 top-0 left-0 sqrl-pink;
+    width: 315px;
+    height: 100%;
+}
