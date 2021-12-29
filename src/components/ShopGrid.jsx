@@ -27,7 +27,7 @@ export default ({
     
     return (
         <>
-            <ul className="flex flex-col w-full lg:w-1/2">
+            <ul className="flex flex-col w-full mt-10 lg:mt-0 lg:w-1/2">
                 {sortedProducts
                     .map((product, i) => {
                         const className = i % 2 === 0

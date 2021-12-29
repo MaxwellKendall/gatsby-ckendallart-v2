@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { graphql } from 'gatsby';
 import { faTimesCircle, faSlidersH, faTimes } from '@fortawesome/free-solid-svg-icons'
 
@@ -20,7 +20,25 @@ const FilterSidebar = ({
     criteria,
     setFilterCriteria
 }) => {
+    const wrapperRef = useRef(null);
     const [showFacets, setShowFacets] = useState(true);
+    useEffect(() => {
+        /**
+         * Alert if clicked on outside of element
+         */
+        function handleClickOutside(event) {
+            if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+                setShowFacets(false);
+            }
+        }
+
+        // Bind the event listener
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            // Unbind the event listener on clean up
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [wrapperRef])
     const renderFacets = (facetType) => {
         const getHandler = (key) => (e) => {
             e.persist()
@@ -108,8 +126,8 @@ const FilterSidebar = ({
     }
     if (showFacets) {
         return (
-            <div className='filter-pop-out'>
-                <button onClick={() => setShowFacets(false)} className='ml-auto p-2'>
+            <div className='filter-pop-out' ref={wrapperRef}>
+                <button onClick={() => setShowFacets(false)} className='ml-auto p-2 focus:outline-none cursor-pointer'>
                     <FontAwesomeIcon icon={faTimesCircle} />
                 </button>
                 <ul className='px-4 md:px-10'>
@@ -119,8 +137,8 @@ const FilterSidebar = ({
         )
     }
     return (
-        <div className='absolute top-0 left-50 p-2'>
-            <button onClick={() => setShowFacets(true)}>
+        <div className='absolute top-0 left-50'>
+            <button onClick={() => setShowFacets(true)} className='focus:outline-none cursor-pointer'>
                 <span className='tracking-wider text-xl'>FILTER </span><FontAwesomeIcon icon={faSlidersH} />
             </button>
         </div>
