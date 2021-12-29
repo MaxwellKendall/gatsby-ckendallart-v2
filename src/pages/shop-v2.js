@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { graphql } from 'gatsby';
 import { faTimesCircle, faSlidersH, faTimes } from '@fortawesome/free-solid-svg-icons'
 
@@ -12,16 +12,54 @@ import { getPrettyPrice } from '../helpers/products';
 const description = `Original artwork by Claire Kendall.`
 
 const facets = ['sortBy', 'type', 'price', 'sold', 'title'];
-const criteriaTypeByKey = {
-    'sortBy': '',
 
-}
 const FilterSidebar = ({
     criteria,
     setFilterCriteria
 }) => {
     const wrapperRef = useRef(null);
-    const [showFacets, setShowFacets] = useState(true);
+    const buttonRef = useRef(null);
+    const [isSticky, setIsSticky] = useState(false);
+    const [showFacets, setShowFacets] = useState(false);
+
+    useLayoutEffect(() => {
+        const callback = (arr) => {
+            arr.forEach((o) => {
+                if (isSticky && o.intersectionRatio > 0) {
+                    setIsSticky(false)
+                }
+            })
+        }
+        let options = {
+            root: null,
+            rootMargin: '0px',
+            threshold: [0.01]
+          }
+        let observer = new IntersectionObserver(callback, options);
+        Array.from(document.querySelectorAll('header')).forEach((el) => {
+            observer.observe(el);
+        })
+    })
+
+    useLayoutEffect(() => {
+        const callback = (arr) => {
+            arr.forEach((o) => {
+                if (o.intersectionRatio > 0 && !isSticky) {
+                    setIsSticky(true)
+                }
+            })
+        }
+        let options = {
+            root: null,
+            rootMargin: '0px',
+            threshold: [0.75]
+          }
+        let observer = new IntersectionObserver(callback, options);
+        if (buttonRef.current) {
+            observer.observe(buttonRef.current);
+        }
+    }, [buttonRef])
+
     useEffect(() => {
         /**
          * Alert if clicked on outside of element
@@ -39,6 +77,7 @@ const FilterSidebar = ({
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [wrapperRef])
+
     const renderFacets = (facetType) => {
         const getHandler = (key) => (e) => {
             e.persist()
@@ -69,55 +108,55 @@ const FilterSidebar = ({
                 const handler = getHandler('sortBy');
                 return (
                     <div className='w-full py-5 flex flex-wrap items-center'>
-                        <label className='w-full'>Sort By</label>
+                        <label className='w-full uppercase text-lg tracking-wide'>Sort By</label>
                         <div className='w-full'>
-                            <input name="sort-by" id="price-asc" value="price-asc" onChange={handler} type="radio" checked={criteria.sortBy === 'price-asc'} />
-                            <label className='px-2' htmlFor="price-asc">Price Ascending</label>
+                            <input name="sort-by" className="cursor-pointer" id="price-asc" value="price-asc" onChange={handler} type="radio" checked={criteria.sortBy === 'price-asc'} />
+                            <label className='px-2 cursor-pointer' htmlFor="price-asc">Price Ascending</label>
                         </div>
                         <div className='w-full'>
-                            <input name="sort-by" id="price-desc" value="price-desc" onChange={handler} type="radio" checked={criteria.sortBy === 'price-desc'} />
-                            <label className='px-2' htmlFor="price-desc">Price Descending</label>
+                            <input name="sort-by" className="cursor-pointer" id="price-desc" value="price-desc" onChange={handler} type="radio" checked={criteria.sortBy === 'price-desc'} />
+                            <label className='px-2 cursor-pointer' htmlFor="price-desc">Price Descending</label>
                         </div>
                     </div>
                 )
             case 'sold':
                 return (
                     <div className='w-full py-5 flex flex-wrap items-center'>
-                        <label className='pr-2' htmlFor="exclude-sold">Exclude Sold</label>
+                        <label className='uppercase text-lg tracking-wide pr-2' htmlFor="exclude-sold">Exclude Sold</label>
                         <input id="exclude-sold" onInput={getHandler('excludeSold')} type="checkbox" value="excludeSold" checked={criteria.excludeSold}/>
                     </div>
                 );
             case 'title':
                 return (
                     <div className='w-full py-5 flex flex-wrap items-center'>
-                        <label className='w-full' htmlFor="original">Title / Description / Size</label>
+                        <label className='w-full uppercase text-lg tracking-wide' htmlFor="original">Title / Description / Size</label>
                         <input className='p-2 w-full' id="original" onChange={getHandler('title')} type="text" value={criteria.title} placeholder='ie. size, subject, medium, etc...'/>
                     </div>
                 );
             case 'type':
                 const productTypeChangeHandler = getHandler('productTypes');
                 return (
-                    <div className='w-full py-5 flex flex-wrap items-center'>
-                        <span className='w-full'>Product Type</span>
+                    <div className='w-full py-5 flex flex-wrap items-center' cursor-pointer>
+                        <span className='w-full uppercase text-lg tracking-wide'>Product Type</span>
                         <div className='w-full'>
-                            <input id="original" value="oil paintings" onInput={productTypeChangeHandler} type="checkbox" checked={criteria.productTypes.includes('oil paintings')} />
-                            <label className='px-2' htmlFor="oil paintings">Originals</label>
+                            <input className="cursor-pointer" id="oil paintings" value="oil paintings" onInput={productTypeChangeHandler} type="checkbox" checked={criteria.productTypes.includes('oil paintings')} />
+                            <label className='px-2 cursor-pointer' htmlFor="oil paintings">Originals</label>
                         </div>
                         <div className='w-full'>
-                            <input id="print" value="Print" onInput={productTypeChangeHandler} type="checkbox" checked={criteria.productTypes.includes('Print')} />
-                            <label className='px-2' htmlFor="print">Prints</label>
+                            <input className="cursor-pointer" id="print" value="Print" onInput={productTypeChangeHandler} type="checkbox" checked={criteria.productTypes.includes('Print')} />
+                            <label className='px-2 cursor-pointer' htmlFor="print">Prints</label>
                         </div>
                         <div className='w-full'>
-                            <input name="commission" value="commission" onInput={productTypeChangeHandler} type="checkbox" checked={criteria.productTypes.includes('commission')} />
-                            <label className='px-2' htmlFor="commission">Previous Commissions</label>
+                            <input className='cursor-pointer' name="commission" id="commission" value="commission" onInput={productTypeChangeHandler} type="checkbox" checked={criteria.productTypes.includes('commission')} />
+                            <label className='px-2 cursor-pointer' htmlFor="commission">Previous Commissions</label>
                         </div>
                     </div>
                 );
             case 'price':
                 return (
                     <div className='w-full py-5 flex flex-wrap'>
-                        <label className='w-full' htmlFor="price">{`Price Range: ${getPrettyPrice(criteria.minPrice)} - ${getPrettyPrice(criteria.maxPrice)}`}</label>
-                        <input className='price-range w-full' id="price" value={criteria.maxPrice} onInput={getHandler('maxPrice')} type="range" min={criteria.minPrice} max={criteria.absoluteMaxPrice} />
+                        <label className='w-full uppercase text-lg tracking-wide' htmlFor="price">{`Price Range: ${getPrettyPrice(criteria.minPrice)} - ${getPrettyPrice(criteria.maxPrice)}`}</label>
+                        <input className='price-range w-full cursor-pointer' id="price" value={criteria.maxPrice} onInput={getHandler('maxPrice')} type="range" min={criteria.minPrice} max={criteria.absoluteMaxPrice} />
                     </div>
                 );
             default:
@@ -128,17 +167,17 @@ const FilterSidebar = ({
         return (
             <div className='filter-pop-out' ref={wrapperRef}>
                 <button onClick={() => setShowFacets(false)} className='ml-auto p-2 focus:outline-none cursor-pointer'>
-                    <FontAwesomeIcon icon={faTimesCircle} />
+                    <FontAwesomeIcon icon={faTimesCircle} className='text-xl' />
                 </button>
-                <ul className='px-4 md:px-10'>
+                <ul className='m-auto px-4 md:px-10'>
                     {facets.map(renderFacets)}
                 </ul>
             </div>
         )
     }
     return (
-        <div className='absolute top-0 left-50'>
-            <button onClick={() => setShowFacets(true)} className='focus:outline-none cursor-pointer'>
+        <div className={`top-0 left-50 ${isSticky ? 'fixed z-10 p-2 mt-2 bg-white rounded lg:p-5' : 'absolute'}`}>
+            <button onClick={() => setShowFacets(true)} className='focus:outline-none cursor-pointer' ref={buttonRef}>
                 <span className='tracking-wider text-xl'>FILTER </span><FontAwesomeIcon icon={faSlidersH} />
             </button>
         </div>

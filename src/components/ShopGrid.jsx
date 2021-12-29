@@ -46,7 +46,7 @@ export default ({
                                         <Img responsiveImgs={img} imgName={kebabCase(title)} />
                                         {!hasVariantForSale && ctx === "forSale" && (
                                             <span
-                                                className="absolute top-0 mt-4 md:mt-12 text-white font-semibold text-center w-24 md:w-40 text-2xl md:text-3xl py-2 left-0 tracking-widest"
+                                                className="absolute top-0 mt-4 md:mt-12 text-white font-semibold text-center w-48 md:w-40 text-2xl md:text-3xl py-2 left-0 tracking-widest"
                                                 style={{ backgroundColor: "#C097D0", border: "3px solid #8D647A", left: '-.5rem' }}>
                                                 SOLD
                                             </span>
@@ -83,7 +83,7 @@ export default ({
                                         <Img responsiveImgs={img} imgName={kebabCase(title)} />
                                         {!hasVariantForSale && ctx === "forSale" && (
                                             <span
-                                                className="absolute top-0 mt-4 md:mt-12 text-white font-semibold text-center w-24 md:w-40 text-2xl md:text-3xl py-2 left-0 tracking-widest"
+                                                className="absolute top-0 mt-4 md:mt-12 text-white font-semibold text-center w-48 md:w-40 text-2xl md:text-3xl py-2 left-0 tracking-widest"
                                                 style={{ backgroundColor: "#C097D0", border: "3px solid #8D647A", left: '-.5rem' }}>
                                                 SOLD
                                             </span>
