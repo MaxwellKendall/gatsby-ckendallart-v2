@@ -84,21 +84,17 @@ const FilterSidebar = ({
             const { value } = e.target;
 
             const previous = criteria[key];
-            const type = typeof previous;
             let newSelection;
             if (Array.isArray(previous)) {
                 newSelection = previous.includes(value)
                     ? previous.filter((str) => str !== value)
                     : previous.concat([value]);
-
-            } else if (type === 'string') {
+            } else if (key === 'excludeSold') {
+                newSelection = previous === 'false' ? 'true' : 'false';
+            } else {
                 newSelection = value;
-            } else if (type === 'number') {
-                newSelection = value;
-            } else if (type === 'boolean') {
-                newSelection = !previous;
             }
-            setFilterCriteria({
+            writeQueryStrings({
                 ...criteria,
                 [key]: newSelection
             });
@@ -123,7 +119,7 @@ const FilterSidebar = ({
                 return (
                     <div className='w-full py-5 flex flex-wrap items-center'>
                         <label className='uppercase text-lg tracking-wide pr-2' htmlFor="exclude-sold">Exclude Sold</label>
-                        <input id="exclude-sold" onInput={getHandler('excludeSold')} type="checkbox" value="excludeSold" checked={criteria.excludeSold}/>
+                        <input id="exclude-sold" onInput={getHandler('excludeSold')} type="checkbox" value="excludeSold" checked={criteria.excludeSold === 'true'}/>
                     </div>
                 );
             case 'title':
@@ -184,10 +180,9 @@ const FilterSidebar = ({
     )
 }
 
-const VALID_QUERY_PARAMS = ['maxPrice', 'productTypes', 'excludeSold', 'sortBy', 'title'];
+const VALID_QUERY_PARAMS = ['maxPrice', 'productTypes', 'excludeSold', 'sortBy', 'title', 'excludeSold'];
 
-const getDefaultCriteria = (arr, queryStrings) => {
-    const params = new URLSearchParams(queryStrings);
+const getDefaultCriteria = (arr) => {
     const defaultCriteria = arr.reduce((acc, product) => {
         const parsedMin =  parseInt(product.priceRange.low, 10)
         const parsedMax =  parseInt(product.priceRange.high, 10)
@@ -206,26 +201,12 @@ const getDefaultCriteria = (arr, queryStrings) => {
         sortBy: 'price-desc',
         title: ''
     });
-
-    Array.from(params.keys()).forEach((key) => {
-        if (VALID_QUERY_PARAMS.includes(key)) {
-            const value = params.get(key);
-            if (key === 'maxPrice') {
-                defaultCriteria[key] = parseInt(value, 10);
-            }
-            else if (key === 'productTypes') {
-                defaultCriteria[key] = value.split(',');
-            }
-            else {
-                defaultCriteria[key] = value;
-            }
-        }
-    });
     return defaultCriteria;
 };
 
-const readQueryStrings = (queryStrings) => {
-    const defaultCriteria = {};
+const readQueryStrings = (queryStrings, products) => {
+    const params = new URLSearchParams(queryStrings);
+    const defaultCriteria = getDefaultCriteria(products);
     
     Array.from(params.keys()).forEach((key) => {
         if (VALID_QUERY_PARAMS.includes(key)) {
@@ -244,8 +225,16 @@ const readQueryStrings = (queryStrings) => {
     return defaultCriteria;
 }
 
-const writeQueryStrings = (key) => {
-    
+const writeQueryStrings = (obj) => {
+    const newUrl = Object
+        .entries(obj)
+        .reduce((str, [key, value]) => {
+            if (key === 'productTypes') {
+                return `${str}productTypes=${value.join(',')}&`
+            }
+            return `${str}${key}=${value}&`
+        }, '?');
+    navigate(newUrl);
 }
 
 const userSelectedSortFn = (selection) => {
@@ -263,7 +252,8 @@ const filterProductsByCriteria = (products, filterCriteria) => {
                 (p.title.includes(filterCriteria.title) || p.description.includes(filterCriteria.title)) &&
                 lowestPrice <= filterCriteria.maxPrice &&
                 filterCriteria.productTypes.includes(p.productType) &&
-                (!filterCriteria.excludeSold || (filterCriteria.excludeSold && isForSale))
+                // this is so dumb
+                ((!filterCriteria.excludeSold || filterCriteria.excludeSold === 'false') || (filterCriteria.excludeSold === 'true' && isForSale))
             );
             return shouldInclude;
         });
@@ -275,15 +265,16 @@ export default ({
     },
     location
 }) => {
-    const [filterCriteria, setFilterCriteria] = useState(getDefaultCriteria(products, location.search));
+    const filterCriteria = readQueryStrings(location.search, products);
     const filteredProducts = filterProductsByCriteria(products, filterCriteria);
+
     return (
         <SEO
             title="Originals"
             pathname={location.pathname}
             description={description}>
             <Layout classNames="relative" location={location}>
-                <FilterSidebar criteria={filterCriteria} setFilterCriteria={setFilterCriteria} />
+                <FilterSidebar criteria={filterCriteria} />
                 {(filteredProducts.length > 0)
                     ? <ShopGrid products={filteredProducts} path={location.pathname} sortFn={userSelectedSortFn(filterCriteria.sortBy)}/>
                     : <p>No results. Please refine your search!</p>
