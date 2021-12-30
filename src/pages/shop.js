@@ -105,28 +105,28 @@ const FilterSidebar = ({
                 return (
                     <div className='w-full py-5 flex flex-wrap items-center'>
                         <label className='w-full uppercase text-lg tracking-wide'>Sort By</label>
-                        <div className='w-full'>
+                        <div className='w-full p-2'>
                             <input name="sort-by" className="cursor-pointer" id="price-asc" value="price-asc" onChange={handler} type="radio" checked={criteria.sortBy === 'price-asc'} />
-                            <label className='px-2 cursor-pointer' htmlFor="price-asc">Price Ascending</label>
+                            <label className='px-2 cursor-pointer' htmlFor="price-asc">Price Low to High</label>
                         </div>
-                        <div className='w-full'>
+                        <div className='w-full p-2'>
                             <input name="sort-by" className="cursor-pointer" id="price-desc" value="price-desc" onChange={handler} type="radio" checked={criteria.sortBy === 'price-desc'} />
-                            <label className='px-2 cursor-pointer' htmlFor="price-desc">Price Descending</label>
+                            <label className='px-2 cursor-pointer' htmlFor="price-desc">Price High to Low</label>
                         </div>
                     </div>
                 )
             case 'sold':
                 return (
                     <div className='w-full py-5 flex flex-wrap items-center'>
-                        <label className='uppercase text-lg tracking-wide pr-2' htmlFor="exclude-sold">Exclude Sold</label>
-                        <input id="exclude-sold" onInput={getHandler('excludeSold')} type="checkbox" value="excludeSold" checked={criteria.excludeSold === 'true'}/>
+                        <input className='mx-2' id="exclude-sold" onInput={getHandler('excludeSold')} type="checkbox" value="excludeSold" checked={criteria.excludeSold === 'true'}/>
+                        <label className='uppercase text-lg tracking-wide' htmlFor="exclude-sold">Exclude Sold</label>
                     </div>
                 );
             case 'title':
                 return (
                     <div className='w-full py-5 flex flex-wrap items-center'>
                         <label className='w-full uppercase text-lg tracking-wide' htmlFor="original">Title / Description / Size</label>
-                        <input className='p-2 w-full' id="original" onChange={getHandler('title')} type="text" value={criteria.title} placeholder='ie. size, subject, medium, etc...'/>
+                        <input className='mx-2 p-2 w-full mt-2' id="original" onChange={getHandler('title')} type="text" value={criteria.title} placeholder='ie. size, subject, medium, etc...'/>
                     </div>
                 );
             case 'type':
@@ -134,15 +134,15 @@ const FilterSidebar = ({
                 return (
                     <div className='w-full py-5 flex flex-wrap items-center' cursor-pointer>
                         <span className='w-full uppercase text-lg tracking-wide'>Product Type</span>
-                        <div className='w-full'>
+                        <div className='w-full p-2'>
                             <input className="cursor-pointer" id="oil paintings" value="oil paintings" onInput={productTypeChangeHandler} type="checkbox" checked={criteria.productTypes.includes('oil paintings')} />
                             <label className='px-2 cursor-pointer' htmlFor="oil paintings">Originals</label>
                         </div>
-                        <div className='w-full'>
+                        <div className='w-full p-2'>
                             <input className="cursor-pointer" id="print" value="Print" onInput={productTypeChangeHandler} type="checkbox" checked={criteria.productTypes.includes('Print')} />
                             <label className='px-2 cursor-pointer' htmlFor="print">Prints</label>
                         </div>
-                        <div className='w-full'>
+                        <div className='w-full p-2'>
                             <input className='cursor-pointer' name="commission" id="commission" value="commission" onInput={productTypeChangeHandler} type="checkbox" checked={criteria.productTypes.includes('commission')} />
                             <label className='px-2 cursor-pointer' htmlFor="commission">Previous Commissions</label>
                         </div>
