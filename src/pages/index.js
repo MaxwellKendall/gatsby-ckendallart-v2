@@ -169,16 +169,17 @@ export default (props) => {
       <Layout pageName="home" location={props.location}>
         {/* I. HERO IMG */}
         <Img
+          critical
           className="w-full hero-img"
           fluid={responsiveHeroImages}
           imgStyle={{ objectPosition: 'center 55%' }} />
         {/* TAG LINE */}
-        <div className="flex-col-center py-10 md:py-24">
+        <div className="flex-col-center py-10 md:py-12">
           {tagLine.map((str, i) => (
             <h2 className={`w-full p-2 text-center tracking-wide md:tracking-wider lg:tracking-widest text-xl md:text-2xl lg:text-3xl ${i === 1 ? 'my-2' : ''}`}>{str.toUpperCase()}</h2>
           ))}
-          <Link to="/portfolio/" className="border mt-10 text-center mx-auto border-black py-5 px-10 md:text-xl tracking-wide md:tracking-wider lg:tracking-widest">
-            EXPLORE PORTFOLIO
+          <Link to="/shop/" className="border mt-10 text-center mx-auto border-black py-5 px-10 md:text-xl tracking-wide md:tracking-wider lg:tracking-widest">
+            SHOP NOW
         </Link>
         </div>
         {/* II. FEATURED WORK */}

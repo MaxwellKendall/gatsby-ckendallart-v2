@@ -114,11 +114,11 @@ export default ({
                                 </li>
                             )
                         }),
-                        <li className="hidden lg:tracking-wider xl:tracking-widest md:flex lg:px-8 p-2 mt-2 ml-5 md:text-lg mx-4">
-                            <Link to="/">
-                                <Img fluid={logo} className="w-24 mx-auto h-12" />
-                            </Link>
-                        </li>,
+                        // <li className="hidden lg:tracking-wider xl:tracking-widest md:flex lg:px-8 p-2 mt-2 ml-5 md:text-lg mx-4">
+                        //     <Link to="/">
+                        //         <Img fluid={logo} className="w-24 mx-auto h-12" />
+                        //     </Link>
+                        // </li>,
                     ...pages.slice(2, 4)
                         .map((page) => (
                             <li className="p-5 mt-2 md:text-lg mx-4">

@@ -156,7 +156,7 @@ const FilterSidebar = ({
                 return (
                     <div className='w-full py-5 flex flex-wrap'>
                         <label className='w-full uppercase text-lg tracking-wide' htmlFor="price">{`Price Range: ${getPrettyPrice(criteria.minPrice)} - ${getPrettyPrice(criteria.maxPrice)}`}</label>
-                        <input className='price-range w-full cursor-pointer' id="price" value={criteria.maxPrice} onInput={getHandler('maxPrice')} type="range" min={criteria.minPrice} max={criteria.absoluteMaxPrice} />
+                        <input className='price-range w-11/12 cursor-pointer' id="price" value={criteria.maxPrice} onInput={getHandler('maxPrice')} type="range" min={criteria.minPrice} max={criteria.absoluteMaxPrice} />
                     </div>
                 );
             default:

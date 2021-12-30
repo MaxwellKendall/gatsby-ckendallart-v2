@@ -34,30 +34,12 @@ module.exports = {
     email: 'info@ckendallart.com',
     pages: [
       {
-        name: 'Portfolio',
-        link: '/portfolio/'
-      },
-      {
         name: 'Shop',
-        isExpandable: true,
-        childPages: [
-          {
-            name: 'Prints',
-            link: '/prints/'
-          },
-          {
-            name: 'Originals',
-            link: '/originals/'
-          },
-          {
-            name: 'Airbnb collection',
-            link: '/airbnb-collection/'
-          }
-        ]
+        link: '/shop/'
       },
       {
-        name: 'Commissions',
-        link: '/commissions/'
+        name: 'Request a Commission',
+        link: '/commission-request/'
       },
       {
         name: 'About',

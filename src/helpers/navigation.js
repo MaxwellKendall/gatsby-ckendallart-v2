@@ -11,11 +11,6 @@ export const usePages = () => {
                     pages {
                         name
                         link
-                        isExpandable
-                        childPages {
-                            name
-                            link
-                        }
                     }
                 }
             }
