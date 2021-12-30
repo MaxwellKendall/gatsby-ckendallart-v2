@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { graphql } from 'gatsby';
+import { graphql, navigate } from 'gatsby';
 import { faTimesCircle, faSlidersH, faTimes } from '@fortawesome/free-solid-svg-icons'
 
 import Layout from '../components/Layout';
@@ -184,8 +184,11 @@ const FilterSidebar = ({
     )
 }
 
-const getDefaultCriteria = (arr) => {
-    return arr.reduce((acc, product) => {
+const VALID_QUERY_PARAMS = ['maxPrice', 'productTypes', 'excludeSold', 'sortBy', 'title'];
+
+const getDefaultCriteria = (arr, queryStrings) => {
+    const params = new URLSearchParams(queryStrings);
+    const defaultCriteria = arr.reduce((acc, product) => {
         const parsedMin =  parseInt(product.priceRange.low, 10)
         const parsedMax =  parseInt(product.priceRange.high, 10)
         return {
@@ -203,7 +206,47 @@ const getDefaultCriteria = (arr) => {
         sortBy: 'price-desc',
         title: ''
     });
+
+    Array.from(params.keys()).forEach((key) => {
+        if (VALID_QUERY_PARAMS.includes(key)) {
+            const value = params.get(key);
+            if (key === 'maxPrice') {
+                defaultCriteria[key] = parseInt(value, 10);
+            }
+            else if (key === 'productTypes') {
+                defaultCriteria[key] = value.split(',');
+            }
+            else {
+                defaultCriteria[key] = value;
+            }
+        }
+    });
+    return defaultCriteria;
 };
+
+const readQueryStrings = (queryStrings) => {
+    const defaultCriteria = {};
+    
+    Array.from(params.keys()).forEach((key) => {
+        if (VALID_QUERY_PARAMS.includes(key)) {
+            const value = params.get(key);
+            if (key === 'maxPrice') {
+                defaultCriteria[key] = parseInt(value, 10);
+            }
+            else if (key === 'productTypes') {
+                defaultCriteria[key] = value.split(',');
+            }
+            else {
+                defaultCriteria[key] = value;
+            }
+        }
+    });
+    return defaultCriteria;
+}
+
+const writeQueryStrings = (key) => {
+    
+}
 
 const userSelectedSortFn = (selection) => {
     return selection === 'price-asc'
@@ -232,7 +275,7 @@ export default ({
     },
     location
 }) => {
-    const [filterCriteria, setFilterCriteria] = useState(getDefaultCriteria(products));
+    const [filterCriteria, setFilterCriteria] = useState(getDefaultCriteria(products, location.search));
     const filteredProducts = filterProductsByCriteria(products, filterCriteria);
     return (
         <SEO
