@@ -270,7 +270,7 @@ export default ({
 
     return (
         <SEO
-            title="Originals"
+            title="Shop"
             pathname={location.pathname}
             description={description}>
             <Layout classNames="relative" location={location}>
@@ -288,6 +288,7 @@ export const query = graphql`
     query GetAllProducts {
         allShopifyProduct {
             nodes {
+                id
                 title
                 collection
                 slug

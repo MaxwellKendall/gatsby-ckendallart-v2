@@ -524,7 +524,7 @@ export default ({
                     <div className={`w-full flex-col-center h-full relative overflow-auto`} onClick={() => setIsModalOpen(false)}>
                         {modalImg === 'afterpay' && <Img className="w-5/6 md:w-1/2" style={{ maxWidth: '500px' }} fluid={afterPayPopup.fluid} />}
                         {modalImg === 'product' && (
-                            <div className="h-auto" style={{ marginTop: '50%' }}>
+                            <div className="h-auto">
                                 <Img fixed={selectedImg.responsiveHoverImgs} className="overlay-product-img" />
                             </div>
                         )}                    

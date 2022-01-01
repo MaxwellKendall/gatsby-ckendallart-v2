@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'gatsby';
 import { kebabCase } from 'lodash';
 
@@ -20,7 +20,6 @@ export default ({
     products,
     sortFn = defaultSort,
     ctx = "forSale",
-    path
 }) => {
     const sortedProducts = products
         .sort(sortFn);
@@ -37,10 +36,10 @@ export default ({
                         return ({ ...product, className, img: getDefaultProductImage(product) })
                     })
                     .filter(({ img }) => img)
-                    .map(({ slug, img, title, variants, priceRange: { low: lowestPrice }, className }, i) => {
+                    .map(({ id, slug, img, title, variants, priceRange: { low: lowestPrice }, className }, i) => {
                         const hasVariantForSale = hasAvailableInventory(variants);
                         return (
-                            <li className={`my-2 lg:mr-2 ${className}`}>
+                            <li className={`my-2 lg:mr-2 ${className}`} key={id}>
                                 <Link to={`/${slug}/`} className="grid-product-img flex flex-col items-center lg:items-end w-full">
                                     <div className="relative">
                                         <Img responsiveImgs={img} imgName={kebabCase(title)} />
@@ -74,10 +73,10 @@ export default ({
                         return ({ ...product, className, img: getDefaultProductImage(product) })
                     })
                     .filter(({ img }) => img)
-                    .map(({ slug, img, title, variants, priceRange: { low: lowestPrice }, className }) => {
+                    .map(({ id, slug, img, title, variants, priceRange: { low: lowestPrice }, className }) => {
                         const hasVariantForSale = variants.some((({ availableForSale }) => availableForSale));
                         return (
-                            <li className={`my-2 ml-2 ${className}`}>
+                            <li className={`my-2 ml-2 ${className}`} key={id}>
                                 <Link to={`/${slug}/`} className="grid-product-img flex flex-col items-start w-full">
                                     <div className="relative">
                                         <Img responsiveImgs={img} imgName={kebabCase(title)} />
