@@ -205,7 +205,7 @@ const CartPage = ({
           )}
           <div className="w-auto m-5 lg:w-3/4 xl:w-1/2 flex-col-center">
             {cart.lineItems.length > 0 &&<a className="w-full md:w-3/4 lg:w-1/2 text-center checkout-button font-bold tracking-widest px-10 py-5" href={cart.webUrl}>CHECKOUT</a>}
-            <Link to="/originals/" className="w-full md:w-3/4 lg:w-1/2 text-center sqrl-purple mt-5 text-white px-10 py-5 tracking-widest">
+            <Link to="/shop/" className="w-full md:w-3/4 lg:w-1/2 text-center sqrl-purple mt-5 text-white px-10 py-5 tracking-widest">
               CONTINUE SHOPPING
             </Link>
           </div>
