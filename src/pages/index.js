@@ -183,8 +183,8 @@ export default (props) => {
         </Link>
         </div>
         {/* II. FEATURED WORK */}
-        <div className="w-full featured-work pb-5 lg:pb-10">
-          <h2 className="text-xl font-semibold lg:text-2xl px-4 pt-8 tracking-wide md:tracking-wider lg:tracking-widest text-center md:text-left xl:ml-12">FEATURED WORK</h2>
+        <div className="w-full pb-5 lg:pb-10">
+          <h2 className="text-xl font-semibold lg:text-2xl px-4 pt-8 tracking-wide md:tracking-wider lg:tracking-widest text-center md:text-left">FEATURED WORK</h2>
           <div className="flex pt-4 lg:hidden">
             <CarouselProvider
               className="w-full"
