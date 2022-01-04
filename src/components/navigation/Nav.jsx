@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Link  } from 'gatsby';
+import React, { useState } from 'react';
+import { Link, graphql, useStaticQuery  } from 'gatsby';
 import Img from "gatsby-image";
 
 import { usePages } from "../../helpers/navigation";
@@ -85,20 +85,28 @@ export default ({
     maxWidth
 }) => {
     const { pages, logo } = usePages();
+    const {
+        imageSharp: { fluid: signature }
+    } = useStaticQuery(graphql`
+        query getSignature {
+            imageSharp(original: {src: {regex: "/ckendallart-web-signature/"}}) {
+                fluid(maxWidth: 500) {
+                    ...GatsbyImageSharpFluid
+                }
+            }
+        }`
+    );
 
     return (
         <header className="hidden w-full self-center md:mt-10 md:mb-4 md:align-center md:flex md:flex-col lg:justify-center lg:p-4" style={{ maxWidth }}>
             <Link to='/cart/' className="ml-auto self-center order-2 md:order-none md:self-start mr-5">
                 <CartIcon numberOfItemsInCart={itemsInCart} />
             </Link>
-            <Link to='/' className={`mx-auto`}>
-                <h1 className="text-3xl lg:text-4xl font-normal md:tracking-wider lg:tracking-widest">CLAIRE KENDALL</h1>
+            <Link to='/' className={`mx-auto w-1/2`}>
+                <Img className="w-full" fluid={signature} />
             </Link>
             <ul className={`w-full flex-col items-center text-center justify-center md:flex md:flex-row lg:mt-6`}>
                 {[
-                    // <li className="flex items-center p-5 mt-10 text-xl md:text-lg">
-                    //     <SearchIcon />
-                    // </li>,
                     ...pages.slice(0, 2)
                         .map((page) => {
                             if (page.isExpandable) {

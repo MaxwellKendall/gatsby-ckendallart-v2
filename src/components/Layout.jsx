@@ -23,7 +23,7 @@ import {
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { toDate, differenceInHours } from 'date-fns';
 import { delay } from 'lodash';
-import { Link } from 'gatsby';
+import { Link, useStaticQuery, graphql } from 'gatsby';
 
 import CartContext from "../../globalState";
 import { localStorageKey } from '../helpers';
@@ -72,6 +72,7 @@ export const Layout = ({
     const [userEmail, setUserEmail] = useState('');
     const [subscribeStatus, setSubscribeStatus] = useState(defaultSubscribeStatus);
     const { cart, dispatch } = useContext(CartContext);
+
 
     useEffect(() => {
         const cartFromStorage = JSON.parse(window.localStorage.getItem(localStorageKey));

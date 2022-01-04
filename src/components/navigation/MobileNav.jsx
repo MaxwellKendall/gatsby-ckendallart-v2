@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'gatsby';
+import { Link, graphql, useStaticQuery } from 'gatsby';
 import Img from "gatsby-image";
 
 import { CartIcon, ExpandableMenuIcon } from './Nav';
@@ -45,6 +45,17 @@ export default ({
     itemsInCart,
     activePath
 }) => {
+    const {
+        imageSharp: { fluid: signature }
+    } = useStaticQuery(graphql`
+        query getTest {
+            imageSharp(original: {src: {regex: "/ckendallart-web-signature/"}}) {
+                fluid(maxWidth: 200) {
+                    ...GatsbyImageSharpFluid
+                }
+            }
+        }`
+    );
     const { pages, logo } = usePages();
     const [menuExpandedStatus, setMenuExpandedStatus] = useState('closed');
     const toggleMenuWithDelayedClose = (e, newStatus = newStatusByCurrentStatus[menuExpandedStatus]) => {
@@ -71,8 +82,8 @@ export default ({
     return (
         <header className="flex py-5 items-center md:hidden">
             <NavIcon isNotClosed={isNotClosed} onClick={toggleMenuWithDelayedClose} classNames={`pl-5`} />      
-            <Link to='/' className={`mx-auto`}>
-                <h1 className="text-2xl font-light">CLAIRE KENDALL</h1>
+            <Link to='/' className={`mx-auto w-full`}>
+                <Img className="gatsby-image-wrapper w-5/6 mx-auto" fluid={signature} />
             </Link>
             <Link to='/cart/' className={`self-center ${itemsInCart === 0 ? 'pr-5' : ''}`}>
                 <CartIcon numberOfItemsInCart={itemsInCart} />
