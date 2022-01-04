@@ -241,12 +241,12 @@ export default (props) => {
               const arrayOfImages = otherImages[key];
               const splitFileName = key.split('--');
               const section = startCase(splitFileName[1]).toLowerCase() === 'request commission'
-                ? { title: 'REQUEST COMMISSION', url: '/commissions/' }
+                ? { title: 'REQUEST COMMISSION', url: '/commission-request/' }
                 : { title: 'MEET THE ARTIST', url: '/about/' };
               return (
                 <li className={`w-full pb-4 md:pb-0 md:w-1/2 flex flex-col align-center mx-2`}>
                   <Link to={section.url} className="w-full cursor-pointer text-center mt-5 tracking-wide md:tracking-wider lg:tracking-widest lg:text-xl">
-                    <Img className={`mb-4 xl:mb-8 ${i === 0 ? 'xl:mr-10' : 'xl:ml-10'}`} fluid={arrayOfImages} style={{ height: section.url === '/commissions' ? '84%' : '80%' }} />
+                    <Img className={`mb-4 xl:mb-8 ${i === 0 ? 'xl:mr-10' : 'xl:ml-10'}`} fluid={arrayOfImages} style={{ height: section.url === '/commission-request' ? '84%' : '80%' }} />
                     <span className={`${i === 0 ? 'xl:mr-10' : 'xl:ml-10'} flex w-full justify-center md:justify-start tracking-wide md:tracking-wider lg:tracking-widest`}>{`${startCase(section.title).toUpperCase()} >`}</span>
                   </Link>
                 </li>
