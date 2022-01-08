@@ -51,7 +51,7 @@ export default ({
                                             </span>
                                         )}
                                         <span
-                                            className="hidden md:flex opacity-0 product-info font-semibold text-base md:text-xl py-5 mb-5 px-5 bottom-0 absolute flex-wrap items-center justify-center bg-gray-300 tracking-widest text-center w-full"
+                                            className="flex opacity-70 product-info font-semibold text-base md:text-xl py-5 mb-5 px-5 bottom-0 absolute flex-wrap items-center justify-center bg-gray-300 tracking-widest text-center w-full"
                                             style={{ width: '100%', marginBottom: '7px' }}>
                                                 {title.toUpperCase()}
                                                 {hasVariantForSale && variants.length > 1 && <span className="w-full text-center">from {getPrettyPrice(lowestPrice)}</span>}
@@ -88,7 +88,7 @@ export default ({
                                             </span>
                                         )}
                                         <span
-                                            className="hidden md:flex opacity-0 product-info font-semibold text-base md:text-xl py-5 mb-5 px-5 bottom-0 absolute flex-wrap items-center justify-center bg-gray-300 tracking-widest text-center w-full"
+                                            className="flex opacity-70 product-info font-semibold text-base md:text-xl py-5 mb-5 px-5 bottom-0 absolute flex-wrap items-center justify-center bg-gray-300 tracking-widest text-center w-full"
                                             style={{ width: '100%', marginBottom: '7px' }}>
                                                 {title.toUpperCase()}
                                                 {hasVariantForSale && variants.length > 1 && <span className="w-full text-center">from {getPrettyPrice(lowestPrice)}</span>}
