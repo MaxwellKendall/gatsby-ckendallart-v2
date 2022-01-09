@@ -47,6 +47,13 @@ body,
         visibility: hidden;
     }
 
+    .right-arrow-carousel {
+        left: calc(100% - 64px);
+        @media (min-width: $tablet) {
+            left: calc(100% - 112px);
+        }
+    }
+
     header {
         .mobile-nav-opened {
             animation: slide-in 0.195s ease-in;

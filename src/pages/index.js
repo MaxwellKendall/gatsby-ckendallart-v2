@@ -10,6 +10,7 @@ import ReferralCarousel from "../components/ReferralCarousel";
 import SEO from "../components/SEO";
 
 import 'pure-react-carousel/dist/react-carousel.es.css';
+import { getPrettyPrice } from "../helpers/products";
 
 const tagLine = [
   'Obsession with Quality',
@@ -91,37 +92,57 @@ export default (props) => {
           name
         }
       },
-      featuredMobile: allFile(filter: {name: {regex: "/featured/"}}) {
+      featuredMobile: allShopifyProduct(filter: {tags: {in: "home-pg-featured"}}) {
         nodes {
-          id
-          childImageSharp {
-            fluid(maxWidth: 750) {
-              ...GatsbyImageSharpFluid
+          localFile {
+            childImageSharp {
+              fluid(maxWidth: 750) {
+                ...GatsbyImageSharpFluid
+              }
             }
           }
-          name
+          name: title
         }
       },
-      featuredTablet: allFile(filter: {name: {regex: "/featured/"}}) {
+      featuredTablet: allShopifyProduct(filter: {tags: {in: "home-pg-featured"}}) {
         nodes {
-          id
-          childImageSharp {
-            fluid(maxWidth: 1000) {
-              ...GatsbyImageSharpFluid
+          localFile {
+            childImageSharp {
+              fluid(maxWidth: 1000) {
+                ...GatsbyImageSharpFluid
+              }
             }
           }
-          name
+          name: title
         }
       },
-      featuredDesktop: allFile(filter: {name: {regex: "/featured/"}}) {
+      featuredDesktop: allShopifyProduct(filter: {tags: {in: "home-pg-featured"}}) {
         nodes {
-          id
-          childImageSharp {
-            fluid(maxWidth: 1500) {
-              ...GatsbyImageSharpFluid
+          localFile {
+            childImageSharp {
+              fluid(maxWidth: 1500) {
+                ...GatsbyImageSharpFluid
+              }
             }
           }
-          name
+          name: title
+        }
+      },
+      featuredImages: allShopifyProduct(filter: {tags: {in: "home-pg-featured"}}) {
+        nodes {
+          localFile {
+            childImageSharp {
+              fluid(maxWidth: 1500) {
+                ...GatsbyImageSharpFluid
+              }
+            }
+          }
+          priceRange {
+            low
+            high
+          }
+          handle
+          name: title
         }
       },
       otherMobile: allFile(filter: {name: {regex: "/other/"}}) {
@@ -161,8 +182,9 @@ export default (props) => {
 `);
  
   const responsiveHeroImages = parseImages(homePageImages, 'hero');
-  const featuredImages = groupBy(flatten(parseImages(homePageImages, 'featured')), 'fileName');
+  // const featuredImages = groupBy(flatten(parseImages(homePageImages, 'featured')), 'fileName');
   const otherImages = groupBy(flatten(parseImages(homePageImages, 'other')), 'fileName');
+  console.log('featruedImages', homePageImages.featuredImages);
 
   return (
     <SEO title="Fine Art Made For You" description={siteDescription} pathname={"/"} image={responsiveHeroImages[0]}>
@@ -183,53 +205,35 @@ export default (props) => {
         </Link>
         </div>
         {/* II. FEATURED WORK */}
-        <div className="w-full pb-5 lg:pb-10">
-          <h2 className="text-xl font-semibold lg:text-2xl px-4 pt-8 tracking-wide md:tracking-wider lg:tracking-widest text-center md:text-left">FEATURED WORK</h2>
-          <div className="flex pt-4 lg:hidden">
-            <CarouselProvider
-              className="w-full"
-              naturalSlideWidth={780}
-              naturalSlideHeight={700}
-              totalSlides={3}>
-              <Slider>
-                {Object.keys(featuredImages)
-                  .map((key, i) => (
-                    <Slide index={i}>
-                      <Link to={getFeaturedImgUrl(key)}>
-                        <Img fluid={featuredImages[key]} />
-                      </Link>
-                    </Slide>
-                  ))
-                }
-              </Slider>
-              <div className="flex w-full justify-center">
-                <ButtonBack className="p-2"><Arrow direction="left" /></ButtonBack>
-                <ButtonNext className="p-2"><Arrow direction="right" /></ButtonNext>
-              </div>
-            </CarouselProvider>
-          </div>
-          <ul className="hidden lg:flex p-4 flex w-full">
-            {Object.keys(featuredImages)
-              .map((key, i) => {
-                const arrayOfImages = featuredImages[key];
-                const margin = i === 1;
-                const name = key.split('--')[1];
-                return (
-                  <li className={`w-1/3 flex flex-col align-center ${margin ? 'mx-2' : ''}`}>
-                    <Link className="w-full text-center h-full text-lg tracking-wide" to={getFeaturedImgUrl(key)}>
-                      <Img fluid={arrayOfImages} style={{ height: '80%' }} />
-                      <p className="w-full text-center font-semibold mt-5 text-lg xl:text-xl tracking-wide md:tracking-wider lg:tracking-widest">
-                        {startCase(name).toUpperCase()}
-                      </p>
-                      <p className="tracking-wide text-sm xl:text-base mt-5 md:tracking-wider">
-                        shop now {`>`}
-                      </p>
+        <div className="w-full relative pb-5 lg:pb-10">
+          <h2 className="text-xl font-semibold text-center tracking-wide md:tracking-wider lg:text-2xl lg:tracking-widest">FEATURED WORK</h2>
+          <CarouselProvider
+            className="w-full pt-4 md:px-4 mx-auto max-w-screen-md xl:max-w-screen-lg"
+            naturalSlideWidth={780}
+            naturalSlideHeight={700}
+            visibleSlides={1}
+            totalSlides={homePageImages?.featuredImages?.nodes?.length}>
+            <Slider>
+              {homePageImages?.featuredImages?.nodes
+                .map((img, i) => (
+                  <Slide index={i}>
+                    <Link to={`products/${img.handle}/`}>
+                      <Img fluid={img.localFile.childImageSharp.fluid} />
+                      <span className="flex opacity-70 product-info font-semibold text-base p-5 bottom-0 absolute flex-wrap items-center justify-center bg-gray-300 tracking-widest text-center w-full md:text-xl md:p-8 lg:p-12">
+                          {img.name.toUpperCase()}
+                          {img.priceRange.low !== img.priceRange.high && <span className="w-full text-center">from {getPrettyPrice(img.priceRange.low)}</span>}
+                          {img.priceRange.low === img.priceRange.high && <span className="w-full text-center">{getPrettyPrice(img.priceRange.low)}</span>}
+                      </span>
                     </Link>
-                  </li>
-                );
-              })
-            }
-          </ul>
+                  </Slide>
+                ))
+              }
+            </Slider>
+            <div className="flex w-full justify-center">
+              <ButtonBack className="p-2 absolute left-0 top-1/2"><Arrow direction="left" classNames="opacity-70 md:w-24 md:h-24" /></ButtonBack>
+              <ButtonNext className="p-2 absolute top-1/2 right-arrow-carousel"tyle={{ left: 'calc(100% - 112px)' }}><Arrow direction="right" classNames="opacity-70 md:w-24 md:h-24" /></ButtonNext>
+            </div>
+          </CarouselProvider>
         </div>
         {/* III. REFERRALS */}
         <ReferralCarousel />
