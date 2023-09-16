@@ -111,68 +111,71 @@ const { gql } = require('@apollo/client');
 // `;
 
 exports.GetAllProductsInCollection = gql`
-    query GetAllProductsInCollection($first: Int!, $handle: String!) {
-        collectionByHandle(handle: $handle) {
-            handle
-            description
+query GetAllProductsInCollection($first: Int!, $handle: String!) {
+    collectionByHandle(handle: $handle) {
+        handle
+        description
+        id
+        title
+        image {
             id
-            title
-            image {
-                id
-                originalSrc
-            }
-            products(first: $first) {
-                edges {
-                    cursor
-                    node {
-                        createdAt
-                        id
-                        title
-                        handle
-                        description
-                        productType
-                        id
-                        totalInventory
-                        tags
-                        images(first: $first) {
-                            edges {
-                                node {
-                                    originalSrc
-                                }
+            originalSrc
+        }
+        products(first: $first) {
+            edges {
+                cursor
+                node {
+                    createdAt
+                    id
+                    title
+                    handle
+                    description
+                    productType
+                    id
+                    totalInventory
+                    tags
+                    images(first: $first) {
+                        edges {
+                            node {
+                                originalSrc
                             }
                         }
-                        variants(first:$first) {
-                      	  edges {
-                      	    node {
-                              price
-                              sku
-                              weight
-                              weightUnit
-                              title
-                      	      id
-                              availableForSale
-                              image {
-                                altText
-                                originalSrc
-                              }
-                      	    }
-                      	  }
-                      	}
-                        priceRange {
-                            maxVariantPrice {
-                                amount
-                                currencyCode
+                    }
+                    variants(first:$first) {
+                        edges {
+                          node {
+                          price {
+                            amount
+                            currencyCode
                             }
-                            minVariantPrice {
-                                amount
-                                currencyCode
-                            }
+                          sku
+                          weight
+                          weightUnit
+                          title
+                            id
+                          availableForSale
+                          image {
+                            altText
+                            originalSrc
+                          }
+                          }
+                        }
+                      }
+                    priceRange {
+                        maxVariantPrice {
+                            amount
+                            currencyCode
+                        }
+                        minVariantPrice {
+                            amount
+                            currencyCode
                         }
                     }
                 }
             }
         }
-    }   
+    }
+}   
 `;
 
 exports.GetAllCollections = gql`

@@ -8,13 +8,14 @@ const {
     GetAllCollectionsAndAllProducts
 } = require('./queries');
 const { kebabCase } = require('lodash');
+const GRAPHQL_VERSION = `2023-04`;
 
 const PRODUCT_SLUG_PREFIX = 'products';
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
   link: new HttpLink({
-    uri: `https://${process.env.SHOP_NAME}.myshopify.com/api/2020-04/graphql.json`,
+    uri: `https://${process.env.SHOP_NAME}.myshopify.com/api/${GRAPHQL_VERSION}/graphql.json`,
     headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -25,7 +26,8 @@ const client = new ApolloClient({
 });
 
 const fetchData = async (query, vars) => {
-    return client.query({ query, variables: vars });
+    const data = await client.query({ query, variables: vars });
+    return data
 };
 
 exports.sourceNodes = async ({ actions, createNodeId, createContentDigest }, options = {}) => {
@@ -95,6 +97,7 @@ exports.sourceNodes = async ({ actions, createNodeId, createContentDigest }, opt
                 variants: variants.edges.map(({ node }) => {
                     return {
                         ...node,
+                        price: node.price.amount,
                         image: node.image.originalSrc
                     };
                 }),
@@ -114,13 +117,17 @@ exports.sourceNodes = async ({ actions, createNodeId, createContentDigest }, opt
         return parsedProducts
             .reduce((prevPromise, product) => prevPromise
                 .then((resp) => {
-                    return createNode(createNodeWithMeta(product.id, product, 'ShopifyProduct'));
+                    const node = createNodeWithMeta(product.id, product, 'ShopifyProduct');
+                    console.log({ node });
+                    return createNode(node);
                 })
             , Promise.resolve(null))
             .then(() => {
                 console.info(`Products for ${title} added 🙌 `);
             });
     };
+
+    console.log({ allCollections })
 
     return allCollections
         .reduce((prevPromise, { node: { handle } }) => prevPromise
@@ -132,6 +139,7 @@ exports.sourceNodes = async ({ actions, createNodeId, createContentDigest }, opt
                 .then(() => fetchData(GetAllProductsInCollection, { first: 250, handle }))
             }), Promise.resolve(null))
             .then((resp) => {
+                console.log({ resp})
                 return parseProductsFromCollection(resp);
             })
             .catch((e) => {
