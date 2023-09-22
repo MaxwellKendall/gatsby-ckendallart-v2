@@ -96,6 +96,7 @@ const CartPage = ({
       : parseInt(price, 10);
     return getPrettyPrice(cleanPrice * quantity);
   };
+  console.log({ cart })
 
   return (
     <Layout pageName="order-summary" classNames="lg:mt-12" location={location} isCheckoutLoading={loadingState === 'checkout'} maxWidth="72rem" classNames="px-4 md:px-8">
@@ -182,7 +183,7 @@ const CartPage = ({
           {cart.lineItems.length > 0 && (
             <>
               <span className="text-center text-2xl w-full pt-10 mr-5 lg:text-right md:tracking-wide">
-                SUB TOTAL: {cart.totalPrice && <strong>{getPrettyPrice(cart.totalPrice)}</strong>}
+                SUB TOTAL: {cart.totalPrice && <strong>{getPrettyPrice(cart.totalPrice.amount)}</strong>}
               </span>
               {cart.totalPrice < 1000 && cart.totalPrice >= 35 && (
                 <p className="w-full text-center items-center justify-center lg:justify-end pb-10 tracking-wider flex flex-wrap">
