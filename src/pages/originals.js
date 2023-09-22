@@ -29,7 +29,6 @@ export const query = graphql`
     query GetOnlyOriginals {
         allShopifyProduct(filter: {collection: {eq: "Originals Shop"}}) {
             nodes {
-                optimizedImages
                 title
                 collection
                 slug

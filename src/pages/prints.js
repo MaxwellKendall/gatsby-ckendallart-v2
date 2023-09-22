@@ -27,7 +27,6 @@ export const query = graphql`
     query GetOnlyPrints {
         allShopifyProduct(filter: {collection: {eq: "Prints Shop"}}) {
             nodes {
-                optimizedImages
                 title
                 collection
                 slug

@@ -29,7 +29,6 @@ export const query = graphql`
     query GetPortfolio {
         allShopifyProduct(filter: {productType: {regex: "/^((?!Print).)*$/"}}) {
             nodes {
-                optimizedImages
                 title
                 collection
                 slug

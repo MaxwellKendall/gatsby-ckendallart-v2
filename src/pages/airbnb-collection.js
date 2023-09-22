@@ -21,7 +21,6 @@ export const query = graphql`
     query GetAirbnbPrints {
         allShopifyProduct(filter: { tags: { in: ["airbnb"]} } ) {
             nodes {
-                optimizedImages
                 title
                 collection
                 slug
