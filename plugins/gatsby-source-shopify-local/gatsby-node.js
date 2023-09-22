@@ -1,4 +1,4 @@
-const { ApolloClient, HttpLink, InMemoryCache, gql } = require('@apollo/client');
+const { ApolloClient, InMemoryCache, ApolloProvider, gql } = require('@apollo/client');
 const fetch = require('isomorphic-fetch');
 const { createRemoteFileNode } = require("gatsby-source-filesystem")
 const {
@@ -14,15 +14,12 @@ const PRODUCT_SLUG_PREFIX = 'products';
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
-  link: new HttpLink({
-    uri: `https://${process.env.SHOP_NAME}.myshopify.com/api/${GRAPHQL_VERSION}/graphql.json`,
-    headers: {
+  uri: `https://${process.env.SHOP_NAME}.myshopify.com/api/${GRAPHQL_VERSION}/graphql.json`,
+  headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
         'X-Shopify-Storefront-Access-Token': process.env.SHOPIFY_ACCESS_TOKEN
-    },
-    fetch
-  })
+  },
 });
 
 const fetchData = async (query, vars) => {

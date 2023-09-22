@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@apollo/client": "^3.8.4",
-    "graphql": "^15.8.0",
+    "graphql": "^16.8.1",
     "isomorphic-fetch": "^3.0.0",
     "lodash": "^4.17.20"
   }
