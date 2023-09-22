@@ -146,7 +146,7 @@ exports.sourceNodes = async ({ actions, createNodeId, createContentDigest }, opt
 
 const imagesAddedByProductTitle = {};
 
-const processFileNode = (fileNode, previousImage, node) => {
+const processFileNode = (fileNode, previousImage, node, createNodeField) => {
     if (fileNode && previousImage.variantTitle) {
         node.variants = node.variants.map((variant) => {
             if (variant.id === previousImage.id) {
@@ -167,17 +167,24 @@ const processFileNode = (fileNode, previousImage, node) => {
             ? imagesAddedByProductTitle[node.title] = { ...imagesAddedByProductTitle[node.title], count: imagesAddedByProductTitle[node.title].count++ }
             : imagesAddedByProductTitle[node.title] = { count: 1, slug: node.slug };
         node.localFile___NODE = fileNode.id;
-        node.optimizedImages = node.optimizedImages
+        createNodeField({ node, name: "localFile", value: fileNode.id })
+
+        const images = node.optimizedImages
             ? node.optimizedImages.concat([fileNode.relativePath])
             : [fileNode.relativePath]
+
+        console.log("\n\n\ncreating images\n\n\n", images)
+        
+        createNodeField({ node, name: "optimizedImages", value: images })
+        createNodeField({ node, name: "test", value: 123 })
     }
 }
 // https://www.gatsbyjs.org/packages/gatsby-source-filesystem/
 exports.onCreateNode = async ({
     node,
-    actions: { createNode },
+    actions: { createNode, createNodeField },
     store,
-    cache,
+    getCache,
     createNodeId,
 }) => {
     const type = node.internal.type;
@@ -193,21 +200,21 @@ exports.onCreateNode = async ({
                             ? img
                             : arr[i - 1];
                         if (i > 0) {
-                            processFileNode(fileNode, previousImage, node);
+                            processFileNode(fileNode, previousImage, node, createNodeField);
                         }
+                      
                         return createRemoteFileNode({
                             url: img.url, // string that points to the URL of the image
                             // parentNodeId: image.id, // id of the parent node of the fileNode you are going to create
                             parentNodeId: node.id,
                             createNode, // helper function in gatsby-node to generate the node
                             createNodeId, // helper function in gatsby-node to generate the node id
-                            cache, // Gatsby's cache
-                            store, // Gatsby's redux store
+                            getCache, // Gatsby's cache
                         })
                         .then((resp) => {
                             if (i === arr.length - 1) {
-                                processFileNode(resp, arr[arr.length - 1], node);
-
+                                processFileNode(resp, arr[arr.length - 1], node, createNodeField);
+                    
                                 const totalImagesAdded = Object
                                     .values(imagesAddedByProductTitle)
                                     .reduce((acc, { count: int }) => acc + int, 0);
