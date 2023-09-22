@@ -12,7 +12,7 @@ const client = Client.buildClient({
 const adminAPIBaseUrl = `${customMiddleWareUrl}/inventory`;
 
 export const fetchProductInventory = (variantId) => {
-  const parsedVariantId = window.atob(variantId).split('/').pop();
+  const parsedVariantId = variantId.split('/').pop();
   // remove hard code later.
   return fetch(`${adminAPIBaseUrl}?variantId=${parsedVariantId}`, {
     method: 'get',
